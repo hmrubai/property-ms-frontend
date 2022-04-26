@@ -1,0 +1,260 @@
+<block-ui>
+  <div class="row">
+   
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>Bills </h5>
+
+
+              <!-- <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Create Package</button> -->
+            
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+                
+              </div>
+              <div class="row ">
+                
+                <div class="col-lg-3">
+                  <div class="form-group">
+                    <label class="col-form-label required">Select Customer Type </label>
+                    <ng-select [(ngModel)]="selectedRoleType" [clearable]="false" [clearOnBackspace]="false" (change)="onCustomerTypeChange($event)"
+                    [items]="roleTypes" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select type">  </ng-select>                 
+                  </div>                  
+                </div>
+
+                <div class="col-lg-4" *ngIf="studentList.length > 0">
+                  <div class="form-group">
+                    <label class="col-form-label required">Select Student </label>
+                    <ng-select [(ngModel)]="selectedCustomer" [clearable]="false" [clearOnBackspace]="false"
+                    [items]="studentList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select Student"> 
+                    <ng-template ng-label-tmp let-item="item">
+                      <p >{{item.name}} ({{item.mobile_no}})</p> 
+                  </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                      <p >{{item.name}} ({{item.mobile_no}})</p>                     
+                    </ng-template>
+                  
+                  </ng-select>                 
+                  </div>                  
+                </div> 
+
+                <div class="col-lg-4" *ngIf="instituteList.length > 0">
+                  <div class="form-group">
+                    <label class="col-form-label required">Select Institute </label>
+                    <ng-select [(ngModel)]="selectedInstitute" [clearable]="false" [clearOnBackspace]="false"
+                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select institute">  </ng-select>                 
+                  </div>                  
+                </div>
+           
+
+                <div class="col-lg-2" *ngIf="instituteList.length > 0 || studentList.length > 0">
+                  <div class="form-group">
+                    <label class="col-form-label required">Payment Status </label>
+                    <ng-select [(ngModel)]="selectedPaymentStatus" [clearable]="false" [clearOnBackspace]="false"  [items]="paymentStatus" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select status">  </ng-select>                 
+                  </div>                  
+                </div>
+
+                <div class="col-lg-2 " *ngIf="selectedPaymentStatus">
+                  <div class="form-group mt-4">                  
+                    <button class="btn btn-success  btn-outline-success  float-right" (click)="onSearchSubmit()">
+                      <i class="icofont-search"></i> Search
+                  </button>        
+                  </div>                  
+                </div>
+
+
+              </div>
+              <hr>
+              <!-- <div class="row" *ngIf="instituteList.length > 0 || studentList.length > 0">
+                
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="col-form-label required">Select Package </label>
+                    <ng-select [clearable]="true" [(ngModel)]="selectedPackage" [clearOnBackspace]="false" (change)="onPackageChange($event)"
+                    [items]="packageList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select package">  </ng-select>                 
+                  </div>                  
+                </div>  
+
+              </div> -->
+              <hr>
+
+              <ngx-datatable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+              [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+              [externalPaging]="false" [limit]="10">
+
+              <ngx-datatable-column [width]="50" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
+                <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                  <span> {{ rowIndex + 1}} </span>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column [width]="100" name="Package Name" prop="package_name" [draggable]="false"
+                [sortable]="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{ value }} </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="200" name="Payment Status" prop="status" [draggable]="false" [sortable]="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{ value }} </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="50" name="Payble Amount" prop="net_payble" [draggable]="false" [sortable]="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{ value }} </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="50" name="So Far Paid" prop="so_far_paid" [draggable]="false" [sortable]="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{ value }} </span>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [width]="50" name="Due" prop="due" [draggable]="false" [sortable]="false">
+                <ng-template let-value="value" ngx-datatable-cell-template>
+                  <span title="{{ value }}"> {{ value }} </span>
+                </ng-template>
+              </ngx-datatable-column>
+         
+
+              <ngx-datatable-column [width]="40" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <button class="btn btn-info " (click)="getItem(row,template)"><i
+                      class="icofont icofont-verification"></i>Pay</button>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+                          
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header " *ngIf="itemObj">
+      <h4 class="modal-title pull-left " > Pay Bill For : {{itemObj.package_name}}</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <form [formGroup]="entryForm">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="table-responsive">
+              <table class="table table-xs table-hover table-bordered table-striped">
+                <thead>
+                  <tr>
+                   <th width="7%" scope="col">#</th>
+                   <th width="20%" scope="col">Type</th>
+                    <th width="20%" scope="col">Name</th>
+                    <th width="20%" scope="col">Unit Price</th>
+                     <th width="20%" scope="col">Item Qty</th>
+                    <th width="20%" scope="col">Price</th>
+                  </tr>
+                </thead>
+                <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
+                    <tr  [formGroupName]="i">
+
+                      <th>                              
+                        <p>{{i + 1}}</p>
+
+                      </th>
+
+                      <th>
+                       <p>{{item_his.controls[i].get('type').value}}</p>
+                      </th>
+                      <th>
+                       <p>{{item_his.controls[i].get('item_name').value}}</p>
+                      </th>
+                      <th>
+                        <p>{{item_his.controls[i].get('unit_price').value}}</p>                     
+                      </th>
+                      <th>
+                        <p>{{item_his.controls[i].get('qty').value}}</p>                         
+                      </th>
+                      <th>
+                        <p>{{item_his.controls[i].get('price').value}}</p> 
+                      
+                      </th>  
+
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          </div>
+
+
+          <div class="col-lg-5 offset-lg-7"  *ngIf="itemObj">
+            <table class="table table-xs table-hover table-striped">
+                <tbody>
+                    <tr>
+                        <th>Total </th>
+                        <th class="text-right pr-4">{{itemObj.total_price}}</th>
+                    </tr>
+                    <tr>
+                        <th>Discount</th>
+                        <th class="text-right pr-4">
+                          {{itemObj.discount}}
+                        </th>
+                    </tr>
+                  <tr>
+                        <th>Total Payable</th>
+                        <th class="text-right pr-4">{{ itemObj.net_payble}}</th>
+                    </tr>
+                  <tr>
+                        <th>So Far Paid</th>
+                        <th class="text-right pr-4">{{ itemObj.so_far_paid}}</th>
+                    </tr>
+                  <tr>
+                      <th>Due</th>
+                        <th class="text-right pr-4">{{ itemObj.due}}</th>
+                  </tr>
+
+                    <tr>
+                      <th>Paid Amount</th>
+                      <td class="text-right pr-1">
+                          <input type="text" class="form-control form-control-sm text-right pr-3"   numeric numericType="number" [(ngModel)]="paidAmound" [ngModelOptions]="{standalone: true}">
+                      </td>
+                  </tr>
+                
+
+                </tbody>
+            </table>
+
+            <!-- <button class="btn btn-success  btn-outline-success w-50 float-right" (click)="onFormSubmit()">
+                <i class="icofont-save"></i> {{btnSaveText}}
+            </button> -->
+        </div>
+
+
+        </form>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+</block-ui>

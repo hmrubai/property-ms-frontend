@@ -1,0 +1,255 @@
+<block-ui>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card card-border-primary">
+                        <div class="card-block ">
+                            <div class="row ">
+                                <!--<div class="col-lg-4 box-shadow-one pt-2 bp-2">
+                                    <h5>Cognitve Questions</h5>
+                                    <ng-select placeholder="Select Project" (change)="getList()" [(ngModel)]="projectId" [items]="projectList"
+                                        [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                            <div> {{item.name}}</div>
+                                        </ng-template>
+                                    </ng-select>
+                                    <br/>
+                                </div>-->
+                                <div class="col-lg-2 box-shadow-one offset-md-8">
+                                    <ng-select placeholder="Select Type" (change)="filterList()" [(ngModel)]="type" [items]="status"
+                                        [clearable]='false' [clearOnBackspace]='false' bindLabel="name" bindValue="id">
+                                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                            <div> {{item.name}}</div>
+                                        </ng-template>
+                                    </ng-select>
+                                    <br/>
+                                </div>
+                                <div class="col-lg-2 box-shadow-one">
+                                    <button class="btn btn-success btn-sm float-right" (click)="openModal(template)">Add Question</button>
+                                    <br/>
+                                </div>
+                                <div class="col-lg-12"  *ngFor="let question of questionList; let i=index">
+                                    <div class="card user-card mb-3">
+                                        <div class="card-block">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="col-xs-12">
+                                                        <h5 class="d-inline-block">Question Details</h5> 
+                                                        <label  *ngIf="question.user_type == 'tutor'" class="label label-md label-success float-right">Tutor</label>
+                                                        <label  *ngIf="question.user_type == 'guardian'" class="label label-md label-info float-right">Guardian</label>
+                                                        <label  *ngIf="question.user_type == 'both'" class="label label-md label-warning float-right">Both</label>
+                                                        <hr>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <button class="btn btn-info btn-mini mr-2 float-right" (click)="openUpdateModal(question, template)">Edit</button>
+                                                            <button class="btn btn-danger btn-mini mr-2 float-right" (click)="deleteQuestion(question)">Delete</button>
+                                                            <p>In English: <strong>{{ question.title }}</strong></p>
+                                                            <p>In Bangali: <strong>{{ question.title_bn }}</strong></p>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p *ngIf="question.option1">a. {{ question.option1 }} | {{ question.option1_bn }}</p>
+                                                            <p *ngIf="question.option2">b. {{ question.option2 }} | {{ question.option2_bn }}</p>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p *ngIf="question.option3">c. {{ question.option3 }} | {{ question.option3_bn }}</p>
+                                                            <p *ngIf="question.option4">d. {{ question.option4 }} | {{ question.option4_bn }}</p>
+                                                        </div>
+                                                        <div class="col-sm-4 text-right">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</block-ui>
+
+<!--<ng-template #template>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-form-label required">Teacher </label> 
+                    <ng-select placeholder="Select Teacher" formControlName="teacher_id" [items]="instructorList"
+                        [clearable]='true' [clearOnBackspace]='true' bindLabel="email" bindValue="id">
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                          <div> {{item.first_name}} {{item.last_name}} - ({{item.email}})</div>
+                        </ng-template>
+                    </ng-select>
+
+                    <div *ngIf="submitted && f.teacher_id.errors" class="error-text">
+                        <span *ngIf="f.teacher_id.errors.required" class="text-danger"> Teacher is required</span>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+
+            <button class="btn btn-success btn-outline-success" (click)="onSetInstructorSubmit()">
+                <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+            </button>
+        </div>
+    </div>
+</ng-template>-->
+
+<ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold">Title </label>
+                                <input formControlName="title" [ngClass]="{ 'is-invalid': submitted && f.title.errors }"
+                                    type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.title.errors" class="error-text">
+                                    <span *ngIf="f.title.errors.required" class="text-danger">Title is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold">Title (Bangla) </label>
+                                <input formControlName="title_bn" [ngClass]="{ 'is-invalid': submitted && f.title_bn.errors }"
+                                    type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.title_bn.errors" class="error-text">
+                                    <span *ngIf="f.title_bn.errors.required" class="text-danger">Title Bangla is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 1 </label>
+                                <input formControlName="option1" [ngClass]="{ 'is-invalid': submitted && f.option1.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option1.errors" class="error-text">
+                                    <span *ngIf="f.option1.errors.required" class="text-danger">Option 1 is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 1 (Bangla) </label>
+                                <input formControlName="option1_bn" [ngClass]="{ 'is-invalid': submitted && f.option1_bn.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option1_bn.errors" class="error-text">
+                                    <span *ngIf="f.option1_bn.errors.required" class="text-danger">Option 1 (Bangla) is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 2 </label>
+                                <input formControlName="option2" [ngClass]="{ 'is-invalid': submitted && f.option2.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option2.errors" class="error-text">
+                                    <span *ngIf="f.option2.errors.required" class="text-danger">Option 2 is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 2 (Bangla) </label>
+                                <input formControlName="option2_bn" [ngClass]="{ 'is-invalid': submitted && f.option2_bn.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option2_bn.errors" class="error-text">
+                                    <span *ngIf="f.option2_bn.errors.required" class="text-danger">Option 2 (Bangla) is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 3 </label>
+                                <input formControlName="option3" [ngClass]="{ 'is-invalid': submitted && f.option3.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option3.errors" class="error-text">
+                                    <span *ngIf="f.option3.errors.required" class="text-danger">Option 3 is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 3 (Bangla) </label>
+                                <input formControlName="option3_bn" [ngClass]="{ 'is-invalid': submitted && f.option3_bn.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option3_bn.errors" class="error-text">
+                                    <span *ngIf="f.option3_bn.errors.required" class="text-danger">Option 3 (Bangla) is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 4 </label>
+                                <input formControlName="option4" [ngClass]="{ 'is-invalid': submitted && f.option4.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option4.errors" class="error-text">
+                                    <span *ngIf="f.option4.errors.required" class="text-danger">Option 4 is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 4 (Bangla) </label>
+                                <input formControlName="option4_bn" [ngClass]="{ 'is-invalid': submitted && f.option4_bn.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option4_bn.errors" class="error-text">
+                                    <span *ngIf="f.option4_bn.errors.required" class="text-danger">Option 4 (Bangla) is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <div class="form-check form-check-inline col-sm-3">
+                                    <input class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.user_type.errors }"  formControlName="user_type" type="radio" name="user_type" id="inlineRadio1" value="tutor">
+                                    <label class="form-check-label" for="inlineRadio1">Tutor</label>
+                                </div>
+                                <div class="form-check form-check-inline col-sm-3">
+                                    <input class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.user_type.errors }"  formControlName="user_type" type="radio" name="user_type" id="inlineRadio2" value="guardian">
+                                    <label class="form-check-label" for="inlineRadio2">Guardian</label>
+                                </div>
+                                <div class="form-check form-check-inline col-sm-3">
+                                    <input class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.user_type.errors }"  formControlName="user_type" type="radio" name="user_type" id="inlineRadio3" value="both">
+                                    <label class="form-check-label" for="inlineRadio3">Both</label>
+                                </div>
+                                <div *ngIf="submitted && f.user_type.errors" class="error-text">
+                                    <span *ngIf="f.user_type.errors.required" class="text-danger">Type is required</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" *ngIf="!is_update" (click)="addNewQuestion()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+                <button class="btn btn-success btn-outline-success" *ngIf="is_update" (click)="SubmitQuestionUpdate()">
+                    <i class="icofont icofont-check-circled"></i> {{updateButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>

@@ -1,0 +1,430 @@
+<block-ui>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card card-border-primary">
+                        <div class="card-block ">
+                            <form [formGroup]="searchForm">
+                                <div class="row ">
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="col-form-label">Search By Tutor Name </label>
+                                            <input (keyup)="onTutorChange($event.target.value)"
+                                                formControlName="teacher_name" type="text" class="form-control"
+                                                autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="col-form-label">Search By Student Name </label>
+                                            <input (keyup)="onStudentChange($event.target.value)"
+                                                formControlName="student_name" type="text" class="form-control"
+                                                autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="col-form-label ">Select Project </label>
+                                            <ng-select (change)="onProjectChange($event)" [clearable]="false"
+                                                formControlName="project" [clearOnBackspace]="false"
+                                                [items]="projectList" [multiple]=false bindLabel="name" bindValue="id"
+                                                placeholder="Select project">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="col-form-label ">Select Status </label>
+                                            <ng-select (change)="onStatusChange($event)" formControlName="status"
+                                                [clearable]="false" [clearOnBackspace]="false" [items]="statusList"
+                                                [multiple]=false bindLabel="name" bindValue="id"
+                                                placeholder="Select status">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="col-form-label ">Select Type </label>
+                                            <ng-select (change)="onTypeChange($event)" formControlName="type"
+                                                [clearable]="false" [clearOnBackspace]="false" [items]="typeList"
+                                                [multiple]=false bindLabel="name" bindValue="id"
+                                                placeholder="Select type">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label class="col-form-label ">Select Institute </label>
+                                            <ng-select (change)="onInstituteChange($event)" formControlName="institute"
+                                                [clearable]="true" [clearOnBackspace]="false" [items]="instituteList"
+                                                [multiple]=false bindLabel="name" bindValue="id"
+                                                placeholder="Select institute">
+                                            </ng-select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-4">
+                                        <div class="form-group ">
+                                            <label class=" col-form-label">Select Date Range</label>
+
+                                            <input type="text" (bsValueChange)="onDateValueChange($event)"
+                                                class="form-control" bsDaterangepicker [bsConfig]="bsConfig"
+                                                [(ngModel)]="bsValue" placeholder="Select a date range"
+                                                [ngModelOptions]="{standalone: true}">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 ">
+                                        <div class="form-group">
+                                            <button (click)="allClear()" class="btn btn-warning"><i
+                                                    class="icofont icofont-refresh"></i> Clear All
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 ">
+                                        <div class="row ">
+                                            <div class="col-8 mt-4">
+                                                <button (click)="openModalCourse(templateCourse)"
+                                                    class="btn btn-success float-right"><i
+                                                        class="icofont icofont-plus"></i> Create New
+                                                </button>
+                                            </div>
+                                            <div class="col-4 mt-4">
+                                                <button (click)="export()" class="btn btn-info "><i
+                                                        class="icofont icofont-download"></i> Download Excel
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="row ">
+                                <div class="col-lg-6"
+                                    *ngFor="let item of correctionList | paginate: { itemsPerPage: page.size, currentPage: page.pageNumber, totalItems: page.totalElements }">
+                                    <ul class="list-view">
+                                        <li>
+                                            <a class="a-hover" [routerLink]="['/correction-details', item.id ]">
+                                                <div class="card user-card">
+                                                    <div class="card-block">
+                                                        <div class="media">
+                                                            <div class="media-body">
+                                                                <div class="f-13 text-muted"><strong>Course:</strong> {{
+                                                                    item.course_name }} </div>
+                                                                <div class="f-13 text-muted"><strong>Assignment Created
+                                                                        On:</strong> {{ item.created_at | date:'MMM d,
+                                                                    y' }} </div>
+                                                                <div class="f-13 text-muted"><strong>Title: </strong> {{
+                                                                    item.title }}</div>
+                                                                <br>
+                                                                <div class="f-13 text-muted inline"
+                                                                    *ngIf="item.status_id === 0"> <button type="button"
+                                                                        class="btn btn-primary btn-sm inline">Assigned</button>
+                                                                </div>
+                                                                <div class="f-13 text-muted inline"
+                                                                    *ngIf="item.status_id === 1"> <button type="button"
+                                                                        class="btn btn-info btn-sm inline">Answered</button>
+                                                                </div>
+                                                                <div class="f-13 text-muted inline"
+                                                                    *ngIf="item.status_id === 2"> <button type="button"
+                                                                        class="btn btn-info btn-sm inline">Correction
+                                                                        Requested</button> </div>
+                                                                <div class="f-13 text-muted inline"
+                                                                    *ngIf="item.status_id === 3"> <button type="button"
+                                                                        class="btn btn-info btn-sm inline">Corrected</button>
+                                                                </div>
+                                                                <div class="f-13 text-muted inline"
+                                                                    *ngIf="item.status_id === 4"> <button type="button"
+                                                                        class="btn btn-success btn-sm inline">Completed</button>
+                                                                </div>
+                                                                <div class="f-13 text-muted float-right"
+                                                                    *ngIf="!item.is_locked"><strong>For: </strong> {{
+                                                                    item.student_name }}</div>
+                                                                <div class="f-13 text-muted float-right"
+                                                                    *ngIf="item.is_locked"><strong>Locked By: </strong>
+                                                                    {{ item.tutor_name }} | <strong>For: </strong> {{
+                                                                    item.student_name }}</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+
+
+                                <!-- <div class="col-lg-12">
+                                    <div class="pagination_fg">
+                                        <a *ngIf="activePage > 0" class="link-pointer" (click)="changePage(1)">&laquo;
+                                            First</a>
+                                        <a *ngIf="activePage > 0" class="link-pointer"
+                                            (click)="changePage(activePage -1)">Previous</a>
+                                        <a *ngIf="activePage > 1" class="link-pointer"
+                                            (click)="changePage(activePage -1)">{{ activePage - 1 }}</a>
+                                        <a class="link-pointer" class="active">{{ activePage }}</a>
+                                        <a *ngIf="(activePage + 1) < totalCount" class="link-pointer"
+                                            (click)="changePage(activePage + 1)">{{ activePage + 1 }}</a>
+                                        <a *ngIf="activePage < totalCount" class="link-pointer"
+                                            (click)="changePage(activePage + 1)">Next</a>
+                                        <a *ngIf="activePage < totalCount" class="link-pointer"
+                                            (click)="changePage(totalCount)">Last &raquo;</a>
+                                    </div>
+
+                                </div> -->
+
+
+                            </div>
+
+
+                            <div class="row text-center mt-5">
+                                <div class="col-md-3 col-xs-12">
+                                    <p *ngIf="page"> {{page.showingResult()}}</p>
+                                </div>
+                                <div class="col-md-9 col-xs-12">
+                                    <nav>
+                                        <!-- <ul class="pagination justify-content-left">
+                                            <li class="page-item" [ngClass]="{'disabled': page.pageNumber === 0}">
+                                                <a class="page-link" href="javascript:;" tabindex="-1"
+                                                    (click)="setPage(page.pageNumber - 1)">
+                                                    <i class="fa fa-long-arrow-left "></i>
+                                                </a>
+                                            </li>
+                                            <li class="page-item" [ngClass]="{'active': item === page.pageNumber}"
+                                                *ngFor="let item of page.pages()| paginate: { itemsPerPage: page.size, currentPage: p, totalItems: page.pageTotalElements }">
+                                                <a class="page-link" href="javascript:;" (click)="setPage(item)">{{item+1}}</a>
+                                            </li>
+                                            <li class="page-item" [ngClass]="{'disabled': page.totalPages === page.pageNumber+1 || page.totalPages === 0 }">
+                                                <a class="page-link" href="javascript:;" (click)="setPage(page.pageNumber + 1)">
+                                                    <i class="fa fa-long-arrow-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul> -->
+                                        <pagination-controls (pageChange)="setPage($event)" responsive="true">
+                                        </pagination-controls>
+                                    </nav>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block-ui>
+
+<ng-template #template>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-form-label required">Teacher </label>
+                    <ng-select placeholder="Select Teacher" formControlName="teacher_id" [items]="instructorList"
+                        [clearable]='true' [clearOnBackspace]='true' bindLabel="email" bindValue="id">
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                            <div> {{item.first_name}} {{item.last_name}} - ({{item.email}})</div>
+                        </ng-template>
+                    </ng-select>
+
+                    <div *ngIf="submitted && f.teacher_id.errors" class="error-text">
+                        <span *ngIf="f.teacher_id.errors.required" class="text-danger"> Teacher is required</span>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+
+            <button class="btn btn-success btn-outline-success" (click)="onSetInstructorSubmit()">
+                <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+            </button>
+
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #templateCourse>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitleCourse" id="modalTitleCourse"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideCourse()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <form [formGroup]="courseForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="col-form-label font-weight-bold required">Project </label>
+                                <ng-select placeholder="Select Project" formControlName="projectId"
+                                    [items]="projectList" [clearable]='true' [clearOnBackspace]='true' bindLabel="name"
+                                    bindValue="id">
+                                </ng-select>
+
+                                <div *ngIf="submitted && c.projectId.errors" class="error-text">
+                                    <span *ngIf="c.projectId.errors.required" class="text-danger"> Project is
+                                        required</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="col-form-label font-weight-bold required">Select Type </label>
+                                <ng-select placeholder="Select Type" formControlName="typeId" [items]="typeList"
+                                    [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                </ng-select>
+
+                                <div *ngIf="submitted && c.typeId.errors" class="error-text">
+                                    <span *ngIf="c.typeId.errors.required" class="text-danger"> Type is required</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="font-weight-bold required"> Title </label>
+                                <textarea rows="3" formControlName="title" placeholder="Select Title"
+                                    [ngClass]="{ 'is-invalid': submitted && c.title.errors }" type="text"
+                                    class="form-control" autocomplete="off"></textarea>
+                                <div *ngIf="submitted && c.title.errors" class="error-text">
+                                    <span *ngIf="c.title.errors.required" class="text-danger">Title is
+                                        required</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label class="font-weight-bold "> Description </label>
+                                <textarea formControlName="description" rows="3" type="text" class="form-control"
+                                placeholder="Set Description"  autocomplete="off"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="font-weight-bold"> Apeared Date</label>
+                                <input formControlName="date" type="text" class="form-control" autocomplete="off"
+                                [bsConfig]="bsConfigWritten" bsDatepicker placeholder="Set Apeared Date ">
+
+
+                            </div>
+                            <div class="col-6">
+                                <label class="font-weight-bold required"> Mark </label>
+                                <input formControlName="mark" type="number" class="form-control" autocomplete="off"
+                                [ngClass]="{ 'is-invalid': submitted && c.mark.errors }" placeholder="Set Mark ">
+
+                                <div *ngIf="submitted && c.mark.errors" class="error-text">
+                                    <span *ngIf="c.mark.errors.required" class="text-danger"> Mark is required</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <label class="font-weight-bold required"> Course Name </label>
+                        <textarea formControlName="name" rows="3" type="text" class="form-control"
+                            autocomplete="off" [ngClass]="{ 'is-invalid': submitted && c.name.errors }"
+                            placeholder="Set Course Name "></textarea>
+
+                            <div *ngIf="submitted && c.name.errors" class="error-text">
+                                <span *ngIf="c.name.errors.required" class="text-danger"> Course name is required</span>
+                            </div>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideCourse()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+            <button class="btn btn-success btn-outline-success" (click)="openModalStudent(templateStudent)">
+                <i class="icofont icofont-arrow-right"></i> Next
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #templateStudent>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitleCourse" id="modalTitleCourse"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideStudent(templateCourse)">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+         
+            <div class="table-responsive scroll" *ngIf="studentList.length>0" >
+                <table class="table table-sm table-hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col">
+                                <div style="font-weight: bold" *ngIf="studentList.length > 0">
+                                    {{ selectedStudentIds.length === studentList.length? 'Unselect All' : 'Select All'
+                                    }}
+
+                                    <ui-switch class="ml-3" size="small" [checked]="selectedStudentIds.length === studentList.length"
+                                        (changeEvent)="checkUncheckAll()"></ui-switch>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let item of studentList; let i=index">
+                            <th>{{i+1}}</th>
+                            <td>
+                                <span class="text-wrap">{{item.name}}</span>
+                            </td>
+                            <td>
+                               <span class="text-wrap">{{item.mobile_no }}</span> 
+                            </td>
+                            <td >
+                                <ui-switch class="ml-3 " size="small" [checked]="checkStudentInSelectedList(item.id)"
+                                (changeEvent)="checkIndividually(item)"></ui-switch>
+                            </td>
+                        </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+           
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideStudent(templateCourse)"> <i
+                    class="icofont icofont-close"></i>Close</button>
+            <button class="btn btn-success btn-outline-success" (click)="onWrittenFormSubmit()">
+                <i class="icofont icofont-check"></i> Submit
+            </button>
+        </div>
+    </div>
+</ng-template>

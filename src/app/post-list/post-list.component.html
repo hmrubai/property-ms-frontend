@@ -1,0 +1,290 @@
+<block-ui>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Posts</h5>
+                            <button (click)="openModal(template)" class="btn btn-success float-right"> Create A Post
+                            </button>
+                        </div>
+                        <div class="card-block ">
+
+                            <div class="row">
+                                <form [formGroup]="searchForm" class="col-md-12">
+
+                                    <div class="row">
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <div class="form-group ">
+                                                    <label class="  col-form-label">Select Date Range</label>
+                                                    <input type="text" class="form-control" bsDaterangepicker
+                                                        [bsConfig]="bsConfig" [(ngModel)]="bsValue"
+                                                        placeholder="Select a date range"
+                                                        [ngModelOptions]="{standalone: true}">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="col-form-label ">Select Type </label>
+                                                <ng-select (change)="onTypeChange($event)" formControlName="post_type"
+                                                    [clearable]="false" [clearOnBackspace]="false"
+                                                    [items]="post_type_list" [multiple]=false bindLabel="name"
+                                                    bindValue="id" placeholder="Select type">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3" *ngIf="showCountryDiv">
+                                            <div class="form-group">
+                                                <label class="col-form-label ">Select Country </label>
+                                                <ng-select (change)="onCountryChange($event)" formControlName="country"
+                                                    [clearable]="false" [clearOnBackspace]="false" [items]="countryList"
+                                                    [multiple]=false placeholder="Select country">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 ">
+                                            <div class="form-group mt-4 pt-3">
+                                                <button (click)="search()" class="btn btn-info btn-mini mr-1"> Search
+                                                </button>
+                                                <button (click)="allClear()" class="btn btn-warning btn-mini"> Clear All
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            </div>
+
+
+                            <div class="row ">
+
+                                <div class="col-lg-12 ">
+                                    <ngx-datatable #table class="material table-bordered" [scrollbarH]="true"
+                                        [rows]="rows" [loadingIndicator]="loadingIndicator" [externalPaging]="true"
+                                        [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50"
+                                        rowHeight="auto" [count]="page.totalElements" [offset]="page.pageNumber"
+                                        [limit]="page.size" (page)="setPage($event)">
+
+                                        <ngx-datatable-column [width]="100" name="Image" prop="featured_image"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <img *ngIf="value" src="{{baseUrl}}/{{value}}" style="width:100px;">
+                                                <img *ngIf="!value" src="assets/images/no_privew.jpg"
+                                                    style="width:100px;">
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column [width]="200" name="Title" prop="post_title"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <!-- <ngx-datatable-column [width]="250" name="Summary" prop="post_excerpt"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column> -->
+                                        <ngx-datatable-column [width]="100" name="Type" prop="post_type"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column [width]="100" name="Status" prop="post_status"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                        <ngx-datatable-column [width]="100" name="Post Date" prop="post_date"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span> {{ value | amDateFormat:'DD MMM YYYY hh:mm:ss A'}} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <!-- <ngx-datatable-column name="Is Active?" prop="IsActive" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{value === true? 'Yes':'No'}}">
+                                                    {{value === true? 'Yes':'No'}} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column> -->
+
+                                        <ngx-datatable-column [width]="150" name="Action" prop="id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-info btn-mini" (click)="getItem(row,template)"><i
+                                                        class="icofont icofont-edit"></i>Edit</button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</block-ui>
+
+
+
+<ng-template #template>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label required">Title </label>
+                    <div class="col-md-9">
+                        <input formControlName="post_title"
+                            [ngClass]="{ 'is-invalid': submitted && f.post_title.errors }" type="text"
+                            class="form-control" autocomplete="off">
+                        <div *ngIf="submitted && f.post_title.errors" class="error-text">
+                            <span *ngIf="f.post_title.errors.required" class="text-danger">Title is required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label ">Summary </label>
+                    <div class="col-md-9">
+                        <textarea rows="2" formControlName="post_excerpt"
+                             type="text"
+                            class="form-control" autocomplete="off"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label required">Content </label>
+                    <div class="col-md-9">
+                        <div class="NgxEditor__Wrapper">
+                            <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+                            <ngx-editor [editor]="editor" formControlName="post_content" [disabled]="false"
+                                [placeholder]="'Type here...'"></ngx-editor>
+                        </div>
+                        <div *ngIf="submitted && f.post_content.errors" class="error-text">
+                            <span *ngIf="f.post_content.errors.required" class="text-danger"> Content is required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-md-6 col-form-label required"> Type </label>
+                            <div class="col-md-6">
+                                <ng-select (change)="onTypeChange($event)" formControlName="post_type"
+                                    [clearable]="false" [clearOnBackspace]="false" [items]="post_type_list"
+                                    [multiple]=false bindLabel="name" bindValue="id" placeholder="Select type">
+                                </ng-select>
+
+
+                                <div *ngIf="submitted && f.post_type.errors" class="error-text">
+                                    <span *ngIf="f.post_type.errors.required" class="text-danger">Type is
+                                        required</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-6" *ngIf="showCountryDiv">
+                        <div class="form-group row">
+                            <label class="col-md-4 col-form-label "> Country</label>
+                            <div class="col-md-8">
+                                <ng-select formControlName="country" [clearable]="false" [clearOnBackspace]="false"
+                                    [items]="countryList" [multiple]=false placeholder="Select country">
+                                </ng-select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label class="col-md-6 col-form-label required"> Status </label>
+                            <div class="col-md-6">
+                                <ng-select formControlName="post_status" [clearable]="false" [clearOnBackspace]="false"
+                                    [items]="post_status_list" [multiple]=false bindLabel="name" bindValue="id"
+                                    placeholder="Select status"></ng-select>
+                                <div *ngIf="submitted && f.post_status.errors" class="error-text">
+                                    <span *ngIf="f.post_status.errors.required" class="text-danger">Status is
+                                        required</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-form-label ">Featured Image </label>
+                            <input accept=".png, .jpg, .jpeg" (change)="fileChangeEvent($event)"
+                                formControlName="featured_image"
+                                [ngClass]="{ 'is-invalid': submitted && f.featured_image.errors }" type="file"
+                                autocomplete="off">
+
+                            <!--<div *ngIf="isCropper">
+                                <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+                                    [aspectRatio]="16 / 9" [resizeToWidth]="900" format="jpg"
+                                    (imageCropped)="imageCropped($event)" (imageLoaded)="imageLoaded()"
+                                    (cropperReady)="cropperReady()" (loadImageFailed)="loadImageFailed()">
+                                </image-cropper>
+                            </div>
+
+                            <div *ngIf="!isCropper && imagePath">
+                                <img [src]="imagePath" style="height:200px">
+                            </div>-->
+
+                        </div>
+                    </div>
+                    <!--<div class="col-md-6" *ngIf="croppedImage">
+                        <img class="img-fluid mt-5 pt-3" [src]="croppedImage" />
+                        <br>
+                        <br>
+                        <button class="btn btn-danger btn-sm">
+                            <i class="fa fa-trash float-right" (click)="removeImage()"></i>
+                        </button>
+                        <button class="btn btn-success btn-sm float-right" *ngIf="isCropper">
+                            <i class="fa fa-check-circle" (click)="approveImage()"></i>
+                        </button>
+                    </div>-->
+                </div>
+
+
+
+
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+
+            <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+            </button>
+
+        </div>
+
+    </div>
+</ng-template>

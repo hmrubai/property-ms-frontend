@@ -1,0 +1,354 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>SEW Collaborator List</h5>
+                            <div class="col-lg-4 float-right">
+                                <!--<ng-select (change)="onPromoChange($event)"
+                                    [clearable]="true" [clearOnBackspace]="false" [(ngModel)]="promo_id" [items]="promoList" class="col-lg-9 inline-row"
+                                    [multiple]=false bindLabel="company_name" bindValue="id"
+                                    placeholder="Select Promo">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div> {{item.promo_code}} {{item.promo_value}} - ({{item.company_name}})</div>
+                                    </ng-template>
+                                </ng-select>-->
+                                <button class="btn btn-sm btn-success float-right inline-row" (click)="openModal(collaboratorTemplate)"> <i class="fa fa-user"></i> Add New Collaborator</button>
+                                <button class="btn btn-sm btn-success float-right inline-row mr-2" (click)="export()"> <i class="fa fa-arrow-down"></i> Download List</button>
+                            </div>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                        <!--"user_id", "name", "email", "mobile_no", "company_contact_person", "address", "raw_password", "is_active", "created_by"-->
+                                            <tr>
+                                                <th>Image</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Mobile No</th>
+                                                <th>Contact Person</th>
+                                                <th>Address</th>
+                                                <th>Is Active</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let collaborator of collaboratorList; let i=index">
+                                                <td><img class="media-object img-circle card-list-img image-size-payment" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td>
+                                                <td>
+                                                    {{ collaborator.name  }}
+                                                </td>
+                                                <td>
+                                                    {{ collaborator.email }}
+                                                </td>
+                                                <td>
+                                                    {{ collaborator.mobile_no }}
+                                                </td>
+                                                <td>
+                                                    {{ collaborator.company_contact_person }}
+                                                </td>
+                                                <td>
+                                                    {{ collaborator.address }}
+                                                </td>
+                                                <td>
+                                                    <span *ngIf="collaborator.is_active" class="type-ribbon bg-success">Yes</span>
+                                                    <span *ngIf="!collaborator.is_active" class="type-ribbon bg-danger">No</span>
+                                                </td>
+                                                <td>
+                                                    <!-- (click)="openPasswordModal(collaborator, editCollaboratorTemplate)" -->
+                                                    <button class="btn btn-info btn-mini mr-1" (click)="onUpdateCollaborator(collaborator, editCollaboratorTemplate)" > <i class="icofont-edit"></i> Edit</button>
+                                                </td>
+                                            </tr>
+                                             <tr *ngIf="collaboratorList.length <= 0">
+                                                <td colspan="8">No Collaborator Found!</td>
+                                             </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Name</label>
+                            <input formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.name.errors" class="error-text">
+                                <span *ngIf="f.name.errors.required" class="text-danger">Name is required</span>
+                                <span *ngIf="f.name.errors.maxlength" class="text-danger">Name must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Email</label>
+                            <input formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                                type="email" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.email.errors" class="error-text">
+                                <span *ngIf="f.email.errors.required" class="text-danger">Email is required</span>
+                                <span *ngIf="f.email.errors.email" class="text-danger">Please Enter valid email</span>
+                                <span *ngIf="f.email.errors.maxlength" class="text-danger">Email must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Gender</label>
+                            <ng-select placeholder="Select Gender" formControlName="gender" [items]="genderList"
+                                [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                    <div>{{item.name}}</div>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.gender.errors" class="error-text">
+                                <span *ngIf="f.gender.errors.required" class="text-danger"> Gender is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold required">Role </label> 
+                        <ng-select placeholder="Select Role" formControlName="role_id" [items]="roleList"
+                            [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                <div>{{item.name}}</div>
+                            </ng-template>
+                        </ng-select>
+                        <div *ngIf="submitted && f.role_id.errors" class="error-text">
+                            <span *ngIf="f.role_id.errors.required" class="text-danger"> Role is required</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.password.errors" class="error-text">
+                                <span *ngIf="f.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="f.password.errors.minlength" class="text-danger">Password must be 6 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+
+                            <div *ngIf="submitted && f.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="f.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #collaboratorTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Name</label>
+                            <input type="text" formControlName="name" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.name.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.name.errors" class="error-text">
+                                <span *ngIf="f.name.errors.required" class="text-danger">Name is required</span>
+                                <span *ngIf="f.name.errors.minlength" class="text-danger">Name must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Email</label>
+                            <input type="email" formControlName="email" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.email.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.email.errors" class="error-text">
+                                <span *ngIf="f.email.errors.required" class="text-danger">Email is required</span>
+                                <span *ngIf="f.email.errors.minlength" class="text-danger">Email must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Mobile No</label>
+                            <input type="text" formControlName="mobile_no" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.mobile_no.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.mobile_no.errors" class="error-text">
+                                <span *ngIf="f.mobile_no.errors.required" class="text-danger">Mobile No is required</span>
+                                <span *ngIf="f.mobile_no.errors.minlength" class="text-danger">Mobile No must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Contact Person</label>
+                            <input type="text" formControlName="company_contact_person" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.company_contact_person.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.company_contact_person.errors" class="error-text">
+                                <span *ngIf="f.company_contact_person.errors.required" class="text-danger">Contact Person Information is required</span>
+                                <span *ngIf="f.company_contact_person.errors.minlength" class="text-danger">Contact Person Information must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Address</label>
+                            <input type="text" formControlName="address" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.address.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.address.errors" class="error-text">
+                                <span *ngIf="f.address.errors.required" class="text-danger">Address is required</span>
+                                <span *ngIf="f.address.errors.minlength" class="text-danger">Address must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="raw_password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.raw_password.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.raw_password.errors" class="error-text">
+                                <span *ngIf="f.raw_password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="f.raw_password.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="f.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                                <span *ngIf="f.ConfirmPassword.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onCollaboratorSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #editCollaboratorTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="editForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Name</label>
+                            <input type="text" formControlName="name" class="form-control"
+                                [ngClass]="{ 'is-invalid': edit_submitted && ef.name.errors }" autocomplete="off" required>
+                            <div *ngIf="edit_submitted && ef.name.errors" class="error-text">
+                                <span *ngIf="ef.name.errors.required" class="text-danger">Name is required</span>
+                                <span *ngIf="ef.name.errors.minlength" class="text-danger">Name must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Email</label>
+                            <input type="email" formControlName="email" class="form-control"
+                                [ngClass]="{ 'is-invalid': edit_submitted && ef.email.errors }" autocomplete="off" required>
+                            <div *ngIf="edit_submitted && ef.email.errors" class="error-text">
+                                <span *ngIf="ef.email.errors.required" class="text-danger">Email is required</span>
+                                <span *ngIf="ef.email.errors.minlength" class="text-danger">Email must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Mobile No</label>
+                            <input type="text" formControlName="mobile_no" class="form-control"
+                                [ngClass]="{ 'is-invalid': edit_submitted && ef.mobile_no.errors }" autocomplete="off" required>
+                            <div *ngIf="edit_submitted && ef.mobile_no.errors" class="error-text">
+                                <span *ngIf="ef.mobile_no.errors.required" class="text-danger">Mobile No is required</span>
+                                <span *ngIf="ef.mobile_no.errors.minlength" class="text-danger">Mobile No must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Contact Person</label>
+                            <input type="text" formControlName="company_contact_person" class="form-control"
+                                [ngClass]="{ 'is-invalid': edit_submitted && ef.company_contact_person.errors }" autocomplete="off" required>
+                            <div *ngIf="edit_submitted && ef.company_contact_person.errors" class="error-text">
+                                <span *ngIf="ef.company_contact_person.errors.required" class="text-danger">Contact Person Information is required</span>
+                                <span *ngIf="ef.company_contact_person.errors.minlength" class="text-danger">Contact Person Information must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Address</label>
+                            <input type="text" formControlName="address" class="form-control"
+                                [ngClass]="{ 'is-invalid': edit_submitted && ef.address.errors }" autocomplete="off" required>
+                            <div *ngIf="edit_submitted && ef.address.errors" class="error-text">
+                                <span *ngIf="ef.address.errors.required" class="text-danger">Address is required</span>
+                                <span *ngIf="ef.address.errors.minlength" class="text-danger">Address must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onUpdateCollaboratorSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+</block-ui>

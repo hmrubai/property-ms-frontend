@@ -1,0 +1,235 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-sm-4"><h5>Quiz List </h5></div>
+                                <div class="col-sm-3">
+                                    <ng-select placeholder="Select Course" [(ngModel)]="course" (change)="getFilterList()" [items]="masterCourseList"
+                                        [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                            <div>{{item.name}}</div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <ng-select placeholder="Select Class" [(ngModel)]="class" (change)="getFilterList()" [items]="classList"
+                                        [clearable]='true' [clearOnBackspace]='true' bindLabel="title" bindValue="id">
+                                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                            <div>{{item.title}}</div>
+                                        </ng-template>
+                                    </ng-select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)">
+                                <i class=" icofont icofont-plus "></i>Add Quiz</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <ngx-datatable class="material table-bordered" [rows]="quizList"
+                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                        [headerHeight]="30" [footerHeight]="50" rowHeight="auto"
+                                        [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber"
+                                        [limit]="page.size" (page)="setPage($event)">
+
+                                        <ngx-datatable-column [width]="130" name="Medium" prop="medium_name" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Course" prop="course_name" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Class" [width]="105" prop="class_name" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column prop="questions_count"  [width]="130" name="Total Questions" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Question Number (Min)" prop="question_number" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Positive Mark" [width]="115" prop="positive_mark" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Negative Mark" [width]="120" prop="negative_mark" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-info btn-mini mr-1" [routerLink]="['/entrance-quiz-details', row.id ]">
+                                                    <i class="icofont-edit"></i> View
+                                                </button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+
+                        </div>
+                        <!-- end of card-footer -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required">Medium </label> 
+                                <ng-select placeholder="Select Medium" formControlName="medium_id" [items]="mediumList"
+                                    [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div>{{item.name}}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <div *ngIf="submitted && f.medium_id.errors" class="error-text">
+                                    <span *ngIf="f.medium_id.errors.required" class="text-danger"> Medium is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required">Course </label> 
+                                <ng-select placeholder="Select Course" formControlName="master_course_id" [items]="masterCourseList"
+                                    [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div>{{item.name}}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <div *ngIf="submitted && f.master_course_id.errors" class="error-text">
+                                    <span *ngIf="f.master_course_id.errors.required" class="text-danger"> Course is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required">Class </label> 
+                                <ng-select placeholder="Select Class" formControlName="class_id" [items]="classList"
+                                    [clearable]='true' [clearOnBackspace]='true' bindLabel="title" bindValue="id">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div>{{item.title}}</div>
+                                    </ng-template>
+                                </ng-select>
+                                <div *ngIf="submitted && f.class_id.errors" class="error-text">
+                                    <span *ngIf="f.class_id.errors.required" class="text-danger"> Class is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required">Name </label> 
+                                <input formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text"
+                                    class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.name.errors" class="error-text">
+                                    <span *ngIf="f.name.errors.required" class="text-danger">Name is required</span>
+                                    <span *ngIf="f.name.errors.maxlength" class="text-danger">Name must be not then 50 characters</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required">Duration </label> 
+                                <input formControlName="duration" [ngClass]="{ 'is-invalid': submitted && f.duration.errors }" type="number"
+                                    class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.duration.errors" class="error-text">
+                                    <span *ngIf="f.duration.errors.required" class="text-danger">Duration is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Question Number </label>
+                                <input formControlName="question_number" [ngClass]="{ 'is-invalid': submitted && f.question_number.errors }" type="number"
+                                    class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.question_number.errors" class="error-text">
+                                    <span *ngIf="f.question_number.errors.required" class="text-danger">Question Number is required</span>
+                                    <span *ngIf="f.question_number.errors.maxlength" class="text-danger">Question Number must be not then 50 characters</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Positive Mark </label>
+                                <input formControlName="positive_mark" [ngClass]="{ 'is-invalid': submitted && f.positive_mark.errors }" type="number"
+                                    class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.positive_mark.errors" class="error-text">
+                                    <span *ngIf="f.positive_mark.errors.required" class="text-danger">Positive Mark is required</span>
+                                    <span *ngIf="f.positive_mark.errors.maxlength" class="text-danger">Positive Mark must be not then 50 characters</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Negative Mark </label>
+                                <input formControlName="negative_mark" [ngClass]="{ 'is-invalid': submitted && f.negative_mark.errors }" type="number"
+                                    class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.negative_mark.errors" class="error-text">
+                                    <span *ngIf="f.negative_mark.errors.required" class="text-danger">Positive Mark is required</span>
+                                    <span *ngIf="f.negative_mark.errors.maxlength" class="text-danger">Positive Mark must be not then 50 characters</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>

@@ -1,0 +1,250 @@
+<block-ui>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>BSCS Item List </h5>
+
+
+              <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Create Item</button>
+              <!-- <span class="code-header ">use class <code>table</code> inside table element</span> -->
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+                <!-- <div class="col-lg-4 mb-3">
+                  <ng-select [clearable]="false" [clearOnBackspace]="false" (change)="onInstituteChange($event)"
+                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select institute">
+
+                  </ng-select>
+                </div> -->
+              </div>
+              <div class="row ">
+                <div class="col-lg-12 ">
+                  <!-- <ngx-datatable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                    (page)="setPage($event)"> -->
+                  <ngx-datatable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="false" [limit]="10">
+
+                    <ngx-datatable-column [width]="50" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <span> {{ rowIndex + 1}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Type" prop="type_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="200" name="Title" prop="title" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="50" name="Unit Price" prop="unit_price" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="50" name="Mark" prop="mark" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="50" name="Is Active?" prop="is_active" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{value === true? 'Yes':'No'}}">
+                          {{value === true? 'Yes':'No'}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+
+                    <ngx-datatable-column [width]="40" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button class="btn btn-info btn-mini" (click)="getItem(row,template)"><i
+                            class="icofont icofont-edit"></i>Edit</button>
+                      </ng-template>
+                    </ngx-datatable-column>
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <form [formGroup]="entryForm">
+
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <!-- <h5>Institute Information</h5> -->
+              </div>
+              <div class="card-block">
+
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Type </label>
+                  <div class="col-sm-9">
+                    <ng-select formControlName="bscs_item_type_id" [clearable]="false" [clearOnBackspace]="false"
+                      [items]="itemTypeList" [multiple]=false bindLabel="name" bindValue="id"
+                      placeholder="Select type">
+                    </ng-select>
+
+                    <div *ngIf="submitted && f.bscs_item_type_id.errors" class="error-text">
+                      <span *ngIf="f.bscs_item_type_id.errors.required" class="text-danger"> Type is
+                        required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Item Title </label>
+                  <div class="col-sm-9">
+                    <textarea type="text" rows="2" formControlName="title" placeholder="Enter title"
+                      [ngClass]="{ 'is-invalid': submitted && f.title.errors }" type="text" class="form-control" > </textarea>
+
+                    <div *ngIf="submitted && f.title.errors" class="error-text">
+                      <span *ngIf="f.title.errors.required" class="text-danger"> Title is
+                        required</span>
+                      <span *ngIf="f.title.errors.maxlength" class="text-danger">Title must
+                        be not more then
+                        550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Description </label>
+                  <div class="col-sm-9">
+                    <textarea type="text" rows="2" formControlName="description" placeholder="Enter description"
+                      [ngClass]="{ 'is-invalid': submitted && f.description.errors }" type="text" class="form-control" > </textarea>
+
+                    <div *ngIf="submitted && f.description.errors" class="error-text">
+                      <span *ngIf="f.description.errors.required" class="text-danger"> Description is
+                        required</span>
+                      <span *ngIf="f.description.errors.maxlength" class="text-danger">Description must
+                        be not more then
+                        550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group row">
+                      <label class="col-sm-6 col-form-label">Mark </label>
+                      <div class="col-sm-6">
+                        <input type="text" numeric numericType="number" formControlName="mark" placeholder="Enter mark"  class="form-control" /> 
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group row">
+                      <label class="col-sm-6 col-form-label required">Unit Price </label>
+                      <div class="col-sm-6">
+                        <input type="text" numeric numericType="number" formControlName="unit_price" placeholder="Enter unit price" class="form-control" /> 
+                        <div *ngIf="submitted && f.unit_price.errors" class="error-text">
+                          <span *ngIf="f.unit_price.errors.required" class="text-danger"> Unit price is required</span>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group row">
+                      <label class="col-sm-6 col-form-label required">Min Word Count </label>
+                      <div class="col-sm-6">
+                        <input type="text" numeric numericType="number" formControlName="min_word_count" placeholder="Enter min count"  class="form-control" /> 
+
+                        <div *ngIf="submitted && f.min_word_count.errors" class="error-text">
+                          <span *ngIf="f.min_word_count.errors.required" class="text-danger"> Min word count is required</span>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group row">
+                      <label class="col-sm-6 col-form-label required">Max Word Count </label>
+                      <div class="col-sm-6">
+                        <input type="text" numeric numericType="number" formControlName="max_word_count" placeholder="Enter max count" class="form-control" /> 
+
+                        <div *ngIf="submitted && f.max_word_count.errors" class="error-text">
+                          <span *ngIf="f.max_word_count.errors.required" class="text-danger"> Max word count is required</span>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group row text-left">
+                      <label class="col-sm-6 col-form-label">Is Active? </label>
+                      <div class="col-sm-6 mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_active">
+                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               
+
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+
+
+
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+</block-ui>

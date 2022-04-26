@@ -1,0 +1,392 @@
+<block-ui>
+
+  <div class="row">
+      <div class="col-lg-6">
+            <div class="form-group">
+                <label class="col-form-label font-weight-bold">Select Property </label>
+                <ng-select [(ngModel)]="property_id" (change)="changeProperty($event)" [clearable]="true" [clearOnBackspace]="false" [items]="propertyList" [multiple]=false bindLabel="name" bindValue="id" placeholder="Select Property">
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                      <div> {{item.name}} | {{item.address}} - ({{item.total_floor_space}} m<sup>2</sup>)</div>
+                    </ng-template>
+                </ng-select>
+            </div>
+      </div>
+      <div class="col-lg-12 mb-4">
+        <hr/>
+        <div class="row">
+            <div class="col-lg-12" *ngIf="!is_loaded">
+              <p>No property selected. Please, Select property.</p>
+            </div>
+            <div class="col-lg-3" *ngIf="is_loaded">
+                <img src="assets/images/{{propertyDetails.image}}" class="property-img" alt=""/>
+            </div>
+            <div class="col-lg-9" *ngIf="is_loaded">
+                <br/>
+                <h3>Property Details</h3>
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td>
+                                Name Of Building: <strong>{{ propertyDetails.name }}</strong> 
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Address: <strong>{{ propertyDetails.address }}</strong> 
+                            </td>
+                            <td>Total floor space: <strong>{{ propertyDetails.total_floor_space }}  m<sup>2</sup></strong></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                Completion Date of Construction: <strong>{{ propertyDetails.completion_date_of_construction }}</strong> 
+                            </td>
+                            <td>Total floor space for rent: <strong>{{ propertyDetails.total_floor_space_for_rent }}  m<sup>2</sup></strong></td>
+                        </tr>
+                    </tbody>
+                    </table>
+            </div>
+        </div>
+        <hr/>
+      </div>
+      <div class="col-lg-6">
+          <div class="row">
+            <div class="col-md-12">
+              <h4> <i class="fa fa-list"></i> Income & Cost</h4>
+            </div>
+            <div class="col-md-4">
+              <div class="card-counter success">
+                <i class="icofont icofont-chart-line"></i>
+                <span class="count-name">Monthly Income</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-counter success">
+                <i class="icofont icofont-chart-line"></i>
+                <span class="count-name">Monthly Cost</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-counter success">
+                <i class="icofont icofont-chart-line"></i>
+                <span class="count-name">Monthly Profit</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-3" style="width: 100%; height: 500px; overflow-y: scroll;">
+              <div class="card-header" *ngIf="tutuorCallList.list.length === 0">
+                  <h4 class="card-title mb-0">Monthly Trends (Income, Cost, Profit). </h4>
+              </div>
+              <highcharts-chart [Highcharts]="Highcharts" *ngIf="tutuorCallList.list.length>0"
+                  [options]="tutorChartOptions" style="width: 100%;height: 100%; position:absolute;">
+              </highcharts-chart>
+          </div>
+      </div>
+
+      <div class="col-lg-6">
+          <div class="row">
+            <div class="col-md-12">
+              <h4> <i class="fa fa-home"></i> Status of Occupancy</h4>
+            </div>
+            <div class="col-md-4">
+              <div class="card-counter info">
+                <i class="icofont icofont-ui-home"></i>
+                <span class="count-name">Total Area(tsubo)</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-counter info">
+                <i class="icofont icofont-ui-home"></i>
+                <span class="count-name">Vacancy Area(tsubo)</span>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-counter info">
+                <i class="icofont icofont-chart-line"></i>
+                <span class="count-name">Vacancy Rate</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-3" style="width: 100%; height: 500px; overflow-y: scroll;">
+              <div class="card-header" *ngIf="vacancRate.list.length === 0">
+                  <h4 class="card-title mb-0">Monthly Trends (Vacancy Rate). </h4>
+              </div>
+              <highcharts-chart [Highcharts]="Highcharts" *ngIf="vacancRate.list.length>0"
+                  [options]="vacancRateOptions" style="width: 100%;height: 100%; position:absolute;">
+              </highcharts-chart>
+          </div>
+      </div>
+
+      <div class="col-lg-6 mt-4">
+        <h4> <i class="fa fa-calendar"></i> Event Schedule</h4>
+        <full-calendar [options]="calendarOptions"></full-calendar>
+      </div>
+      <div class="col-lg-6 mt-4">
+        <h4> <i class="fa fa-envelope"></i> Messaging</h4>
+        <div class="messaging">
+          <div class="inbox_msg">
+            <div class="inbox_people">
+              <div class="headind_srch">
+                <div class="recent_heading">
+                  <h4>Recent</h4>
+                </div>
+              </div>
+              <div class="inbox_chat">
+                <div class="chat_list active_chat">
+                  <div class="chat_people">
+                    <div class="chat_img"> <img src="assets/images/user_icon.png" alt="HM Rubai"> </div>
+                    <div class="chat_ib">
+                      <h5>HM Rubai <span class="chat_date">Dec 25</span></h5>
+                      <p>Test, which is a new approach to have all solutions 
+                        astrology under one roof.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="chat_list">
+                  <div class="chat_people">
+                    <div class="chat_img"> <img src="assets/images/user_icon.png" alt="HM Rubai"> </div>
+                    <div class="chat_ib">
+                      <h5>HM Rubai <span class="chat_date">Dec 25</span></h5>
+                      <p>Test, which is a new approach to have all solutions 
+                        astrology under one roof.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="chat_list">
+                  <div class="chat_people">
+                    <div class="chat_img"> <img src="assets/images/user_icon.png" alt="HM Rubai"> </div>
+                    <div class="chat_ib">
+                      <h5>HM Rubai <span class="chat_date">Dec 25</span></h5>
+                      <p>Test, which is a new approach to have all solutions 
+                        astrology under one roof.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="chat_list">
+                  <div class="chat_people">
+                    <div class="chat_img"> <img src="assets/images/user_icon.png" alt="HM Rubai"> </div>
+                    <div class="chat_ib">
+                      <h5>HM Rubai <span class="chat_date">Dec 25</span></h5>
+                      <p>Test, which is a new approach to have all solutions 
+                        astrology under one roof.</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="chat_list">
+                  <div class="chat_people">
+                    <div class="chat_img"> <img src="assets/images/user_icon.png" alt="HM Rubai"> </div>
+                    <div class="chat_ib">
+                      <h5>HM Rubai <span class="chat_date">Dec 25</span></h5>
+                      <p>Test, which is a new approach to have all solutions 
+                        astrology under one roof.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mesgs">
+              <div class="msg_history">
+                <div class="incoming_msg">
+                  <div class="incoming_msg_img"> <img src="assets/images/user_icon.png" alt="HM Rubai"> </div>
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p>Test which is a new approach to have all solutions</p>
+                      <span class="time_date"> 11:01 AM    |    June 9</span></div>
+                  </div>
+                </div>
+                <div class="outgoing_msg">
+                  <div class="sent_msg">
+                    <p>Test which is a new approach to have all solutions</p>
+                    <span class="time_date"> 11:01 AM    |    June 9</span> </div>
+                </div>
+                <div class="incoming_msg">
+                  <div class="incoming_msg_img"> <img src="assets/images/user_icon.png" alt="HM Rubai"> </div>
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p>Test, which is a new approach to have</p>
+                      <span class="time_date"> 11:01 AM    |    Yesterday</span></div>
+                  </div>
+                </div>
+                <div class="outgoing_msg">
+                  <div class="sent_msg">
+                    <p>Apollo University, Delhi, India Test</p>
+                    <span class="time_date"> 11:01 AM    |    Today</span> </div>
+                </div>
+                <div class="incoming_msg">
+                  <div class="incoming_msg_img"> <img src="assets/images/user_icon.png" alt="HM Rubai"> </div>
+                  <div class="received_msg">
+                    <div class="received_withd_msg">
+                      <p>We work directly with our designers and suppliers,
+                        and sell direct to you, which means quality, exclusive
+                        products, at a price anyone can afford.</p>
+                      <span class="time_date"> 11:01 AM    |    Today</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="type_msg">
+                <div class="input_msg_write">
+                  <input type="text" class="write_msg" placeholder="Type a message" />
+                  <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 mt-4">
+        <h4> <i class="fa fa-list"></i> Alert</h4>
+        <p>Not submited notification of termination</p>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+                <th scope="col">Building</th>
+                <th scope="col">Company</th>
+                <th scope="col">End of Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td>Mitsui Building</td>
+                <td>ABC Company</td>
+                <td>2022/04/30</td>
+            </tr>
+            <tr>
+                <td>Mitsui Building</td>
+                <td>XYZ Company</td>
+                <td>2022/02/28</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-lg-12 mt-4">
+        <h4> <i class="fa fa-list"></i> Rent Roll</h4>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+                <th scope="col">Floor</th>
+                <th scope="col">Room</th>
+                <th scope="col">Use</th>
+                <th scope="col">Tenant Name</th>
+                <th scope="col">Contact Type</th>
+                <th scope="col">Area (m<sup>2</sup>)</th>
+                <th scope="col">Area (tsubo)</th>
+                <th scope="col">Unit rent including<br> common expenses</th>
+                <th scope="col">Rent including<br> common services (yen)</th>
+                <th scope="col">Diposit Months</th>
+                <th scope="col">Diposit</th>
+                <th scope="col">Contract Start</th>
+                <th scope="col">Contract End</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td>7</td>
+                <td>701</td>
+                <td>Office</td>
+                <td>ABC Company</td>
+                <td>Fixed Term</td>
+                <td>19.58</td>
+                <td>5.90</td>
+                <td>29,144</td>
+                <td>172,000</td>
+                <td>3</td>
+                <td>516,000</td>
+                <td>2021/04/01</td>
+                <td>2022/04/01</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>701</td>
+                <td>Office</td>
+                <td>ABC Company</td>
+                <td>Fixed Term</td>
+                <td>19.58</td>
+                <td>5.90</td>
+                <td>29,144</td>
+                <td>172,000</td>
+                <td>3</td>
+                <td>516,000</td>
+                <td>2021/04/01</td>
+                <td>2022/04/01</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>701</td>
+                <td>Office</td>
+                <td>ABC Company</td>
+                <td>Fixed Term</td>
+                <td>19.58</td>
+                <td>5.90</td>
+                <td>29,144</td>
+                <td>172,000</td>
+                <td>3</td>
+                <td>516,000</td>
+                <td>2021/04/01</td>
+                <td>2022/04/01</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>701</td>
+                <td>Office</td>
+                <td>ABC Company</td>
+                <td>Fixed Term</td>
+                <td>19.58</td>
+                <td>5.90</td>
+                <td>29,144</td>
+                <td>172,000</td>
+                <td>3</td>
+                <td>516,000</td>
+                <td>2021/04/01</td>
+                <td>2022/04/01</td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>701</td>
+                <td>Office</td>
+                <td>ABC Company</td>
+                <td>Fixed Term</td>
+                <td>19.58</td>
+                <td>5.90</td>
+                <td>29,144</td>
+                <td>172,000</td>
+                <td>3</td>
+                <td>516,000</td>
+                <td>2021/04/01</td>
+                <td>2022/04/01</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-lg-12 mt-4">
+        <h4> <i class="fa fa-list"></i> Stacking</h4>
+        <!--<table class="table table-bordered">
+          <thead>
+            <tr>
+                <th colspan="5" class="text-center">
+                    701 <br/> ABC Company <br/> 19.52 (m<sup>2</sup>)  | 5.90 Sf <br/> 2022/02/28 - 2022/04/30
+                </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+                <td>7th</td>
+                <td>703</td>
+                <td>XYZ Company</td>
+                <td>Fixed Term</td>
+                <td>19.58</td>
+            </tr>
+          </tbody>
+        </table>-->
+        <img src="assets/images/Stacking.png" width="100%" alt="">
+      </div>
+
+    </div>
+
+
+</block-ui>

@@ -1,0 +1,14 @@
+@media (min-width: 992px) {
+    .modal-lg {
+        max-width: 1024px !important;
+    }
+}
+
+.image-size{
+    width: 120px !important;
+    height: 120 !important;;
+}
+
+.text-align-left{
+    text-align: left;
+}

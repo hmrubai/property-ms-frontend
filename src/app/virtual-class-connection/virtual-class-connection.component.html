@@ -1,0 +1,185 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header"></div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-6 box-shadow-one pt-2 bp-2">
+                                    <h3>Select Project</h3>
+                                    <ng-select placeholder="Select Project" (change)="changeProject($event)"  [items]="projectList"
+                                        [clearable]='true' [clearOnBackspace]='true' bindLabel="name">
+                                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                            <div> {{item.name}} </div>
+                                        </ng-template>
+                                    </ng-select>
+                                    <br/>
+                                </div>
+                                <div class="col-lg-6 box-shadow-one pt-2 bp-2">
+                                    <h3>Assesments</h3>
+                                    <div class="list-group list-group-horizontal" *ngIf="assesmentList.length > 0">
+                                        <button type="button"  *ngFor="let item of assesmentList; let i=index" class="list-group-item list-group-item-action">{{ item.test_name }}</button>
+                                    </div>
+                                    <div class="list-group" *ngIf="assesmentList.length == 0 && !first_loaded">
+                                        <button type="button" class="list-group-item list-group-item-action">No assesment found!</button>
+                                    </div>
+                                    <div class="list-group" *ngIf="assesmentList.length == 0 && first_loaded">
+                                        <button type="button" class="list-group-item list-group-item-action">Please select project!</button>
+                                    </div>
+                                    <br/>
+                                </div>
+                                <div class="col-lg-6 box-shadow-one pt-2 bp-2" *ngIf="!is_tutor_selected && projectId">
+                                    <h3>Search Tutor</h3>
+                                    <input type="text" class="form-control" (input)="GetTutorList()" [(ngModel)]="search_tutor" />
+                                    <br/>
+                                    <div class="list-group" *ngIf="tutorList.length > 0">
+                                        <button type="button"  *ngFor="let tutor of tutorList; let i=index" class="list-group-item list-group-item-action">
+                                        {{ tutor.name }} - {{ tutor.mobile_no_1 }}
+                                            <button class="btn btn-success btn-sm float-right" (click)="selectTutor(tutor)"> Select </button>
+                                        </button>
+                                    </div>
+                                    <br/>
+                                </div>
+                                <div class="col-lg-6 box-shadow-one pt-2 bp-2" *ngIf="is_tutor_selected">
+                                    <h4>Tutor Information <button class="btn btn-warning btn-sm float-right" (click)="CancelTutor()"> Cancel </button></h4>
+                                    <div class="list-group pt-2 bp-2">
+                                        <button type="button" class="list-group-item list-group-item-action"><strong>Name:</strong> {{ tutorDetails.name }} <button class="btn btn-outline-info btn-mini float-right" (click)="EditTutorSecret(tutorDetails,template)"> Edit </button></button>
+                                        <button type="button" class="list-group-item list-group-item-action"><strong>Mobile:</strong> {{ tutorDetails.mobile_no_1 }}</button>
+                                        <button type="button" class="list-group-item list-group-item-action"><strong>Zoom Id:</strong> {{ tutorDetails.zoom_id }}</button>
+                                        <button type="button" class="list-group-item list-group-item-action"><strong>Zoom Password:</strong> {{ tutorDetails.zoom_password }}</button>
+                                        <button type="button" class="list-group-item list-group-item-action"><strong>Zoom API Key:</strong> {{ tutorDetails.z_api_key }}</button>
+                                        <button type="button" class="list-group-item list-group-item-action"><strong>Zoom API Secret:</strong> {{ tutorDetails.z_api_secret }}</button>
+                                        <button type="button" class="list-group-item list-group-item-action"><strong>Zoom Token:</strong> {{ tutorDetails.z_token | slice:0:50 }}..</button>
+                                    </div>
+                                    <hr/>
+                                    <h5 *ngIf="selectedStudentList.length > 0">Selected Student List </h5> <button class="btn btn-success btn-sm float-right" *ngIf="selectedStudentList.length > 0" (click)="SubmitStudent()"> Submit </button>
+                                    <br/>
+                                    <ul class="list-inline mt-3" *ngIf="selectedStudentList.length > 0">
+                                        <li class="list-inline-item mt-1" *ngFor="let student of selectedStudentList; let i=index">{{ student.name }} <button class="btn btn-danger btn-mini" (click)="removeStudent(student)"><i class="icofont-ui-close"></i></button></li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-6 box-shadow-one pt-2 bp-2" *ngIf="is_tutor_selected && !tutorDetails.zoom_id">
+                                    <p class="text-danger">Tutor's profile is not ready!</p>
+                                </div>
+                                <div class="col-lg-6 box-shadow-one pt-2 bp-2" *ngIf="is_tutor_selected && tutorDetails.zoom_id">
+                                    <h4>Select Student <input type="text" class="form-control" placeholder="Search by name or phone" (input)="GetStudentList()" [(ngModel)]="search_student" /></h4>
+                                    <ngx-datatable class="material table-bordered" [rows]="studentList"
+                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                        [headerHeight]="30" [footerHeight]="50" rowHeight="auto"
+                                        [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber"
+                                        [limit]="page.size" (page)="setPage($event)">
+
+                                        <ngx-datatable-column name="Name" prop="name" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Mobile" prop="mobile_no" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-info btn-mini mr-1" *ngIf="!row.is_selected"
+                                                    (click)="selectStudent(row)">
+                                                    <i class="icofont-check-circled"></i> Select
+                                                </button>
+                                                <button class="btn btn-warning btn-mini mr-1" *ngIf="row.is_selected"
+                                                    (click)="removeStudent(row)">
+                                                    <i class="icofont-check-circled"></i> Remove
+                                                </button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold"> Zoom ID </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_id" [ngClass]="{ 'is-invalid': submitted && f.zoom_id.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_id.errors" class="error-text">
+                                <span *ngIf="f.zoom_id.errors.required" class="text-danger">Zoom ID is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom Password </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_password" [ngClass]="{ 'is-invalid': submitted && f.zoom_password.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_password.errors" class="error-text">
+                                <span *ngIf="f.zoom_password.errors.required" class="text-danger">Zoom Password is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom API Key </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_api_key" [ngClass]="{ 'is-invalid': submitted && f.zoom_api_key.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_api_key.errors" class="error-text">
+                                <span *ngIf="f.zoom_api_key.errors.required" class="text-danger">Zoom API Key is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom API Secret </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_api_secret" [ngClass]="{ 'is-invalid': submitted && f.zoom_api_secret.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_api_secret.errors" class="error-text">
+                                <span *ngIf="f.zoom_api_secret.errors.required" class="text-danger">Zoom API Secret is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom Token </label>
+                        <div class="col-sm-8">
+                            <textarea formControlName="zoom_token" [ngClass]="{ 'is-invalid': submitted && f.zoom_token.errors }" type="text" class="form-control" autocomplete="off" cols="30" rows="5"></textarea>
+                            <div *ngIf="submitted && f.zoom_token.errors" class="error-text">
+                                <span *ngIf="f.zoom_token.errors.required" class="text-danger">Token is required</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>

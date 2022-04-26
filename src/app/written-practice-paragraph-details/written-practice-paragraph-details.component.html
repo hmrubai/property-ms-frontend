@@ -1,0 +1,286 @@
+<block-ui>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card card-border-primary">
+            <div class="card-block ">
+
+              <div class="container">
+                <div class="row row-cols-2">
+                  <div class="col">
+                    <div class="row">
+                      <div class="col-2">
+                        <img *ngIf="!detail.image" class="media-object card-list-img image-size img-circle mb-2"
+                          src="assets/images/avatar-5.png" alt="Image">
+                        <img *ngIf="detail.image" class="media-object card-list-img image-size img-circle mb-2"
+                          src="{{detail.image}}" alt="Image">
+                      </div>
+                      <div class="col-10 pt-3">
+                        <span class="custom-text">{{ detail.name }}</span><br>
+                        <span class="custom-text">{{ detail.phone }}</span>
+
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col">
+                    <span><b>Course :</b> {{ detail.courseName }}</span><br>
+                    <span  *ngIf="detail.status === 0">
+                      <b>Status: </b>  <button class="badge  badge-primary">Assigned</button>
+                      </span>                                                
+                      <span  *ngIf="detail.status === 1">
+                      <b>Status: </b> <button class="badge badge-info" >Answered</button>
+                      </span>
+                      <span  *ngIf="detail.status === 2">
+                      <b>Status: </b> <button class="badge  badge-info" >Correction Requested</button>
+                      </span>
+                      <span  *ngIf="detail.status === 3">
+                      <b>Status: </b>  <button class="badge badge-info" >Corrected</button>
+                      </span>
+                      <span  *ngIf="detail.status === 4">
+                       <b>Status: </b> <button class="badge badge-success " >Completed</button>
+                      </span>
+<br>
+                   
+                    <span><b>Total Mark :</b> {{ detail.totalMark }}</span><br>
+                    <span class="custom-text"><b>Tutor : </b>{{ detail.tutorName }}</span>
+                  </div>
+                  <hr>
+                  <div class="col-12"> <span><b>Title :</b> {{ detail.title }}</span></div>
+                  <div class="col-12"> <span><b>Description :</b> {{ detail.description }}</span></div>
+                </div>
+              </div>
+              <br>
+              <!-- <div class="col-lg-12"
+                *ngFor="let correction of correctionList | paginate: { itemsPerPage: page.size, currentPage: page.pageNumber, totalItems: page.totalElements  }; let i=index">
+                <div class="card user-card mb-3">
+                  <div class="card-block">
+                    <div class="media">
+                      <div class="media-body">
+                        <a href="#">
+                          <div class="row">
+                            <div class="col-12">
+                              <p><b>Class :</b> {{correction.course_name}}</p>
+                              <p><b>Created On :</b> {{correction.complete_date | amDateFormat :
+                                'MMMM DD,YYYY'}}</p>
+                              <p class="text-wrap"><b>Title :</b> {{correction.title}}</p>
+                            </div>
+                            <div class="col-sm-12">
+                              <div class="row">
+                                <div class="col-6 text-left">
+                                  <button *ngIf="correction.is_completed"
+                                    class="btn btn-success btn-mini mr-2 ">Completed</button>
+                                  <button *ngIf="!correction.is_completed" class="btn btn-error btn-mini mr-2">Not
+                                    Completed</button>
+                                </div>
+                                <div class="col-6 text-right">
+                                  <span><b>Student :</b> {{correction.student_name}}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row text-center mt-5">
+                <div class="col-md-3 col-xs-12">
+                  <p *ngIf="page"> {{page.showingResult()}}</p>
+                </div>
+                <div class="col-md-9 col-xs-12">
+                  <nav>
+
+                    <pagination-controls (pageChange)="setPage($event)" responsive="true">
+                    </pagination-controls>
+                  </nav>
+                </div>
+              </div> -->
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card " style="border:0">
+            <div class="card-block ">
+
+              <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <p class="pull-left custom-text">Student's Answer</p>
+                        <p class="pull-right custom-text">{{answer.created_at | amDateFormat : 'hh:mm a MMMM DD, YYYY'}}</p>
+                      </div>
+                      <div class="col-12">
+                        <span *ngIf="answer.answer">{{answer.answer}}</span><br>
+                        <span *ngIf="answer.total_words" class="custom-text"><b>TOTAL WORDS:</b> {{answer.total_words}}</span>
+                      </div>
+                      <div class="col-12">
+                        
+                        <div class="div" *ngFor="let item of answer.files">
+                          <img  class="media-object card-list-img image-size  mb-2" (click)="openModalImage(template,item.file)"
+                          src="{{item.file}}" alt="Image">
+                        </div>
+                      </div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+<br>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card " style="border:0">
+            <div class="card-block ">
+
+              <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <p class="pull-left custom-text">Tutor's Correction</p>
+                        <p class="pull-right custom-text">{{correction.created_at | amDateFormat : 'hh:mm a MMMM DD, YYYY'}}</p>
+                      </div>
+                      <div class="col-12">
+                        <p class="pull-right custom-text text-danger"><b>Given Mark: {{correction.given_mark}} / 5</b></p>
+                      </div>
+                      <div class="col-12">
+                        <span><div [innerHtml]="correction.correction_note"></div></span><br>
+                        <span *ngIf="correction.admin_name"><i>Updated by: </i><b>{{correction.admin_name}}</b></span><br>
+                        <button class="btn btn-info btn-sm mt-2" (click)="OpenNoteModel(notetemplate)">Edit</button>
+                      </div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+<br>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card " style="border:0">
+            <div class="card-block ">
+
+              <div class="container">
+                    <div class="row">
+                      <div class="col-12">
+                        <p class="pull-left custom-text">Tutor's Feedback</p>
+                      </div>
+                    
+                      <div class="col-12">
+                        <span>{{correction.tutor_feedback}}</span><br>
+                        <button class="btn btn-info btn-sm mt-2" (click)="OpenFeedbackModel(feedtemplate)">Edit</button>
+                      </div>
+                    </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <ng-template #feedtemplate>
+    <div class="modal-header ">
+    </div>
+    <div class="modal-body ">
+        <app-card>
+          
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                       
+                        <textarea rows="10" [(ngModel)]="correction.tutor_feedback" type="text"
+                            class="form-control" autocomplete="off"></textarea>
+                        
+                    </div>
+                </div>
+           
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2 " (click)="closeFeedbackModel()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+            <button class="btn btn-success btn-outline-success " (click)="onFeedbackSubmit()">
+                <i class="icofont icofont-check-circled"></i> Update
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+  <ng-template #notetemplate>
+    <div class="modal-header ">
+    </div>
+    <div class="modal-body ">
+        <app-card>
+          
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                      <!-- <angular-editor id="myEditor" [(ngModel)]="correction.correction_note" [config]="config"></angular-editor> -->
+                        <!-- <textarea rows="10" [(ngModel)]="correction.correction_note" type="text"
+                            class="form-control" autocomplete="off"></textarea>
+                         -->
+                         <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+                         <ngx-editor [editor]="editor" [(ngModel)]="correction.correction_note" [disabled]="false"
+                             [placeholder]="'Type here...'"></ngx-editor>
+                    </div>
+                </div>
+           
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2 " (click)="closeNoteModel()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+            <button class="btn btn-success btn-outline-success " (click)="onNoteSubmit()">
+                <i class="icofont icofont-check-circled"></i> Update
+            </button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #template>
+  <div class="modal-header pt-2 pb-2">
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideImage()">
+          <i class="icofont icofont-close"></i>
+      </button>
+  </div>
+  <div class="modal-body">
+      <div class="card borderless head mb-0">
+          <img *ngIf="imageSource" [src]="imageSource" class="card-img-top " >
+      </div>
+
+  </div>
+  <div class="modal-footer pt-1 pb-1">
+      <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHideImage()">
+          <i class="icofont icofont-close"></i> Close
+      </button>
+      
+  </div>
+</ng-template>
+
+</block-ui>

@@ -1,0 +1,179 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header"></div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-6 box-shadow-one pt-2 bp-2 align-middle">
+                                    <h5 class="align-self-center">Select Date</h5>
+                                    <input type="text" class="form-control align-self-center" [(ngModel)]="filterDate" (ngModelChange)="getDetails()" [bsConfig]="bsConfig" bsDatepicker readonly>
+                                    <br/>
+                                </div>
+                                <div class="col-lg-6 box-shadow-one pt-2 bp-2">
+                                    <h5 class="mb-2">Student Details</h5>
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="media" *ngIf="studentDetails">
+                                                        <a class="media-left" href="javascript:;">
+                                                            <img class="media-object img-circle card-list-img" *ngIf="!studentDetails.profile_pic" src="assets/images/avatar-5.png" alt="Profile Image">
+                                                            <img *ngIf="studentDetails.profile_pic" class="media-object img-circle card-list-img image-size" src="{{ studentDetails.profile_pic }}" alt="{{ studentDetails.name }}">
+                                                        </a>
+                                                        <div class="media-body">
+                                                            <div class="col-xs-12">
+                                                                <h6 class="d-inline-block">{{ studentDetails.name }}</h6>
+                                                            </div>
+                                                            <div class="f-13 text-muted"><i class="icofont-phone"></i> <strong>{{ studentDetails.mobile_no }}</strong> </div>
+                                                            <div class="f-13 text-muted"><strong>Email: </strong> {{ studentDetails.email }}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <br/>
+                                </div>
+                                <div class="col-lg-12" *ngIf="allVirtualClassList.length > 0">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Tutor</th>
+                                                <th>V-Class ID</th>
+                                                <th>Class Start</th>
+                                                <th>Class End</th>
+                                                <th>Log Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let class of allVirtualClassList; let i=index">
+                                                <td class="align-middle"><a [routerLink]="['/tutor-external-virtual-class-history', class.tutor_id ]">{{ class.host_name  }}</a></td>
+                                                <td class="align-middle">{{ class.meeting_id  }}</td>
+                                                <td class="align-middle">{{ class.start_time | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A' }}</td>
+                                                <td class="align-middle">{{ class.end_time | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A' }}</td>
+                                                <td>
+                                                    <table class="table table-hover">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Join Time</th>
+                                                                <th>Leave Time</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr *ngFor="let item of class.student_participants; let j=index">
+                                                                <td>{{ item.join_time | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A' }}</td>
+                                                                <td>{{ item.leave_time | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A' }}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-12" *ngIf="allVirtualClassList.length == 0">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Tutor</th>
+                                                <th>V-Class ID</th>
+                                                <th>Class Start</th>
+                                                <th>Class End</th>
+                                                <th>Log Details</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5">No Data Found!</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--<ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold"> Zoom ID </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_id" [ngClass]="{ 'is-invalid': submitted && f.zoom_id.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_id.errors" class="error-text">
+                                <span *ngIf="f.zoom_id.errors.required" class="text-danger">Zoom ID is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom Password </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_password" [ngClass]="{ 'is-invalid': submitted && f.zoom_password.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_password.errors" class="error-text">
+                                <span *ngIf="f.zoom_password.errors.required" class="text-danger">Zoom Password is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom API Key </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_api_key" [ngClass]="{ 'is-invalid': submitted && f.zoom_api_key.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_api_key.errors" class="error-text">
+                                <span *ngIf="f.zoom_api_key.errors.required" class="text-danger">Zoom API Key is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom API Secret </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_api_secret" [ngClass]="{ 'is-invalid': submitted && f.zoom_api_secret.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_api_secret.errors" class="error-text">
+                                <span *ngIf="f.zoom_api_secret.errors.required" class="text-danger">Zoom API Secret is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom Token </label>
+                        <div class="col-sm-8">
+                            <textarea formControlName="zoom_token" [ngClass]="{ 'is-invalid': submitted && f.zoom_token.errors }" type="text" class="form-control" autocomplete="off" cols="30" rows="5"></textarea>
+                            <div *ngIf="submitted && f.zoom_token.errors" class="error-text">
+                                <span *ngIf="f.zoom_token.errors.required" class="text-danger">Token is required</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>-->
+
+</block-ui>

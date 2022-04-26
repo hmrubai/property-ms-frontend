@@ -1,0 +1,873 @@
+<block-ui>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary" *ngIf="is_loaded">
+            <div class="card-header">
+              <!-- <div class="row">
+                <div class="col-4">
+                  <h5> &nbsp; </h5>
+                </div>
+                <div class="col-7">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group row ">
+                        <label class="col-sm-3 pt-2">Status </label>
+                        <div class="col-sm-8">
+                          <select name="select" (change)="changeStatus($event.target.value, studentDetails)"
+                            class="form-control">
+                            <option value="">Change Status</option>
+                            <option *ngIf="studentDetails.status == 'Pending'" selected value="Pending">Pending</option>
+                            <option *ngIf="studentDetails.status != 'Pending'" value="Pending">Pending</option>
+                            <option *ngIf="studentDetails.status == 'Available'" selected value="Available">Approve
+                            </option>
+                            <option *ngIf="studentDetails.status != 'Available'" value="Available">Approve</option>
+                            <option *ngIf="studentDetails.status == 'On-Hold'" selected value="On-Hold">On-Hold</option>
+                            <option *ngIf="studentDetails.status != 'On-Hold'" value="On-Hold">On-Hold</option>
+                            <option *ngIf="studentDetails.status == 'Suspended'" selected value="Suspended">Suspended
+                            </option>
+                            <option *ngIf="studentDetails.status != 'Suspended'" value="Suspended">Suspend</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group row ">
+                        <label class="col-sm-4 pt-2">BacBon Rank </label>
+                        <div class="col-sm-8">
+                          <select name="select" (change)="changeRank($event.target.value, studentDetails)"
+                            class="form-control">
+                            <option value="">Change Rank</option>
+                            <option *ngIf="studentDetails.bacbon_rank == 'Platinum'" selected value="Platinum">Platinum
+                            </option>
+                            <option *ngIf="studentDetails.bacbon_rank != 'Platinum'" value="Platinum">Platinum</option>
+                            <option *ngIf="studentDetails.bacbon_rank == 'Gold'" selected value="Gold">Gold</option>
+                            <option *ngIf="studentDetails.bacbon_rank != 'Gold'" value="Gold">Gold</option>
+                            <option *ngIf="studentDetails.bacbon_rank == 'Silver'" selected value="Silver">Silver</option>
+                            <option *ngIf="studentDetails.bacbon_rank != 'Silver'" value="Silver">Silver</option>
+                            <option *ngIf="studentDetails.bacbon_rank == null" selected value="null">None</option>
+                            <option *ngIf="studentDetails.bacbon_rank != null" value="null">None</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-1">
+                  <button class="btn btn-secondary btn-sm float-right" (click)="backTo()">
+                    < Back </button>
+                </div>
+              </div> -->
+            </div>
+
+            <div class="card-block ">
+              <div class="row ">
+                <div class="col-lg-12">
+                  <div class="card user-card mb-3">
+                    <div class="card-block">
+                      <div class="media">
+                        <div class="media-body">
+
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <h5> {{ studentDetails.name }} </h5> 
+                               <!-- <span *ngIf="studentDetails.bacbon_rank"
+                                class="badge badge-secondary rank-button"
+                                [ngClass]="{'gold-color': studentDetails.bacbon_rank === 'Gold','platinum-color': studentDetails.bacbon_rank === 'Platinum','silver-color': studentDetails.bacbon_rank === 'Silver'}">
+                                <i class="fa fa-bolt"></i>
+                                {{ studentDetails.bacbon_rank }}
+                              </span> -->
+
+                              <!-- <label class="ml-2 label label-md label-info "> <i class="icofont-star"></i>
+                                {{ studentDetails.guardian_rating }}</label> -->
+
+                                <button class="btn btn-info btn-mini float-right ml-2"
+                                (click)="updateCurrentAddressModal(studentDetails, templateAddress)"><i class="fa fa-edit"></i> Address Edit</button>
+                                <button class="btn btn-success btn-mini float-right"
+                                (click)="openProfileModal(studentDetails, profileTemplate)"><i class="fa fa-edit"></i> Profile Edit</button>
+                              
+                              <hr>
+                            </div>
+
+
+                            <div class="col-sm-12 row">
+                              <div class="col-3">
+                                <img *ngIf="!studentDetails.profile_pic"
+                                  class="media-object card-list-img image-size mb-2" src="assets/images/avatar-5.png"
+                                  alt="Image">
+                                <img *ngIf="studentDetails.profile_pic" class="media-object card-list-img image-size mb-2"
+                                  src="https://api.bacbontutors.com/V2/uploads/tutors/{{studentDetails.profile_pic}}"
+                                  alt="Image">
+                                <br>
+                              </div>
+                              
+                              <div class="col-9">
+                                <div class="row">
+                                  <div class="col-sm-4">
+                                    <p><strong>Mobile No: </strong> {{ studentDetails.mobile_no }}</p>
+                                    <p><strong>Email: </strong> {{ studentDetails.email }}</p>
+                                    <p><strong>Gender: </strong> {{ studentDetails.gender }}</p>
+                                    <p><strong *ngIf="studentDetails.date_of_birth && studentDetails.date_of_birth!='1970-01-01 00:00:00'">Date of Birth: </strong>
+                                      {{ studentDetails.date_of_birth | date : 'MMM d, y' }}</p>
+                                      
+                                      <p><strong *ngIf="studentDetails.created_at">Register date: </strong>
+                                      {{ studentDetails.created_at | date : 'MMM d, y' }}</p>
+                                  </div>
+                                 
+                                  <div class="col-sm-4">
+                                    <p><strong>Father Name: </strong> {{ studentDetails.father_name }}</p>
+                                    <p><strong>Father Mobile: </strong> {{ studentDetails.father_mobile }}</p>
+                                    <p><strong>Mother Name: </strong> {{ studentDetails.mother_name }}</p>
+                                    <p><strong>Father Mobile: </strong> {{ studentDetails.mother_mobile }}</p>
+                                  </div>
+                                 
+                                  <div class="col-sm-4">
+                                    <p><strong>Division: </strong> <span *ngIf="studentDetails.rel_division">{{ studentDetails.rel_division.name }}</span> </p>
+                                    <p><strong>District: </strong> <span *ngIf="studentDetails.rel_district">{{ studentDetails.rel_district.name }}</span></p>
+                                    <p><strong>Area: </strong> <span *ngIf="studentDetails.rel_area">{{ studentDetails.rel_area.name }}</span></p>
+                                    <p><strong>Address: </strong> {{ studentDetails.address }}</p>
+                                  </div>
+                                  
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="card user-card mb-1">
+                    <div class="card-block">
+                      <div class="media">
+                        <div class="media-body">
+
+                          <div class="row">
+                            <div class="col-lg-12 mt-2 mb-4">
+                              <h5 class="mt-2">Education <span *ngIf="studentDetails.has_educations"
+                                  class="badge badge-success"><i class="fa fa-check"></i> Completed</span>
+                              </h5>
+
+                              <button (click)="addEducationModal(updateEducationTemplate)"
+                                class="btn btn-info btn-mini float-right link-a"><i class="fa fa-plus"></i>
+                                Add New</button>
+                            </div>
+                            <div class="col-md-12" *ngIf="studentDetails.educations.length > 0">
+
+
+                              <div class="wrapper_indent">
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <table style="border: 1px groove #ffffff;" class="table table-borderless"
+                                      *ngFor="let education of studentDetails.educations; let i=index">
+                                      <tbody>
+                                        <tr>
+                                          <td colspan="2">
+                                            <a (click)="updateEducationModal(education, updateEducationTemplate)"
+                                              class="float-right link-a font-weight-bold cursor-pointer"><i
+                                                class="fa fa-edit"></i> Edit</a>
+                                          </td>
+                                        </tr>
+                                        <tr class="pb-0">
+                                          <td style="width: 30%"><strong>Title</strong></td>
+                                          <td>{{ education.edu_title }}</td>
+                                        </tr>
+                                        <tr class="pb-0">
+                                          <td><strong>Institute</strong></td>
+                                          <td>{{ education.institute }}</td>
+                                        </tr>
+                                        <tr class="pb-0">
+                                          <td><strong>Department</strong></td>
+                                          <td>{{ education.group }}</td>
+                                        </tr>
+                                        <tr class="pb-0">
+                                          <td><strong>Completion Status</strong></td>
+                                          <td>{{ education.completion_status }}</td>
+                                        </tr>
+                                        <tr class="pb-0" *ngIf="education.passing_year && education.passing_year!='1970-01-01 00:00:00'">
+                                          <td><strong>Passing Year</strong></td>
+                                          <td>{{ education.passing_year | date:"yyyy" }}</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                            </div>
+
+                            <div class="col-md-12" *ngIf="studentDetails.educations.length == 0">
+                              <i>This Student has not updated education history</i>
+                            </div>
+                          </div>
+
+
+                        </div>
+                      </div>
+                    </div>    
+                  </div>
+                </div>
+                </div>
+            </div>
+
+          </div>
+        </div>
+    </div>
+   </div>
+  </div>
+</block-ui>
+
+
+
+<ng-template #templateAddress>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left "> Update Address</h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideAddress()">
+      <i class="icofont icofont-close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <form [formGroup]="currentAddressForm" class="col-sm-12" autocomplete="off">
+
+        <div class="form-group row">
+          <label for="eduTitle" class="col-md-3">Division:</label>
+          <div class="col-md-12">
+
+              <ng-select (change)="onDivisionChange($event)" formControlName="division_id" [clearable]="false"
+              [clearOnBackspace]="false" [items]="divisionList" [multiple]=false
+              bindLabel="name" bindValue="id" placeholder="Select Division">
+              </ng-select>
+          </div>
+      </div>
+
+      <div class="form-group row"> 
+          <label for="eduTitle" class="col-md-3">District:</label>
+          <div class="col-md-12">
+
+              <ng-select (change)="onDistrictChange($event)" formControlName="district_id" [clearable]="false"
+              [clearOnBackspace]="false" [items]="districts" [multiple]=false
+              bindLabel="name" bindValue="id" placeholder="Select Distict">
+              </ng-select>
+          </div>
+      </div>
+
+      <div class="form-group row"> 
+          <label for="eduTitle" class="col-md-3">Area:</label>
+          <div class="col-md-12">
+
+              <ng-select formControlName="area_id" [clearable]="false"
+              [clearOnBackspace]="false" [items]="areaList" [multiple]=false
+              bindLabel="name" bindValue="id" placeholder="Select Distict">
+              </ng-select>
+          </div>
+      </div>
+
+      <div class="form-group row">
+          <label for="eduTitle" class="col-md-3">Address:</label>
+          <div class="col-md-12">
+              <textarea class="form-control" formControlName="address" placeholder="Current Address" id="floatingTextarea2" rows="4" cols="50"></textarea>
+              <!-- <textarea class="form-control" [(ngModel)]="address" placeholder="Current Address" id="floatingTextarea2" rows="4" cols="50"></textarea> -->
+          </div>
+      </div>
+
+      </form>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideAddress()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+      <button class="btn btn-success btn-outline-success" (click)="onFormSubmitAddress()">
+        <i class="icofont icofont-check-circled"></i> Update
+      </button>
+
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #templateBio>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left "> Update Biography</h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideBio()">
+      <i class="icofont icofont-close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <form [formGroup]="bioForm" class="col-sm-12" autocomplete="off">
+
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label font-weight-bold"> Bio </label>
+          <div class="col-sm-10">
+            <textarea rows="3" formControlName="text" [ngClass]="{ 'is-invalid': submitted && bio.text.errors }"
+              type="text" class="form-control" autocomplete="off"></textarea>
+
+            <div *ngIf="submitted && bio.text.errors" class="error-text">
+              <span *ngIf="bio.text.errors.required" class="text-danger">Bio text is required</span>
+              <span *ngIf="bio.text.errors.minlength" class="text-danger">Boi text must be at least 150
+                characters</span>
+              <span *ngIf="bio.text.errors.maxlength" class="text-danger">Bio text must be not then 250
+                characters</span>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideBio()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+      <button class="btn btn-success btn-outline-success" (click)="onFormSubmitBio()">
+        <i class="icofont icofont-check-circled"></i> Update
+      </button>
+
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #profileTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+      <i class="icofont icofont-close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <!--<app-card>
+            <div class="form-floating">
+                <textarea class="form-control" [(ngModel)]="cover_letter" placeholder="Cover letter text (optional)" id="floatingTextarea2" rows="4" cols="50"></textarea>
+            </div>
+      </app-card>-->
+    <form [formGroup]="profileGeneralForm">
+      <div class="row">
+        <div class="col-md-6" style="border-right: 1px solid rgb(238, 238, 238);">
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Name </label>
+            <input formControlName="name" [ngClass]="{ 'is-invalid': submitted && pf.name.errors }" type="text"
+              class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.name.errors" class="error-text">
+              <span *ngIf="pf.name.errors.required" class="text-danger">Name is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Email </label>
+            <input formControlName="email" readonly [ngClass]="{ 'is-invalid': submitted && pf.email.errors }" type="text"
+              class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.email.errors" class="error-text">
+              <span *ngIf="pf.email.errors.required" class="text-danger">Email is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Mobile No. </label>
+            <input formControlName="mobile_no" readonly [ngClass]="{ 'is-invalid': submitted && pf.mobile_no.errors }"
+              type="text" class="form-control" autocomplete="off">
+            
+              <div *ngIf="submitted && pf.mobile_no.errors" class="error-text">
+              <span *ngIf="pf.mobile_no.errors.required" class="text-danger">Mobile No is required</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold "> Date of Birth </label>
+            <input formControlName="date_of_birth" [ngClass]="{ 'is-invalid': submitted && pf.date_of_birth.errors }"
+              type="date" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.date_of_birth.errors" class="error-text">
+              <span *ngIf="pf.date_of_birth.errors.required" class="text-danger">Mobile No 2 is required</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="gender" class="col-form-label font-weight-bold required">Gender:</label>
+            <select id="gender" name="" formControlName="gender" class="form-control form-select">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+            <div *ngIf="submitted && pf.gender.errors" class="error-text">
+              <span *ngIf="pf.gender.errors.required" class="text-danger">Gender is required</span>
+            </div>
+          </div>
+          
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold "> Father name </label>
+            <input formControlName="father_name" [ngClass]="{ 'is-invalid': submitted && pf.father_name.errors }"
+              type="text" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.father_name.errors" class="error-text">
+              <span *ngIf="pf.father_name.errors.required" class="text-danger">Father name is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold "> Father Mobile </label>
+            <input formControlName="father_mobile" [ngClass]="{ 'is-invalid': submitted && pf.father_mobile.errors }"
+              type="text" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.father_mobile.errors" class="error-text">
+              <span *ngIf="pf.father_mobile.errors.required" class="text-danger">Father mobile is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold "> Mother name </label>
+            <input formControlName="mother_name" [ngClass]="{ 'is-invalid': submitted && pf.mother_name.errors }"
+              type="text" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.mother_name.errors" class="error-text">
+              <span *ngIf="pf.mother_name.errors.required" class="text-danger">Mother name is required</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold "> Mother Mobile </label>
+            <input formControlName="mother_mobile" [ngClass]="{ 'is-invalid': submitted && pf.mother_mobile.errors }"
+              type="text" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.mother_mobile.errors" class="error-text">
+              <span *ngIf="pf.mother_mobile.errors.required" class="text-danger">Mother mobile is required</span>
+            </div>
+          </div>
+    
+        </div> <!-- end col-6 -->
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="updateProfileInformation()"> <i
+          class="icofont icofont-check-circled"></i> Save</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #UploadNidTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+      <i class="icon_close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" [(ngModel)]="uploadType" name="inlineRadioOptions" id="uploadTypeC"
+        value="Certificate">
+      <label class="form-check-label" for="uploadTypeC">Certificate</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" [(ngModel)]="uploadType" name="inlineRadioOptions" id="uploadType1"
+        value="NID">
+      <label class="form-check-label" for="uploadType1">National ID</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" [(ngModel)]="uploadType" name="inlineRadioOptions" id="uploadType2"
+        value="Passport">
+      <label class="form-check-label" for="uploadType2">Passport</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" [(ngModel)]="uploadType" name="inlineRadioOptions" id="uploadType3"
+        value="BirthCertificate">
+      <label class="form-check-label" for="uploadType3">Birth Certificate</label>
+    </div>
+    <br /><br />
+    <form action="#" method="post" enctype="multipart/form-data">
+      <input type="file" (change)="onSelectUpoladFile($event)" id="files" accept="image/x-png,image/jpeg"
+        class="filer_input">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateIdentityFileSubmit()"> <i
+          class="icofont icofont-check-circled"></i> Upload</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateParticipationUpdate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left "> Update Participation Allow Number</h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideParticipationAllow()">
+      <i class="icofont icofont-close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <form [formGroup]="perticipationAllowForm" class="col-sm-12" autocomplete="off">
+
+        <div class="form-group row">
+          <label class="col-sm-5 col-form-label font-weight-bold"> Count </label>
+          <div class="col-sm-7">
+            <input numeric numericType="number" (keyup)="checkValidityAttempt($event.target.value)"
+              formControlName="count" [ngClass]="{ 'is-invalid': submitted && pa.count.errors }" type="text"
+              class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pa.count.errors" class="error-text">
+              <span *ngIf="pa.count.errors.required" class="text-danger">Count is required</span>
+            </div>
+            <div *ngIf="invalidAttemptNumber" class="error-text">
+              <span class="text-danger">Participation Allow number is not possible less than percipated number</span>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideParticipationAllow()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+      <button class="btn btn-success btn-outline-success" (click)="participationAllowSubmit()">
+        <i class="icofont icofont-check-circled"></i> Update
+      </button>
+
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #updateEducationTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+      <i class="icofont icofont-close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <div class="row">
+        <form [formGroup]="educationForm" class="col-md-12">
+          <div class="col-md-12">
+            
+            <div class="form-group row">
+              <label for="edu_title" class="col-md-3">Exam Title:</label>
+              <div class="col-md-9">
+                  <select id="edu_title" formControlName="edu_title" name="edu_title" class="form-control form-select">
+                      <option [ngValue]="null" [disabled]="true" >--Select Title--</option>
+                      <option value="SSC">SSC</option>
+                      <option value="HSC">HSC</option>
+                   </select>
+              </div>
+          </div>
+          
+          <div class="form-group row">
+              <label for="student_institute_id" class="col-md-3">Institute:</label>
+              <div class="col-md-9">
+                  <ng-select formControlName="student_institute_id" placeholder="--Select Institute--"
+                  [items]="activeStudentInstitute" [clearable]='true' [clearOnBackspace]='true' bindLabel="name"
+                  bindValue="id">
+              </ng-select>
+              </div>
+          </div>
+
+            <div class="form-group row">
+              <label for="Deparment" class="col-md-3">Deparment:</label>
+              <div class="col-md-9">
+                <input type="text" name="group" formControlName="group" class="form-control" aria-required="true"
+                  aria-invalid="false">
+                <span class="error-text"></span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="CompletionStatus" class="col-md-3">Completion status:</label>
+              <div class="col-md-9">
+                <select id="CompletionStatus" (change)="ChangeCompletionStatus($event)"
+                  formControlName="completion_status" name="completion_status" class="form-control form-select">
+                  <option value="Passed">Passed</option>
+                  <option value="Enrolled">Enrolled</option>
+                </select>
+                <span class="error-text"></span>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="!is_enrolled">
+              <label for="Grade" class="col-md-3">Grade:</label>
+              <div class="col-md-9">
+                <input type="text" name="grade" formControlName="grade" id="Grade" class="form-control"
+                  aria-required="false" aria-invalid="false">
+                <span class="error-text"></span>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="!is_enrolled">
+              <label for="CompletionStatus" class="col-md-3">Passing year:</label>
+              <div class="col-md-9">
+                <input type="date" formControlName="passing_year" class="form-control" placeholder="select date"
+                  autocomplete="off">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateEducationSubmit()">
+         <i class="icofont icofont-check-circled"></i> Update</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateJobTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideWE()">
+      <i class="icon_close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <div class="row">
+      <form [formGroup]="jobForm" class="col-md-12">
+        <div class="col-md-12">
+          <div class="form-group row">
+            <label for="Title" class="col-md-3">Title:</label>
+            <div class="col-md-9">
+              <input type="text" name="title" formControlName="title" id="Title" class="form-control"
+                aria-required="true" aria-invalid="false">
+              <span class="error-text"></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="organization" class="col-md-3">Organization:</label>
+            <div class="col-md-9">
+              <input type="text" name="organization" formControlName="organization" id="organization"
+                class="form-control" aria-required="true" aria-invalid="false">
+              <span class="error-text"></span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHideWE()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateJobSubmit()"> <i class="icofont icofont-check-circled"></i>
+        Update</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateScheduleTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSchedule()">
+      <i class="icon_close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <table class="table table-bordered" *ngIf="is_loaded">>
+      <thead>
+        <tr class="bg-primary">
+          <th scope="col">Day</th>
+          <th scope="col">Morning <br />Before 12:00 pm</th>
+          <th scope="col">Afternoon <br />12:00 pm - 5:00 pm</th>
+          <th scope="col">Evening <br />After 5:00 pm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Saturday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'sat', 1)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.sat && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'sat', 2)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.sat && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'sat', 3)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.sat && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sunday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'sun', 1)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.sun && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'sun', 2)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.sun && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'sun', 3)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.sun && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Monday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'mon', 1)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.mon && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'mon', 2)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.mon && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'mon', 3)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.mon && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Tueday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'tue', 1)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.tue && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'tue', 2)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.tue && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'tue', 3)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.tue && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Wednesday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'wed', 1)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.wed && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'wed', 2)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.wed && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'wed', 3)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.wed && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Thursday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'thu', 1)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.thu && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'thu', 2)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.thu && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'thu', 3)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.thu && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Friday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'fri', 1)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.fri && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'fri', 2)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.fri && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(studentDetails.availibilities, 'fri', 3)">
+            <span *ngFor="let available of studentDetails.availibilities; let i=index">
+              <i *ngIf="available.fri && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHideSchedule()"> <i class="icofont icofont-close"></i>
+        Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateScheduleSubmit(studentDetails.availibilities)"> <i
+          class="icofont icofont-check-circled"></i> Update</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateReferencesTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideRef()">
+      <i class="icon_close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <div class="row">
+      <form [formGroup]="referencesForm" class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="ReferenceName" class="col-md-3">Name:</label>
+              <div class="col-md-9"><input type="text" name="name" formControlName="name" id="ReferenceName"
+                  class="form-control" aria-required="true" aria-invalid="false"><span class="text-danger"></span></div>
+            </div>
+            <div class="form-group row">
+              <label for="MobileNo" class="col-md-3">Mobile no:</label>
+              <div class="col-md-9"><input type="text" name="mobile_no" formControlName="mobile_no" id="MobileNo"
+                  class="form-control" aria-required="true" aria-invalid="false"><span class="text-danger"></span></div>
+            </div>
+            <div class="form-group row">
+              <label for="Relation" class="col-md-3">Relation:</label>
+              <div class="col-md-9"><input type="text" name="relation" formControlName="relation" id="Relation"
+                  class="form-control"><span class="text-danger"></span></div>
+            </div>
+            <div class="form-group row">
+              <label for="Designation" class="col-md-3">Designation:</label>
+              <div class="col-md-9"><input type="text" name="designation" formControlName="designation" id="Designation"
+                  class="form-control"><span class="text-danger"></span></div>
+            </div>
+            <div class="form-group row">
+              <label for="Organization" class="col-md-3">Organization:</label>
+              <div class="col-md-9"><input type="text" name="organization" formControlName="organization"
+                  id="Organization" class="form-control"><span class="text-danger"></span></div>
+            </div>
+            <div class="row" style="">
+              <label for="" class="col-md-3">Blood connection: </label>
+              <div class="col-md-9">
+                <div class="checkbox"><label><input name="is_blood_connected" style="margin-right: 8px;"
+                      formControlName="is_blood_connected" type="checkbox" value="">First Blood</label></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHideRef()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateReferencesSubmit()"> <i
+          class="icofont icofont-check-circled"></i> Update</button>
+    </div>
+  </div>
+</ng-template>

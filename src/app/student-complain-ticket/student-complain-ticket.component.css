@@ -1,0 +1,39 @@
+@media (min-width: 992px) {
+    .modal-lg {
+        max-width: 1024px !important;
+    }
+}
+
+.image-size{
+    width: 40px;
+    height: 40px;
+}
+
+.star {
+    position: relative;
+    display: inline-block;
+    font-size: 20px;
+}
+  
+.star-under {
+    color: #ddd;
+}
+  
+.star-over {
+    color: #f80;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.count-width{
+    width: 60px;
+    font-weight: 700;
+}
+
+.pending-width{
+    width: 40px;
+    font-weight: 700;
+}
+  

@@ -1,0 +1,219 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>PROMOTION LIST </h5>
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)">
+                                <i class=" icofont icofont-plus "></i>Add New Promotion</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Image</th>
+                                                <th>Navi. Web Url</th>
+                                                <th>Navi. App Url</th>
+                                                <th>Type</th>
+                                                <th>Should Cache</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let promo of promotionList; let i=index">
+                                                <td>{{ promo.title  }}</td>
+                                                <td><img class="media-object card-list-img image-size" src="{{ promo.promo_image_url }}" alt="Promo Image"></td>
+                                                <td>{{ promo.navigate_to_web_url  }}</td>
+                                                <td>{{ promo.navigate_to_app_location }}</td>
+                                                <td>{{ promo.type }}</td>
+                                                <td>{{ promo.should_cache }}</td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-mini mr-1" (click)="deletePromo(promo)"> <i class="icofont-edit"></i> Delete</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Title</label>
+                            <input formControlName="title" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.title.errors" class="error-text">
+                                <span *ngIf="f.title.errors.required" class="text-danger">Title is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Navigate Web Url</label>
+                            <input formControlName="navigate_to_web_url" [ngClass]="{ 'is-invalid': submitted && f.navigate_to_web_url.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.navigate_to_web_url.errors" class="error-text">
+                                <span *ngIf="f.navigate_to_web_url.errors.required" class="text-danger">Navigate Web Url is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Navigate App Location</label>
+                            <input formControlName="navigate_to_app_location" [ngClass]="{ 'is-invalid': submitted && f.navigate_to_app_location.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.navigate_to_app_location.errors" class="error-text">
+                                <span *ngIf="f.navigate_to_app_location.errors.required" class="text-danger">Navigate App Location is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Extra Data</label>
+                            <input formControlName="data" [ngClass]="{ 'is-invalid': submitted && f.data.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.data.errors" class="error-text">
+                                <span *ngIf="f.data.errors.required" class="text-danger">Extra Data is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Select Type</label>
+                            <ng-select placeholder="Select Type" formControlName="type" [items]="typeList"
+                                [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                    <div>{{item.name}}</div>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.type.errors" class="error-text">
+                                <span *ngIf="f.type.errors.required" class="text-danger"> Type is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold required">Select Attachment </label> 
+                        <input type="file" (change)="onSelectUpoladFile($event)" formControlName="file" id="files" accept="image/x-png,image/jpeg" class="filer_input">
+                    </div>
+
+                    <!--<div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.password.errors" class="error-text">
+                                <span *ngIf="f.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="f.password.errors.minlength" class="text-danger">Password must be 6 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+
+                            <div *ngIf="submitted && f.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="f.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                            </div>
+                        </div>
+                    </div>-->
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="submitPromo()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #passwordTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="passwordForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': password_submitted && pcf.password.errors }" autocomplete="off" required>
+                            <div *ngIf="password_submitted && pcf.password.errors" class="error-text">
+                                <span *ngIf="pcf.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="pcf.password.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': password_submitted && pcf.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="password_submitted && pcf.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="pcf.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onUpdatePasswordFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+</block-ui>

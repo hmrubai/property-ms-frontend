@@ -1,0 +1,32 @@
+@media (min-width: 992px) {
+    .modal-lg {
+        max-width: 1024px !important;
+    }
+}
+
+.image-size{
+    width: 200px;
+}
+
+.text-align-left{
+    text-align: left;
+}
+
+.p-inline{
+    display: inline-block !important;
+}
+
+.border-right{
+  border-right: 1px solid #ccc;
+}
+.box{
+  box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%), 0 0 0 1px rgb(10 10 10 / 2%);
+  background-color: #fff;
+  border-radius: 6px;
+  color: #3f3f3f;
+  padding: 1.25rem;
+}
+
+.border-buttom-dashed{
+  border-bottom: 1px #ccc dashed;
+}

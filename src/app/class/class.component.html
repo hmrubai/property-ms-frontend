@@ -1,0 +1,145 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Class List </h5>
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)">
+                                <i class=" icofont icofont-plus "></i>Add New Class</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Keyword</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let course of courseList; let i=index">
+                                                <td>{{ course.title  }}</td>
+                                                <td>{{ course.keywords  }}</td>
+                                                <td>{{ course.status }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Title</label>
+                            <input formControlName="title" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.title.errors" class="error-text">
+                                <span *ngIf="f.title.errors.required" class="text-danger">Title is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Title In Bangla</label>
+                            <input formControlName="title_bn" [ngClass]="{ 'is-invalid': submitted && f.title_bn.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.title_bn.errors" class="error-text">
+                                <span *ngIf="f.title_bn.errors.required" class="text-danger">Title In Bangla is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Keywords</label>
+                            <input formControlName="keywords" [ngClass]="{ 'is-invalid': submitted && f.keywords.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.keywords.errors" class="error-text">
+                                <span *ngIf="f.keywords.errors.required" class="text-danger">Keywords is required</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="submitPromo()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #passwordTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="passwordForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': password_submitted && pcf.password.errors }" autocomplete="off" required>
+                            <div *ngIf="password_submitted && pcf.password.errors" class="error-text">
+                                <span *ngIf="pcf.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="pcf.password.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': password_submitted && pcf.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="password_submitted && pcf.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="pcf.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onUpdatePasswordFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+</block-ui>

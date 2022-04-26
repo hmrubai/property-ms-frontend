@@ -1,0 +1,209 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Participant Details</h5> <button class="btn btn-secondary btn-mini float-right" (click)="backTo()">< Back </button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12" *ngIf="is_loaded">
+                                    <div class="card user-card mb-3">
+                                        <div class="card-block">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="col-xs-12">
+                                                        <h5 class="d-inline-block">Project: {{ assesmentDetails.project_name }} | Exam: {{ assesmentDetails.assesment_name }}| Subject: {{ assesmentDetails.subject_name }}</h5> 
+                                                        <hr>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <p><strong>Total Marks (MCQ): </strong> {{ assesmentDetails.marks }}</p>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p><strong>Gained Marks (MCQ): </strong> {{ assesmentDetails.gained_mark }}</p>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <p><strong>Written Question: </strong> {{ assesmentDetails.written_question }}</p>
+                                                            <p><strong>Answer: </strong> {{ assesmentDetails.written_answer }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card user-card mb-3">
+                                        <div class="card-block">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="col-xs-12">
+                                                        <h5 class="d-inline-block">MCQ Questions</h5> 
+                                                        <hr>
+                                                    </div>
+                                                    <div class="row" *ngFor="let question of assesmentDetails.question_with_answers; let i=index">
+                                                        <div class="col-sm-12">
+                                                            <p><strong> {{ i+1 }}. {{ question.questions }}</strong></p>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p *ngIf="question.answer == 1 && question.given_answer == 1" class="text-success p-inline font-weight-bold">a. {{ question.option1 }}</p>
+                                                            <p *ngIf="question.answer == 1 && question.given_answer != 1" class="text-success p-inline font-weight-bold">a. {{ question.option1 }}</p>
+                                                            <p *ngIf="question.answer != 1 && question.given_answer == 1" class="text-danger p-inline font-weight-bold">a. {{ question.option1 }}</p>
+                                                            <p *ngIf="question.answer != 1 && question.given_answer != 1" class="p-inline" >a. {{ question.option1 }}</p>
+                                                            <span class="badge badge-success ml-2" *ngIf="question.answer == 1 && question.given_answer == 1"> Given Answer</span>
+                                                            <span class="badge badge-danger ml-2" *ngIf=" question.answer != 1 && question.given_answer == 1"> Wrong Answer</span>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p *ngIf="question.answer == 2 && question.given_answer == 2" class="text-success p-inline font-weight-bold">b. {{ question.option2 }}</p>
+                                                            <p *ngIf="question.answer == 2 && question.given_answer != 2" class="text-success p-inline font-weight-bold">b. {{ question.option2 }}</p>
+                                                            <p *ngIf="question.answer != 2 && question.given_answer == 2" class="text-danger p-inline font-weight-bold">b. {{ question.option2 }}</p>
+                                                            <p *ngIf="question.answer != 2 && question.given_answer != 2" class="p-inline">b. {{ question.option2 }}</p>
+                                                            <span class="badge badge-success ml-2" *ngIf="question.answer == 2 && question.given_answer == 2"> Given Answer</span>
+                                                            <span class="badge badge-danger ml-2" *ngIf=" question.answer != 2 && question.given_answer == 2"> Wrong Answer</span>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p *ngIf="question.answer == 3 && question.given_answer == 3" class="text-success p-inline font-weight-bold">c. {{ question.option3 }}</p>
+                                                            <p *ngIf="question.answer == 3 && question.given_answer != 3" class="text-success p-inline font-weight-bold">c. {{ question.option3 }}</p>
+                                                            <p *ngIf="question.answer != 3 && question.given_answer == 3" class="text-danger p-inline font-weight-bold">c. {{ question.option3 }}</p>
+                                                            <p *ngIf="question.answer != 3 && question.given_answer != 3" class="p-inline">c. {{ question.option3 }}</p>
+                                                            <span class="badge badge-success ml-2" *ngIf="question.answer == 3 && question.given_answer == 3"> Given Answer</span>
+                                                            <span class="badge badge-danger ml-2" *ngIf=" question.answer != 3 && question.given_answer == 3"> Wrong Answer</span>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <p *ngIf="question.answer == 4 && question.given_answer == 4" class="text-success p-inline font-weight-bold">d. {{ question.option4 }}</p>
+                                                            <p *ngIf="question.answer == 4 && question.given_answer != 4" class="text-success p-inline font-weight-bold">d. {{ question.option4 }}</p>
+                                                            <p *ngIf="question.answer != 4 && question.given_answer == 4" class="text-danger p-inline font-weight-bold">d. {{ question.option4 }}</p>
+                                                            <p *ngIf="question.answer != 4 && question.given_answer != 4" class="p-inline">d. {{ question.option4 }}</p>
+                                                            <span class="badge badge-success ml-2" *ngIf="question.answer == 4 && question.given_answer == 4"> Given Answer</span>
+                                                            <span class="badge badge-danger ml-2" *ngIf=" question.answer != 4 && question.given_answer == 4"> Wrong Answer</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+
+                        </div>
+                        <!-- end of card-footer -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold"> Email </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold required"> {{f.Email.value}} </label>
+                            <input *ngIf="!f.id.value" formControlName="Email" [ngClass]="{ 'is-invalid': submitted && f.Email.errors }"
+                                type="email" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.Email.errors" class="error-text">
+                                <span *ngIf="f.Email.errors.required" class="text-danger">Email is required</span>
+                                <span *ngIf="f.Email.errors.maxlength" class="text-danger">Email must be not then 50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> First Name </label>
+                        <div class="col-sm-8">
+                            <input formControlName="FirstName"
+                                [ngClass]="{ 'is-invalid': submitted && f.FirstName.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.FirstName.errors" class="error-text">
+                                <span *ngIf="f.FirstName.errors.required" class="text-danger">First Name is
+                                    required</span>
+                                <span *ngIf="f.FirstName.errors.maxlength" class="text-danger">First Name must be not
+                                    then 50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Last Name </label>
+                        <div class="col-sm-8">
+                            <input formControlName="LastName"
+                                [ngClass]="{ 'is-invalid': submitted && f.LastName.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.LastName.errors" class="error-text">
+                                <span *ngIf="f.LastName.errors.required" class="text-danger">Last Name is
+                                    required</span>
+                                <span *ngIf="f.LastName.errors.maxlength" class="text-danger">Last Name must be not then
+                                    50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Password </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold"> {{f.Password.value}} </label>
+                            <input *ngIf="!f.id.value" type="password" formControlName="Password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.Password.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.Password.errors" class="error-text">
+                                <span *ngIf="f.Password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="f.Password.errors.minlength" class="text-danger">Password must be 6
+                                    characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required">Confirm Pass. </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold"> {{f.ConfirmPassword.value}} </label>
+                            <input *ngIf="!f.id.value" type="password" formControlName="ConfirmPassword"
+                                [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+
+                            <div *ngIf="submitted && f.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="f.ConfirmPassword.errors.required " class="text-danger ">Confirm Password
+                                    is required</span>
+                                <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords not
+                                    match</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>

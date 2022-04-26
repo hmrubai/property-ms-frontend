@@ -1,0 +1,396 @@
+<block-ui>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card card-border-primary">
+                        <div class="card-block ">
+
+                            <div class="row">
+                                <form [formGroup]="searchForm" class="col-md-12">
+
+                                    <div class="row">
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Search by name, phone, email & referrence code
+                        </label>
+                                                <input class="form-control" formControlName="search_item" placeholder="Type..." />
+
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Search by university</label>
+                                                <input class="form-control" formControlName="searchUniversity" placeholder="Type..." />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Select status </label>
+                                                <ng-select formControlName="tutor_status" [clearable]="false" [clearOnBackspace]="false" [items]="tutor_status_list" [multiple]=false bindLabel="name" bindValue="id" placeholder="Select status">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Select gender </label>
+                                                <ng-select formControlName="gender" [clearable]="false" [clearOnBackspace]="false" [items]="gender_list" [multiple]=false bindLabel="name" bindValue="id" placeholder="Select gender">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Select medium </label>
+                                                <ng-select formControlName="medium" (clear)="onMediumClear()" (change)="onMediumChange($event)" [clearable]="true" [clearOnBackspace]="false" [items]="mediumList" [multiple]=false bindLabel="name" placeholder="Select medium">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Select subject </label>
+                                                <ng-select formControlName="subject" [clearable]="false" [clearOnBackspace]="false" [items]="subjectList" [multiple]=false bindLabel="name" placeholder="Select subject">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Search by registration date </label>
+                                                <input type="text" class="form-control" bsDaterangepicker [bsConfig]="bsConfig" placement="left" [(ngModel)]="bsValue" placeholder="Select a date range" [ngModelOptions]="{standalone: true}">
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Select District </label>
+                                                <ng-select formControlName="district" (clear)="onDistrictClear()" (change)="onDistrictChange($event)" [clearable]="true" [clearOnBackspace]="false" [items]="districtList" [multiple]=false bindLabel="name" placeholder="Select district">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-3">
+                                            <div class="form-group">
+                                                <label class="col-form-label font-weight-bold">Select area </label>
+                                                <ng-select formControlName="area" [clearable]="false" [clearOnBackspace]="false" [items]="areaList" [multiple]=false bindLabel="name" placeholder="Select area">
+                                                </ng-select>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 mt-3">
+                                            <div class="form-group mt-4">
+                                                <div class="checkbox-fade fade-in-primary">
+                                                    <label>
+                            <input type="checkbox" formControlName="is_bacbon_staff">
+                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                            <span class="font-weight-bold">Only BacBon staff ?</span>
+                          </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-lg-3 ">
+                                            <div class="form-group mt-4 pt-2">
+                                                <button (click)="getListByFilter()" class="btn btn-success mr-1"> <i class="fa fa-search"></i>
+                          Search </button>
+                                                <button (click)="allClear()" class="btn btn-warning "><i class="fa fa-window-close-o"></i> Clear
+                          All </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <hr>
+                            <div class="row mt-5">
+                                <div class="col-md-3">
+                                    <div style="font-weight: bold" *ngIf="tutorList.length > 0">
+                                        {{ selectedTutorIds.length === tutorList.length? 'Unselect All' : 'Select All' }}
+
+                                        <ui-switch class="ml-3" [checked]="selectedTutorIds.length === tutorList.length" (changeEvent)="checkUncheckAll()"></ui-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="button" *ngIf="selectedTutorsListExcelData.length > 0" (click)="downloadTutorExcel()" class="btn btn-info btn-sm float-right "> <i class="fa fa-download"></i> Download Tutor(s)
+                    Info</button>
+
+                                </div>
+
+                                <div class="col-md-7">
+                                    <button type="button" (click)="checkAndSendEmail()" class="btn btn-info btn-sm float-right "> <i
+                      class="fa fa-star"></i> Magic Button For Email</button>
+                                    <button type="button" (click)="openEmailModal(templateEmail)" class="btn btn-info btn-sm float-right mr-2"> <i class="fa fa-send-o"></i> Send Email</button>
+                                    <button type="button" (click)="openNotificationModal(templateNotification)" class="btn btn-info btn-sm float-right mr-2"> <i class="fa fa-mobile"></i> Send
+                    Notification</button>
+
+                                </div>
+                            </div>
+
+                            <div class="row ">
+
+                                <div class="col-lg-6 list-margin" *ngFor="let tutor of tutorList | paginate: { itemsPerPage: 9, currentPage: p }">
+                                    <!-- <div class="col-lg-6 list-margin" *ngFor="let tutor of tutorList | paginate: { itemsPerPage: page.size, currentPage: page.pageNumber, totalItems: page.totalElements }"> -->
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card user-card card-min-height">
+                                                <div class="card-block">
+                                                    <div class="media">
+                                                        <a class="media-left" [routerLink]="['/tutor-details',tutor.id ]">
+                                                            <img *ngIf="!tutor.profile_pic" class="media-object img-circle card-list-img" src="assets/images/avatar-5.png" alt="Image">
+                                                            <img *ngIf="tutor.profile_pic" class="media-object img-circle card-list-img image-size" src="https://api.bacbontutors.com/V2/uploads/tutors/{{tutor.profile_pic}}" alt="Image">
+                                                        </a>
+                                                        <div class="media-body">
+
+                                                            <div class="col-xs-12">
+                                                                <h5 class="d-inline-block"><a [routerLink]="['/tutor-details',tutor.id ]" class="name-a">{{ tutor.name }}</a> <span class="ref-code ml-2">{{ tutor.tutor_code
+                                    }}</span></h5>
+                                                            </div>
+
+
+                                                            <div class="row">
+                                                                <div class="col-sm-7">
+                                                                    <div class="progress progress-margin">
+                                                                        <div class="progress-bar bg-success" role="progressbar" style="width: {{ tutor.profile_progress * 100 / 14 | number : '1.0-0' }}%" aria-valuemin="0" aria-valuemax="100">
+                                                                            <strong>{{ tutor.profile_progress * 100 / 14 | number : '1.1-1' }}%
+                                        Completed</strong>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-5">
+                                                                    <label class="label label-md label-info float-right"> <i class="icofont-star"></i>{{
+                                    tutor.guardian_rating }}</label>
+                                                                    <label class="label label-md label-warning float-right"> {{ tutor.status }}</label>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="f-13 text-muted"><i class="icofont-phone"></i> <strong>{{ tutor.mobile_no_1 }}
+                                </strong> <i class="icofont-calendar"></i> <strong> Registration date:</strong> {{ tutor.created_at | date: 'MMM d, y' }}</div>
+                                                            <div class="f-13 text-muted bio-text"><i class="icofont-comment"></i> {{ tutor.bio | truncate:200 }}
+                                                            </div>
+                                                            <hr />
+                                                            <select name="select" (change)="changeStatus($event.target.value, tutor)" class="form-control col-sm-5" style="display: inline-block">
+                                <option value="">Change Status</option>
+                                <option *ngIf="tutor.status == 'Pending'" selected value="Pending">Pending</option>
+                                <option *ngIf="tutor.status != 'Pending'" value="Pending">Pending</option>
+                                <option *ngIf="tutor.status == 'Available'" selected value="Available">Approve</option>
+                                <option *ngIf="tutor.status != 'Available'" value="Available">Approve</option>
+                                <option *ngIf="tutor.status == 'On-Hold'" selected value="On-Hold">On-Hold</option>
+                                <option *ngIf="tutor.status != 'On-Hold'" value="On-Hold">On-Hold</option>
+                                <option *ngIf="tutor.status == 'Suspended'" selected value="Suspended">Suspended
+                                </option>
+                                <option *ngIf="tutor.status != 'Suspended'" value="Suspended">Suspend</option>
+                              </select>
+                                                            <ui-switch class="ml-3" [checked]="checkTutorInSelectedList(tutor.id)" (changeEvent)="checkIndividually($event,tutor)"></ui-switch>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row text-center mt-5 mb-5 pb-5">
+                                <!-- <div class="col-md-3 col-xs-12">
+                                    <p *ngIf="page"> {{page.showingResult()}}</p>
+                                </div> -->
+                                <div class="col-md-12 col-xs-12">
+                                    <nav>
+                                        <!-- <pagination-controls (pageChange)="setPage($event)" responsive="true"></pagination-controls> -->
+                                        <pagination-controls (pageChange)="p = $event" responsive="true"></pagination-controls>
+                                    </nav>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</block-ui>
+
+<ng-template #templateNotification>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left"> Send Notification : {{selectedTutorsList.length}} People Selected</h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="hideNotificationModal()">
+      <i class="icofont icofont-close"></i>
+    </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <div class="row">
+                <div class="col-md-12  mb-2">
+                    <span *ngFor="let sTutor of selectedTutorsList | slice:0:20; let i=index " class="badge badge-primary ml-2" :key="index">{{sTutor.name}} </span> <span *ngIf="selectedTutorsList.length > 20"> ... </span>
+                </div>
+            </div>
+
+            <form [formGroup]="notificationForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label required">Title </label>
+                    <div class="col-md-9">
+                        <input formControlName="title" [ngClass]="{ 'is-invalid': submitted && n.title.errors }" type="text" class="form-control" autocomplete="off">
+                        <div *ngIf="submitted && n.title.errors" class="error-text">
+                            <span *ngIf="n.title.errors.required" class="text-danger">Title is required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label required">Body </label>
+                    <div class="col-md-9">
+                        <textarea rows="3" formControlName="body" [ngClass]="{ 'is-invalid': submitted && n.body.errors }" type="text" class="form-control" autocomplete="off"></textarea>
+                        <div *ngIf="submitted && n.body.errors" class="error-text">
+                            <span *ngIf="n.body.errors.required" class="text-danger">Body is required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label ">Navigate To Web url </label>
+                    <div class="col-md-9">
+                        <input formControlName="navigate_to_web_url" [ngClass]="{ 'is-invalid': submitted && n.navigate_to_web_url.errors }" type="text" class="form-control" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label ">Image </label>
+                    <div class="col-md-9">
+                        <input accept=".png, .jpg, .jpeg" formControlName="notificationImage" (change)="handleNotificationImageUpload($event)" type="file" autocomplete="off">
+                    </div>
+                </div>
+
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="hideNotificationModal()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+            <button class="btn btn-success btn-outline-success" (click)="sendNotification()">
+        <i class="icofont icofont-check-circled"></i> Send
+      </button>
+
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #templateEmail>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left"> Send Email : {{selectedTutorsList.length}} People Selected</h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="hideEmailModal()">
+      <i class="icofont icofont-close"></i>
+    </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <div class="row">
+                <div class="col-md-12  mb-2">
+                    <span *ngFor="let sTutor of selectedTutorsList | slice:0:20; let i=index " class="badge badge-primary ml-2" :key="index">{{sTutor.name}} </span> <span *ngIf="selectedTutorsList.length > 20"> ... </span>
+                </div>
+            </div>
+
+            <form [formGroup]="emailForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label required">Subject </label>
+                    <div class="col-md-9">
+                        <input formControlName="subject" [ngClass]="{ 'is-invalid': submitted && e.subject.errors }" type="text" class="form-control" autocomplete="off">
+                        <div *ngIf="submitted && e.subject.errors" class="error-text">
+                            <span *ngIf="e.subject.errors.required" class="text-danger">Subject is required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label required">Headlines </label>
+                    <div class="col-md-9">
+                        <input formControlName="headlines" [ngClass]="{ 'is-invalid': submitted && e.headlines.errors }" type="text" class="form-control" autocomplete="off">
+                        <div *ngIf="submitted && e.headlines.errors" class="error-text">
+                            <span *ngIf="e.headlines.errors.required" class="text-danger">Headline is required</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label ">Body Image </label>
+                    <div class="col-md-9">
+                        <input accept=".png, .jpg, .jpeg" (change)="handleBodyImageUpload($event)" formControlName="bodyImage" [ngClass]="{ 'is-invalid': submitted && e.bodyImage.errors }" type="file" autocomplete="off">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label required">Body </label>
+                    <div class="col-md-9">
+                        <div class="NgxEditor__Wrapper">
+                            <ngx-editor-menu [editor]="editor" [toolbar]="toolbar"> </ngx-editor-menu>
+                            <ngx-editor [editor]="editor" formControlName="email_body" [disabled]="false" [placeholder]="'Type here...'"></ngx-editor>
+                        </div>
+                        <div *ngIf="submitted && e.email_body.errors" class="error-text">
+                            <span *ngIf="e.email_body.errors.required" class="text-danger"> Body Note is required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label ">Attachment </label>
+                    <div class="col-md-9">
+                        <input multiple (change)="handleAttachmentUpload($event)" formControlName="attachment_file" [ngClass]="{ 'is-invalid': submitted && e.bodyImage.errors }" type="file" autocomplete="off">
+                    </div>
+                </div>
+
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="hideEmailModal()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+            <button class="btn btn-success btn-outline-success" (click)="sendEmail()">
+        <i class="icofont icofont-check-circled"></i> Send
+      </button>
+
+        </div>
+
+    </div>
+</ng-template>
+
+<!-- <ng-template #template>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+      <i class="icofont icofont-close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+        <div class="form-group">
+          <label class="col-form-label required">Teacher </label>
+          <ng-select placeholder="Select Teacher" formControlName="teacher_id" [items]="instructorList"
+            [clearable]='true' [clearOnBackspace]='true' bindLabel="email" bindValue="id">
+            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+              <div> {{item.first_name}} {{item.last_name}} - ({{item.email}})</div>
+            </ng-template>
+          </ng-select>
+
+          <div *ngIf="submitted && f.teacher_id.errors" class="error-text">
+            <span *ngIf="f.teacher_id.errors.required" class="text-danger"> Teacher is required</span>
+          </div>
+        </div>
+      </form>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+      <button class="btn btn-success btn-outline-success" (click)="onSetInstructorSubmit()">
+        <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+      </button>
+
+    </div>
+
+  </div>
+</ng-template> -->

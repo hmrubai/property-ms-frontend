@@ -1,0 +1,363 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>RECRUITMENT EXAM LIST </h5>
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)">
+                                <i class="icofont icofont-plus "></i>Add New Recruitment Exam</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <div class="table-responsive">
+                                      <table class="table table-bordered">
+                                          <thead>
+                                              <tr>
+                                                  <th>Session</th>
+                                                  <th>Exam Title</th>
+                                                  <th>Duration</th>
+                                                  <th>Code</th>
+                                                  <th>Marks</th>
+                                                  <th>No Of Question</th>
+                                                  <th>Date</th>
+                                                  <th>Action</th>
+                                              </tr>
+                                          </thead>
+                                          <tbody>
+                                              <tr *ngFor="let exam of examList; let i=index">
+                                                  <td>{{ exam.session_name  }}</td>
+                                                  <td>{{ exam.exam_name  }}</td>
+                                                  <td>{{ exam.duration }}</td>
+                                                  <td>{{ exam.exam_code }}</td>
+                                                  <td>
+                                                    Positive Marks: <strong>{{ exam.positive_mark }}</strong><br/>
+                                                    Negative Marks: <strong>{{ exam.negative_mark }}</strong>
+                                                  </td>
+                                                  <td>{{ exam.question_number }}</td>
+                                                  <td>
+                                                    <strong>From:</strong> {{ exam.appeared_from | amLocal | amDateFormat: 'DD MMM, YYYY hh:mm A' }}<br/>
+                                                    <strong>To:</strong>{{ exam.appeared_to | amLocal | amDateFormat: 'DD MMM, YYYY hh:mm A' }}
+                                                  </td>
+                                                  <td>
+                                                      <button class="btn btn-info btn-mini mr-1" [routerLink]="['/recruitment-written-exam',exam.id]"> <i class="icofont-eye"></i> Written Exam</button>
+                                                      <button class="btn btn-success btn-mini mr-1" [routerLink]="['/recruitment-exam-result',exam.id]"> <i class="icofont-eye"></i> Result</button>
+                                                      <button class="btn btn-primary btn-mini mr-1" [routerLink]="['/recruitment-quota-list',exam.id]"> <i class="icofont-eye"></i> Quota</button>
+                                                      <button class="btn btn-info btn-mini mr-1" (click)="editExam(exam, template)"> <i class="icofont-edit"></i></button>
+                                                      <button class="btn btn-danger btn-mini mr-1" (click)="deleteExam(exam)"> <i class="fa fa-trash"></i></button>
+                                                  </td>
+                                              </tr>
+                                              <tr *ngIf="examList.length <= 0">
+                                                  <td colspan="8">No Exam Found!</td>
+                                              </tr>
+                                          </tbody>
+                                      </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+<ng-template #template>
+    <div class="modal-header ">
+      <i class="fa fa-file m-1"></i>
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="entryForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="col-form-label required">Session Name </label>
+              <input type="text" formControlName="session_name" [ngClass]="{ 'is-invalid': submitted && f.session_name.errors }"
+                placeholder="Enter Session name" type="text" class="form-control" />
+              <div *ngIf="submitted && f.session_name.errors" class="error-text">
+                <span *ngIf="f.session_name.errors.required" class="text-danger"> Session Name is required</span>
+                <span *ngIf="f.session_name.errors.maxlength" class="text-danger">Session Name must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Exam Name (English) </label>
+              <input type="text" formControlName="exam_name" [ngClass]="{ 'is-invalid': submitted && f.exam_name.errors }"
+                placeholder="Enter Exam name" type="text" class="form-control" />
+              <div *ngIf="submitted && f.exam_name.errors" class="error-text">
+                <span *ngIf="f.exam_name.errors.required" class="text-danger"> Exam Name is required</span>
+                <span *ngIf="f.exam_name.errors.maxlength" class="text-danger">Exam Name must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Exam Name (Bangla) </label>
+              <input type="text" formControlName="exam_name_bn" [ngClass]="{ 'is-invalid': submitted && f.exam_name_bn.errors }"
+                placeholder="Enter Exam Name" type="text" class="form-control" />
+              <div *ngIf="submitted && f.exam_name_bn.errors" class="error-text">
+                <span *ngIf="f.exam_name_bn.errors.required" class="text-danger"> Exam Name is required</span>
+                <span *ngIf="f.exam_name_bn.errors.maxlength" class="text-danger">Exam Name must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label class="col-form-label">Exam Code </label>
+              <input type="text" formControlName="exam_code" [ngClass]="{ 'is-invalid': submitted && f.exam_code.errors }"
+                placeholder="Enter Exam Code" class="form-control" />
+              <div *ngIf="submitted && f.exam_code.errors" class="error-text">
+                <span *ngIf="f.exam_code.errors.required" class="text-danger">Exam Code is required</span>
+                <span *ngIf="f.exam_code.errors.maxlength" class="text-danger">Exam Code must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label class="col-form-label required">Total Marks </label>
+              <input type="text" formControlName="total_mark" [ngClass]="{ 'is-invalid': submitted && f.total_mark.errors }"
+                placeholder="Enter Total Marks" type="number" class="form-control" />
+              <div *ngIf="submitted && f.total_mark.errors" class="error-text">
+                <span *ngIf="f.total_mark.errors.required" class="text-danger">Total Marks is required</span>
+                <span *ngIf="f.total_mark.errors.maxlength" class="text-danger">Total Marks must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label class="col-form-label required">Number of Total Questions </label>
+              <input type="text" formControlName="question_number" [ngClass]="{ 'is-invalid': submitted && f.question_number.errors }"
+                placeholder="Enter Number of Total Questions" type="number" class="form-control" />
+              <div *ngIf="submitted && f.question_number.errors" class="error-text">
+                <span *ngIf="f.question_number.errors.required" class="text-danger">Number of Total Questions is required</span>
+                <span *ngIf="f.question_number.errors.maxlength" class="text-danger">Number of Total Questions must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label class="col-form-label required">Duration </label>
+              <input type="text" formControlName="duration" [ngClass]="{ 'is-invalid': submitted && f.duration.errors }"
+                placeholder="Enter Duration" type="number" class="form-control" />
+              <div *ngIf="submitted && f.duration.errors" class="error-text">
+                <span *ngIf="f.duration.errors.required" class="text-danger">Duration is required</span>
+                <span *ngIf="f.duration.errors.maxlength" class="text-danger">Duration must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label class="col-form-label required">Positive Mark/Question </label>
+              <input type="text" formControlName="positive_mark" [ngClass]="{ 'is-invalid': submitted && f.positive_mark.errors }"
+                placeholder="Enter Positive Mark/Question" type="number" class="form-control" />
+              <div *ngIf="submitted && f.positive_mark.errors" class="error-text">
+                <span *ngIf="f.positive_mark.errors.required" class="text-danger">Positive Mark/Question is required</span>
+                <span *ngIf="f.positive_mark.errors.maxlength" class="text-danger">Positive Mark/Question must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="form-group">
+              <label class="col-form-label required">Negative Mark/Question </label>
+              <input type="text" formControlName="negative_mark" [ngClass]="{ 'is-invalid': submitted && f.negative_mark.errors }"
+                placeholder="Enter Negative Mark/Question" type="number" class="form-control" />
+              <div *ngIf="submitted && f.negative_mark.errors" class="error-text">
+                <span *ngIf="f.negative_mark.errors.required" class="text-danger">Negative Mark/Question is required</span>
+                <span *ngIf="f.negative_mark.errors.maxlength" class="text-danger">Negative Mark/Question must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Appeared From </label>
+              <input type="text" formControlName="appeared_from" [min]="minDate" [ngClass]="{ 'is-invalid': submitted && f.appeared_from.errors }"
+                placeholder="Enter Starting Date" type="datetime-local" class="form-control" />
+              <div *ngIf="submitted && f.appeared_from.errors" class="error-text">
+                <span *ngIf="f.appeared_from.errors.required" class="text-danger">Appeared From is required</span>
+                <span *ngIf="f.appeared_from.errors.maxlength" class="text-danger">Appeared From must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Appeared To </label>
+              <input type="text" formControlName="appeared_to" [min]="minDate" [ngClass]="{ 'is-invalid': submitted && f.appeared_to.errors }"
+                placeholder="Enter Ending Date" type="datetime-local" class="form-control" />
+              <div *ngIf="submitted && f.appeared_to.errors" class="error-text">
+                <span *ngIf="f.appeared_to.errors.required" class="text-danger">Appeared To is required</span>
+                <span *ngIf="f.appeared_to.errors.maxlength" class="text-danger">Appeared To must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+              <div class="form-group row">
+                  <div class="col-12">
+                      <div class="custom-control custom-checkbox col-form-label">
+                        <input type="checkbox" formControlName="is_active" class="custom-control-input" [ngClass]="{ 'is-invalid': submitted && f.is_active.errors }" id="is_active">
+                        <label class="custom-control-label" for="is_active"> Is Active?</label>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i class="feather icon-x"></i>Close</button>
+      <button class="btn btn-success btn-sm" (click)="onFormSubmit()"><i class="feather icon-save"></i>{{btnSaveText}}</button>
+    </div>
+  </ng-template>
+
+    <!--<ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Title</label>
+                            <input formControlName="title" [ngClass]="{ 'is-invalid': submitted && f.title.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.title.errors" class="error-text">
+                                <span *ngIf="f.title.errors.required" class="text-danger">Title is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Navigate Web Url</label>
+                            <input formControlName="navigate_to_web_url" [ngClass]="{ 'is-invalid': submitted && f.navigate_to_web_url.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.navigate_to_web_url.errors" class="error-text">
+                                <span *ngIf="f.navigate_to_web_url.errors.required" class="text-danger">Navigate Web Url is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Navigate App Location</label>
+                            <input formControlName="navigate_to_app_location" [ngClass]="{ 'is-invalid': submitted && f.navigate_to_app_location.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.navigate_to_app_location.errors" class="error-text">
+                                <span *ngIf="f.navigate_to_app_location.errors.required" class="text-danger">Navigate App Location is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Extra Data</label>
+                            <input formControlName="data" [ngClass]="{ 'is-invalid': submitted && f.data.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.data.errors" class="error-text">
+                                <span *ngIf="f.data.errors.required" class="text-danger">Extra Data is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Select Type</label>
+                            <ng-select placeholder="Select Type" formControlName="type" [items]="typeList"
+                                [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                    <div>{{item.name}}</div>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.type.errors" class="error-text">
+                                <span *ngIf="f.type.errors.required" class="text-danger"> Type is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold required">Select Attachment </label> 
+                        <input type="file" (change)="onSelectUpoladFile($event)" formControlName="file" id="files" accept="image/x-png,image/jpeg" class="filer_input">
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="submitPromo()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #passwordTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="passwordForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': password_submitted && pcf.password.errors }" autocomplete="off" required>
+                            <div *ngIf="password_submitted && pcf.password.errors" class="error-text">
+                                <span *ngIf="pcf.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="pcf.password.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': password_submitted && pcf.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="password_submitted && pcf.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="pcf.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onUpdatePasswordFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>-->
+
+</block-ui>

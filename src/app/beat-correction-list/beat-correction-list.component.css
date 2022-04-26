@@ -1,0 +1,100 @@
+.card-title {
+  display: inline-block;
+}
+
+.title-btn {
+  color: #fff !important;
+  padding: 3px 10px !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  text-transform: capitalize !important;
+}
+
+.title-btn a {
+  color: #fff !important;
+}
+
+.student-profile-icon {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+}
+
+.btn-status {
+  padding: 5px 5px !important;
+}
+
+.card.user-card {
+  box-shadow: 0 0 25px -5px #9e9c9e;
+}
+
+.checkbox-style {
+  display: inline-block !important;
+  width: 30px !important;
+}
+
+.img-circle {
+  border: 3px solid #ccd5d6;
+}
+
+.list-view {
+  margin-top: 15px;
+}
+
+.img-circle {
+  width: 128px !important;
+  height: 128px !important;
+}
+
+.inline {
+  display: inline-block;
+}
+
+.a-hover:hover {
+  color: BLUE;
+  cursor: pointer;
+}
+
+.text-muted:hover {
+  color: BLUE !important;
+}
+
+.scroll {
+
+  height: 500px;
+  overflow-y: scroll;
+}
+
+.ribbon {
+  border-radius: 25px;
+  color: #fff;
+  display: inline-block;
+  font-size: 12px;
+  font-size: 0.75rem;
+  line-height: 1;
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  padding: 6px 8px 6px 8px;
+  font-weight: 600;
+  min-width: 40px;
+  z-index: 9;
+}
+
+.type-ribbon {
+    border-radius: 25px;
+    color: #fff;
+    display: inline-block;
+    font-size: 12px;
+    font-size: 0.75rem;
+    line-height: 1;
+    position: relative;
+    padding: 6px 8px 6px 8px;
+    font-weight: 600;
+    min-width: 40px;
+    z-index: 9;
+  }
+
+.filter-top{
+  margin-top: 34px;
+}

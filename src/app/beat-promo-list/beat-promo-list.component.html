@@ -1,0 +1,253 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Promo List</h5>
+                            <!--<div class="col-lg-4 float-right">
+                                <ng-select (change)="onPromoChange($event)"
+                                    [clearable]="true" [clearOnBackspace]="false" [(ngModel)]="promo_id" [items]="promoList" class="col-lg-9 inline-row"
+                                    [multiple]=false bindLabel="company_name" bindValue="id"
+                                    placeholder="Select Promo">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div> {{item.promo_code}} {{item.promo_value}} - ({{item.company_name}})</div>
+                                    </ng-template>
+                                </ng-select>
+                                <button class="btn btn-sm btn-secondary float-right inline-row" (click)="resetFilter()">Reset</button>
+                            </div>-->
+                            <div class="col-lg-4 float-right">
+                                <button class="btn btn-sm btn-success float-right inline-row" (click)="openModal(template)"> <i class="fa fa-plus"></i> Add New Promo</button>
+                                <button class="btn btn-sm btn-success float-right inline-row mr-2" (click)="export()">Download</button>
+                            </div>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Promo Code</th>
+                                                <th>Amount</th>
+                                                <th>Package</th>
+                                                <th>Company/Person</th>
+                                                <th>Company Address</th>
+                                                <th>Is Active</th>
+                                                <th>Created Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let promo of promoList; let i=index">
+                                                <td>
+                                                    <strong>{{ promo.promo_code  }}</strong>
+                                                </td>
+                                                <td>
+                                                    {{ promo.promo_value  }} Tk.
+                                                </td>
+                                                <td>
+                                                    {{ promo.package_name }}<br/>
+                                                    <strong>Price:</strong> {{ promo.package_price }} Tk.
+                                                </td>
+                                                <td>
+                                                    {{ promo.company_name }}<br/>
+                                                    {{ promo.company_contact_person }}
+                                                </td>
+                                                <td>
+                                                    {{ promo.address  }}
+                                                </td>
+                                                <td>
+                                                    <span *ngIf="promo.is_active" class="type-ribbon bg-success">Yes</span>
+                                                    <span *ngIf="!promo.is_active" class="type-ribbon bg-danger">No</span>
+                                                </td>
+                                                <td>{{ promo.created_at | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A'  }}</td>
+                                                <td>
+                                                    <button class="btn btn-mini btn-info" (click)="openEditModal(promo, template)"> <i class="fa fa-pencil"></i> Edit</button>
+                                                </td>
+                                                
+                                            </tr>
+                                             <tr *ngIf="promoList.length <= 0">
+                                                <td colspan="8">No Promo Found!</td>
+                                             </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <!--//"promo_code", "promo_value", "beat_package_id", "collaborator_id", "limit", "expiry_date", "is_active", "created_by"-->
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Promo Code</label>
+                            <input formControlName="promo_code" [ngClass]="{ 'is-invalid': submitted && f.promo_code.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.promo_code.errors" class="error-text">
+                                <span *ngIf="f.promo_code.errors.required" class="text-danger">Promo Code is required</span>
+                                <span *ngIf="f.promo_code.errors.maxlength" class="text-danger">Promo Code must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Promo Amount</label>
+                            <input formControlName="promo_value" [ngClass]="{ 'is-invalid': submitted && f.promo_value.errors }" type="number"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.promo_value.errors" class="error-text">
+                                <span *ngIf="f.promo_value.errors.required" class="text-danger">Promo Amount is required</span>
+                                <span *ngIf="f.promo_value.errors.maxlength" class="text-danger">Promo Amount must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Package</label>
+                            <ng-select [clearable]="true" [clearOnBackspace]="false" formControlName="beat_package_id" [items]="packageList"
+                                    [multiple]=false bindLabel="name" bindValue="id" placeholder="Select Package">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div> {{item.name}} - ({{item.price_of_package}}৳)</div>
+                                    </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.beat_package_id.errors" class="error-text">
+                                <span *ngIf="f.beat_package_id.errors.required" class="text-danger">Package is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Collaborator</label>
+                            <ng-select [clearable]="true" [clearOnBackspace]="false" formControlName="collaborator_id" [items]="collaboratorList"
+                                    [multiple]=false bindLabel="name" bindValue="id" placeholder="Select Collaborator">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div> {{item.name}} - ({{item.email}})</div>
+                                    </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.collaborator_id.errors" class="error-text">
+                                <span *ngIf="f.collaborator_id.errors.required" class="text-danger">Collaborator is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--<div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Limit</label>
+                            <input formControlName="limit" [ngClass]="{ 'is-invalid': submitted && f.limit.errors }" type="number"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.limit.errors" class="error-text">
+                                <span *ngIf="f.limit.errors.required" class="text-danger">Limit is required</span>
+                                <span *ngIf="f.limit.errors.maxlength" class="text-danger">Limit must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold"> Expiry Date</label>
+                            <input formControlName="expiry_date" [ngClass]="{ 'is-invalid': submitted && f.expiry_date.errors }" type="number"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.expiry_date.errors" class="error-text">
+                                <span *ngIf="f.expiry_date.errors.required" class="text-danger">Expiry Date is required</span>
+                                <span *ngIf="f.expiry_date.errors.maxlength" class="text-danger">Expiry Date must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>-->
+
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label">Is Active? </label>
+                        <div class="col-sm-6 mt-2">
+                            <div class="checkbox-fade fade-in-primary">
+                            <label>
+                                <input type="checkbox" formControlName="is_active">
+                                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #passwordTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="passwordForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': password_submitted && pcf.password.errors }" autocomplete="off" required>
+                            <div *ngIf="password_submitted && pcf.password.errors" class="error-text">
+                                <span *ngIf="pcf.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="pcf.password.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': password_submitted && pcf.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="password_submitted && pcf.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="pcf.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onUpdatePasswordFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+</block-ui>

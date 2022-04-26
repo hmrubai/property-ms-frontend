@@ -1,0 +1,252 @@
+<block-ui>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>Student List </h5>
+
+              <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                class=" icofont icofont-upload "></i> Upload Student To Batch</button>
+
+              <button class="btn btn-primary float-right mr-3" (click)="openModalStudent(templateStudent)"><i
+                  class=" icofont icofont-upload "></i> Upload New Student</button>                 
+              
+            
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+               
+                <div class="col-lg-4 mb-3 mr-2">
+                  <div class="form-group ">
+                    <label class="col-form-label required">Institute </label>
+                    <ng-select [clearable]="false"  [clearOnBackspace]="false" (change)="onFilterInstituteChange($event)"
+                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select institute">
+                   </ng-select>                   
+                    </div>                
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <div class="form-group ">
+                    <label class="col-form-label required">Batch </label>
+                    <ng-select [clearable]="false" [(ngModel)]="batch" [clearOnBackspace]="false" (change)="onFilterBatchChange($event)"
+                    [items]="batchList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select batch">
+                   </ng-select>                   
+                    </div>                
+                </div>
+
+              </div>
+              <div class="row ">
+                <div class="col-lg-12">
+                  <!-- <ngx-datatable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                    (page)="setPage($event)"> -->
+                  <ngx-datatable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="false" [limit]="10">
+
+                    <ngx-datatable-column [width]="50" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <span> {{ rowIndex + 1}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="200" name="Institute" prop="institute_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="200" name="Batch" prop="batch_name" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="200" name="Student Name" prop="student_name" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column [width]="200" name="Mobile No" prop="mobile_no" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+<!-- 
+                    <ngx-datatable-column [width]="40" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button class="btn btn-info btn-mini" (click)="getItem(row.id,template)"><i
+                            class="icofont icofont-edit"></i>Edit</button>
+                      </ng-template>
+                    </ngx-datatable-column> -->
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " >Upload Batch Students</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <form [formGroup]="entryForm">
+
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <!-- <h5>Institute Information</h5> -->
+              </div>
+              <div class="card-block">
+
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label required">Institute </label>
+                  <div class="col-sm-8">
+                    <ng-select formControlName="institute_id" (change)="onInstituteChange($event)" [clearable]="false" [clearOnBackspace]="false"
+                      [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
+                      placeholder="Select institute">
+                    </ng-select>
+
+                    <div *ngIf="submitted && f.institute_id.errors" class="error-text">
+                      <span *ngIf="f.institute_id.errors.required" class="text-danger"> Institute is
+                        required</span>
+                    </div>
+                  </div>                  
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label required">Batch </label>
+                  <div class="col-sm-8">
+                    <ng-select formControlName="batch_id" [clearable]="false" [clearOnBackspace]="false"
+                      [items]="batchList" [multiple]=false bindLabel="name" bindValue="id"
+                      placeholder="Select Batch">
+                    </ng-select>
+
+                    <div *ngIf="submitted && f.batch_id.errors" class="error-text">
+                      <span *ngIf="f.batch_id.errors.required" class="text-danger"> Batch is
+                        required</span>
+                    </div>
+                  </div>                  
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label required">File </label>
+                  <div class="col-sm-8 pt-2">
+                    <input type="file" formControlName="file" #batchStudentUpload (change)="uploadBatchStudentFile($event)" placeholder="Upload file" accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" placeholder="Insert file"
+                       />
+
+                    <div *ngIf="submitted && f.file.errors" class="error-text">
+                      <span *ngIf="f.file.errors.required" class="text-danger"> File is
+                        required</span>                      
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+
+
+
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-outline-success" (click)="onBatchStudentUploadFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateStudent>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " >Upload Students</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideStudent()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+      <form [formGroup]="studentUploadForm">
+
+
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <!-- <h5>Institute Information</h5> -->
+              </div>
+              <div class="card-block">
+             
+
+                <div class="form-group row">
+                  <label class="col-sm-4 col-form-label required">File </label>
+                  <div class="col-sm-8 pt-2">
+                    <input type="file" formControlName="file" #studentUpload (change)="uploadStudentFile($event)" placeholder="Upload file" accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" placeholder="Insert file"
+                      />
+
+                    <div *ngIf="submitted && u.file.errors" class="error-text">
+                      <span *ngIf="u.file.errors.required" class="text-danger"> File is
+                        required</span>                      
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+        </div>
+
+
+
+      </form>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideStudent()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-outline-success" (click)="onStudentUploadFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+</block-ui>

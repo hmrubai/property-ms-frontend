@@ -1,0 +1,250 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header"></div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 box-shadow-one pt-2 bp-2">
+                                    <h5 class="mb-2">Quiz Details</h5>
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="media" *ngIf="quizDetails">
+                                                        <div class="media-body">
+                                                            <div class="row">
+                                                                <div class="col-sm-3">
+                                                                    <strong>Exam </strong>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    {{ quizDetails.name }}
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <strong>Duration </strong>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    {{ quizDetails.duration }} Minutes
+                                                                </div>
+
+                                                                <div class="col-sm-3">
+                                                                    <strong>Course </strong>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    {{ quizDetails.course_name }}
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <strong>Class </strong>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    {{ quizDetails.class_name }}
+                                                                </div>
+
+                                                                <div class="col-sm-3">
+                                                                    <strong>Question Number </strong>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    {{ quizDetails.question_number }}
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <strong>Total Questions </strong>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    {{ quizDetails.questions_count }}
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <strong>Positive Mark </strong>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    {{ quizDetails.positive_mark }}
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    <strong>Nagative Mark </strong>
+                                                                </div>
+                                                                <div class="col-sm-3">
+                                                                    {{ quizDetails.negative_mark }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <br/>
+                                </div>
+                                <div class="col-lg-12" *ngIf="questionlist.length > 0">
+                                    <br/>
+                                    <h5 class="mb-2">History Details</h5> <button class="btn btn-info btn-sm float-right mb-2" (click)="openModal(template)">Add Question</button>
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>SL#</th>
+                                                <th>Question</th>
+                                                <th>Option 01</th>
+                                                <th>Option 02</th>
+                                                <th>Option 03</th>
+                                                <th>Option 04</th>
+                                                <th>Correct Answer</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let question of questionlist; let i=index">
+                                                <td>{{ i + 1  }}</td>
+                                                <td>{{ question.title  }}</td>
+                                                <td>a. {{ question.option1 }}</td>
+                                                <td>b. {{ question.option2 }}</td>
+                                                <td>c. {{ question.option3 }}</td>
+                                                <td>d. {{ question.option4 }}</td>
+                                                <td>
+                                                    <span class="text-bold text-success" *ngIf="question.answer == 1"> a. {{ question.option1 }} </span>
+                                                    <span class="text-bold text-success" *ngIf="question.answer == 2"> b. {{ question.option2 }} </span>
+                                                    <span class="text-bold text-success" *ngIf="question.answer == 3"> c. {{ question.option3 }} </span>
+                                                    <span class="text-bold text-success" *ngIf="question.answer == 4"> d. {{ question.option4 }} </span>
+                                                </td>
+                                                <td><button class="btn btn-info btn-sm" (click)="openUpdateModal(question, template)">Edit</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-12" *ngIf="questionlist.length == 0">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>SL#</th>
+                                                <th>Question</th>
+                                                <th>Option 01</th>
+                                                <th>Option 02</th>
+                                                <th>Option 03</th>
+                                                <th>Option 04</th>
+                                                <th>Correct Answer</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="8">No Question Found!</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold">Title </label>
+                                <input formControlName="title" [ngClass]="{ 'is-invalid': submitted && f.title.errors }"
+                                    type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.title.errors" class="error-text">
+                                    <span *ngIf="f.title.errors.required" class="text-danger">Title is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 1 </label>
+                                <input formControlName="option1" [ngClass]="{ 'is-invalid': submitted && f.option1.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option1.errors" class="error-text">
+                                    <span *ngIf="f.option1.errors.required" class="text-danger">Option 1 is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 2 </label>
+                                <input formControlName="option2" [ngClass]="{ 'is-invalid': submitted && f.option2.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option2.errors" class="error-text">
+                                    <span *ngIf="f.option2.errors.required" class="text-danger">Option 2 is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 3 </label>
+                                <input formControlName="option3" [ngClass]="{ 'is-invalid': submitted && f.option3.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option3.errors" class="error-text">
+                                    <span *ngIf="f.option3.errors.required" class="text-danger">Option 3 is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Option 4 </label>
+                                <input formControlName="option4" [ngClass]="{ 'is-invalid': submitted && f.option4.errors }" type="text" class="form-control" autocomplete="off">
+                                <div *ngIf="submitted && f.option4.errors" class="error-text">
+                                    <span *ngIf="f.option4.errors.required" class="text-danger">Option 4 is required</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <label class="col-form-label font-weight-bold required"> Correct Answer</label><br/>
+
+                                <div class="form-check form-check-inline col-sm-3">
+                                    <input class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.answer.errors }"  formControlName="answer" type="radio" name="answer" id="inlineRadio1" value="1">
+                                    <label class="form-check-label" for="inlineRadio1">Option A</label>
+                                </div>
+                                <div class="form-check form-check-inline col-sm-3">
+                                    <input class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.answer.errors }"  formControlName="answer" type="radio" name="answer" id="inlineRadio2" value="2">
+                                    <label class="form-check-label" for="inlineRadio2">Option B</label>
+                                </div>
+                                <div class="form-check form-check-inline col-sm-3">
+                                    <input class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.answer.errors }"  formControlName="answer" type="radio" name="answer" id="inlineRadio3" value="3">
+                                    <label class="form-check-label" for="inlineRadio3">Option C</label>
+                                </div>
+                                <div class="form-check form-check-inline col-sm-2">
+                                    <input class="form-check-input" [ngClass]="{ 'is-invalid': submitted && f.answer.errors }"  formControlName="answer" type="radio" name="answer" id="inlineRadio4" value="4">
+                                    <label class="form-check-label" for="inlineRadio4">Option D</label>
+                                </div>
+                                <div *ngIf="submitted && f.answer.errors" class="error-text">
+                                    <span *ngIf="f.answer.errors.required" class="text-danger">Answer is required</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" *ngIf="!is_update" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+                <button class="btn btn-success btn-outline-success" *ngIf="is_update" (click)="SubmitQuestionUpdate()">
+                    <i class="icofont icofont-check-circled"></i> {{updateButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>

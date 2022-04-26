@@ -1,0 +1,79 @@
+<block-ui>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+          <div class="card card-border-primary">
+            <div class="card-block ">
+              <div class="col-12">
+                <div class="row">
+                  <div class="col-sm-12 row">
+                    <div class="col-3">
+                      <img *ngIf="!corrector.profile_pic" class="media-object card-list-img corrector-image-size mb-2"
+                        src="assets/images/avatar-5.png" alt="Image">
+                      <img *ngIf="corrector.profile_pic" class="media-object card-list-img corrector-image-size mb-2"
+                        src="https://api.bacbontutors.com/V2/uploads/tutors/{{corrector.profile_pic}}" alt="Image">
+                      <br>
+                      <p><strong> Name: </strong> {{ corrector.name }}</p>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12"
+                *ngFor="let correction of correctionList | paginate: { itemsPerPage: page.size, currentPage: page.pageNumber, totalItems: page.totalElements  }; let i=index">
+                <div class="card user-card mb-3">
+                  <div class="card-block">
+                    <div class="media">
+                      <div class="media-body">
+                        <a  [routerLink]="['/written-practice-paragraph-details', correction.id ]">
+                          <div class="row">
+                            <div class="col-12">
+                              <p><b>Class :</b> {{correction.course_name}}</p>
+                              <p><b>Created On :</b> {{correction.complete_date | amDateFormat :
+                                'MMMM DD,YYYY'}}</p>
+                              <p class="text-wrap"><b>Title :</b> {{correction.title}}</p>
+                            </div>
+                            <div class="col-sm-12">
+                              <div class="row">
+                                <div class="col-6 text-left">
+                                  <button *ngIf="correction.is_completed"
+                                    class="btn btn-success btn-mini mr-2 ">Completed</button>
+                                  <button *ngIf="!correction.is_completed" class="btn btn-error btn-mini mr-2">Not
+                                    Completed</button>
+                                </div>
+                                <div class="col-6 text-right">
+                                  <span ><b>Student :</b> {{correction.student_name}}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row text-center mt-5">
+                <div class="col-md-3 col-xs-12">
+                  <p *ngIf="page"> {{page.showingResult()}}</p>
+                </div>
+                <div class="col-md-9 col-xs-12">
+                  <nav>
+
+                    <pagination-controls (pageChange)="setPage($event)" responsive="true">
+                    </pagination-controls>
+                  </nav>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</block-ui>

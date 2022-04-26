@@ -1,0 +1,193 @@
+<block-ui>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card card-border-primary">
+                        <div class="card-block ">
+                            <div class="row" *ngIf="is_loaded">
+                                <div class="col-lg-12">
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="row">
+                                                        <div class="col-sm-6">
+                                                            <div class="media">
+                                                                <a class="media-left" href="#">
+                                                                    <img *ngIf="!correctionDetails.answer.student_profile_pic" class="media-object img-circle card-list-img" src="assets/images/avatar-5.png" alt="Generic placeholder image">
+                                                                    <img *ngIf="correctionDetails.answer.student_profile_pic" class="media-object img-circle card-list-img" src="{{ correctionDetails.answer.student_profile_pic }}" alt="Generic placeholder image">
+                                                                </a>
+                                                                <div class="media-body">
+                                                                    <br/>
+                                                                    <div class="col-xs-12">
+                                                                        <h6 class="d-inline-block">{{ correctionDetails.answer.student_name }} (Student)</h6>
+                                                                    </div>
+                                                                    <div class="f-13 text-muted"><i class="icofont-phone"></i> <strong>{{ correctionDetails.answer.student_mobile_no }}</strong> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-6">
+                                                            <span *ngIf="correctionDetails.status == 'Answered'" class="ribbon bg-info float-right">Answered</span>
+                                                            <span *ngIf="correctionDetails.status == 'Accepted'" class="ribbon bg-info float-right">Accepted</span>
+                                                            <span *ngIf="correctionDetails.status == 'Corrected'" class="ribbon bg-success float-right">Corrected</span>
+
+                                                            <div class="f-13 text-muted tutor-name"><strong>TUTOR:</strong> {{ correctionDetails.answer.tutor_name }} </div>
+
+                                                            <div class="f-13 text-muted"><strong>Corrected At:</strong> {{ correctionDetails.answer.completed_date | date: 'MMM d, y, h:mm:ss a' }} </div> 
+                                                            <div class="f-13 text-muted" *ngIf="correctionDetails.answer.is_answer_re_submitted"><strong>Answer Re-Submitted:</strong> {{ correctionDetails.answer.is_answer_re_submitted ? "Yes" : "" }} </div>
+                                                            <div class="f-13 text-muted"><strong>Total Mark: </strong> <span *ngIf="correctionDetails.answer.given_mark">{{ correctionDetails.answer.given_mark }} / </span> {{ correctionDetails.answer.total_mark }} </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="f-13 text-muted tutor-name"><strong>Type:</strong> {{ correctionDetails.type_name }} </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="f-13 text-muted"><strong>Title:</strong> {{ correctionDetails.title }} </div>
+                                                        </div>
+                                                        <div class="col-sm-12" *ngIf="correctionDetails.description">
+                                                            <div class="f-13 text-muted"><strong>Description:</strong> {{ correctionDetails.description }} </div>
+                                                        </div>
+                                                        <div class="col-sm-12" *ngIf="correctionDetails.hints">
+                                                            <div class="f-13 text-muted"><strong>Hints:</strong> {{ correctionDetails.hints }} </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-12" *ngFor="let item of correctionDetails.answer_details; let i=index">
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="media">
+                                                        <div class="media-body">
+                                                            <div class="f-13 text-muted inline tutor-name" *ngIf="item.student_answer">
+                                                                <h6>Student's Answer</h6>
+                                                            </div>
+                                                            <div class="f-13 text-muted float-right answer-date tutor-name"> {{item.answer_creation_date | date: 'MMM d, y, h:mm:ss a' }} </div> <br/> 
+                                                            <div class="f-13 text-muted float-right answer-mark" *ngIf="item.given_mark"> Given Mark : {{ item.given_mark }} / {{ item.total_mark }} </div>
+                                                            <br *ngIf="item.given_mark"/><br/>
+                                                            <p *ngIf="item.student_answer" style="white-space: pre-line" [innerHTML]="item.student_answer"></p>
+                                                            <br/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="list-view"  *ngIf="item.tutor_correction">
+                                        <li>
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="media">
+                                                        <div class="media-body">
+                                                            <div class="f-13 text-muted">
+                                                                <h6 class="inline tutor-name">{{item.tutor_name }}'s Correction Note</h6>
+                                                                <div class="f-13 text-muted float-right answer-date tutor-name">Corrected At: {{item.tutor_correction_date | date: 'MMM d, y, h:mm:ss a' }} </div><br/>
+                                                                <button class="btn btn-info btn-sm float-right" (click)="editCFNote(item, editCNTemplate)" > <i class="fa fa-pencil"></i> Edit</button> <br/> 
+                                                                <div class="f-13 text-muted" *ngIf="item.tutor_correction" [innerHTML]="transform(item.tutor_correction)"></div><br/><br/>
+                                                                <h6 class="inline tutor-name">Feedback</h6>
+                                                                <div class="f-13 text-muted" *ngIf="item.tutor_feedback">{{ item.tutor_feedback }}</div> <br/>
+                                                            </div>
+                                                            <br/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block-ui>
+
+<ng-template #template>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-form-label required">Teacher </label> 
+                    <ng-select placeholder="Select Teacher" formControlName="teacher_id" [items]="instructorList"
+                        [clearable]='true' [clearOnBackspace]='true' bindLabel="email" bindValue="id">
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                          <div> {{item.first_name}} {{item.last_name}} - ({{item.email}})</div>
+                        </ng-template>
+                    </ng-select>
+
+                    <div *ngIf="submitted && f.teacher_id.errors" class="error-text">
+                        <span *ngIf="f.teacher_id.errors.required" class="text-danger"> Teacher is required</span>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+
+            <button class="btn btn-success btn-outline-success" (click)="onSetInstructorSubmit()">
+                <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+            </button>
+
+        </div>
+
+    </div>
+</ng-template>
+
+<ng-template #editCNTemplate>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+         <form [formGroup]="correctionForm">
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label font-weight-bold required">  Mark </label>
+                <div class="col-sm-9">
+                    <input type="number" formControlName="mark" class="form-control" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label font-weight-bold required">  Correction Note </label>
+                <div class="col-sm-9">
+                    <quill-editor formControlName="tutor_correction" [modules]="modules"  ngDefaultControl></quill-editor>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label font-weight-bold required"> Feedback </label>
+                <div class="col-sm-9">
+                    <textarea formControlName="tutor_feedback" type="text" class="form-control" autocomplete="off" cols="30" rows="5"></textarea>
+                </div>
+            </div>
+         </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                    class="icofont icofont-close"></i>Close
+            </button>
+            <button class="btn btn-success btn-outline-success" (click)="onCorrectionNoteSubmit()">
+                <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+            </button>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,26 @@
+@media (min-width: 992px) {
+    .modal-lg {
+        max-width: 1024px !important;
+    }
+}
+
+.image-size{
+    width: 100px;
+    height: 100px;
+}
+
+.link-icon{
+    cursor: pointer !important;
+}
+
+.box-shadow-one{
+   box-shadow: 0 7px 25px 0 rgb(0 0 0 / 10%); 
+}
+
+.btn i {
+    margin-right: 0px;
+}
+
+.min-height{
+    min-height: 174px;
+}

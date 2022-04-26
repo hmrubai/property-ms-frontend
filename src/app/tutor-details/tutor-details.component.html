@@ -1,0 +1,1626 @@
+<block-ui>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary" *ngIf="is_loaded">
+            <div class="card-header">
+
+              <div class="row">
+                <div class="col-4">
+                  <h5> &nbsp; </h5>
+                </div>
+                <div class="col-7">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group row ">
+                        <label class="col-sm-3 pt-2">Status </label>
+                        <div class="col-sm-8">
+                          <select name="select" (change)="changeStatus($event.target.value, tutorDetails)"
+                            class="form-control">
+                            <option value="">Change Status</option>
+                            <option *ngIf="tutorDetails.status == 'Pending'" selected value="Pending">Pending</option>
+                            <option *ngIf="tutorDetails.status != 'Pending'" value="Pending">Pending</option>
+                            <option *ngIf="tutorDetails.status == 'Available'" selected value="Available">Approve
+                            </option>
+                            <option *ngIf="tutorDetails.status != 'Available'" value="Available">Approve</option>
+                            <option *ngIf="tutorDetails.status == 'On-Hold'" selected value="On-Hold">On-Hold</option>
+                            <option *ngIf="tutorDetails.status != 'On-Hold'" value="On-Hold">On-Hold</option>
+                            <option *ngIf="tutorDetails.status == 'Suspended'" selected value="Suspended">Suspended
+                            </option>
+                            <option *ngIf="tutorDetails.status != 'Suspended'" value="Suspended">Suspend</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group row ">
+                        <label class="col-sm-4 pt-2">BacBon Rank </label>
+                        <div class="col-sm-8">
+                          <select name="select" (change)="changeRank($event.target.value, tutorDetails)"
+                            class="form-control">
+                            <option value="">Change Rank</option>
+                            <option *ngIf="tutorDetails.bacbon_rank == 'Platinum'" selected value="Platinum">Platinum
+                            </option>
+                            <option *ngIf="tutorDetails.bacbon_rank != 'Platinum'" value="Platinum">Platinum</option>
+                            <option *ngIf="tutorDetails.bacbon_rank == 'Gold'" selected value="Gold">Gold</option>
+                            <option *ngIf="tutorDetails.bacbon_rank != 'Gold'" value="Gold">Gold</option>
+                            <option *ngIf="tutorDetails.bacbon_rank == 'Silver'" selected value="Silver">Silver</option>
+                            <option *ngIf="tutorDetails.bacbon_rank != 'Silver'" value="Silver">Silver</option>
+                            <option *ngIf="tutorDetails.bacbon_rank == null" selected value="null">None</option>
+                            <option *ngIf="tutorDetails.bacbon_rank != null" value="null">None</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <!-- BacBon Rank: <select name="select" (change)="changeStatus($event.target.value, tutorDetails)" class="form-control col-sm-7 mb-2">
+                              <option value="">Change Status</option>
+                              <option *ngIf="tutorDetails.status == 'Pending'" selected value="Pending">Pending</option>
+                              <option *ngIf="tutorDetails.status != 'Pending'" value="Pending">Pending</option>
+                              <option *ngIf="tutorDetails.status == 'Available'" selected value="Available">Approve</option>
+                              <option *ngIf="tutorDetails.status != 'Available'" value="Available">Approve</option>
+                              <option *ngIf="tutorDetails.status == 'On-Hold'" selected value="On-Hold">On-Hold</option>
+                              <option *ngIf="tutorDetails.status != 'On-Hold'" value="On-Hold">On-Hold</option>
+                              <option *ngIf="tutorDetails.status == 'Suspended'" selected value="Suspended">Suspended</option>
+                              <option *ngIf="tutorDetails.status != 'Suspended'" value="Suspended">Suspend</option>
+                          </select> -->
+
+                </div>
+                <div class="col-1">
+                  <button class="btn btn-secondary btn-sm float-right" (click)="backTo()">
+                    < Back </button>
+                </div>
+              </div>
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+                <div class="col-lg-12">
+                  <div class="card user-card mb-3">
+                    <div class="card-block">
+                      <div class="media">
+                        <div class="media-body">
+
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <h5> {{ tutorDetails.name }} </h5> | <span *ngIf="tutorDetails.bacbon_rank"
+                                class="badge badge-secondary rank-button"
+                                [ngClass]="{'gold-color': tutorDetails.bacbon_rank === 'Gold','platinum-color': tutorDetails.bacbon_rank === 'Platinum','silver-color': tutorDetails.bacbon_rank === 'Silver'}">
+                                <i class="fa fa-bolt"></i>
+                                {{ tutorDetails.bacbon_rank }}
+                              </span>
+
+                              <label class="ml-2 label label-md label-info "> <i class="icofont-star"></i>
+                                {{ tutorDetails.guardian_rating }}</label>
+
+                              <button class="btn btn-info btn-mini float-right"
+                                (click)="openProfileModal(tutorDetails, profileTemplate)">Edit</button>
+                              <hr>
+                            </div>
+
+
+                            <div class="col-sm-12 row">
+                              <div class="col-3">
+                                <img *ngIf="!tutorDetails.profile_pic"
+                                  class="media-object card-list-img image-size mb-2" src="assets/images/avatar-5.png"
+                                  alt="Image">
+                                <img *ngIf="tutorDetails.profile_pic" class="media-object card-list-img image-size mb-2"
+                                  src="https://api.bacbontutors.com/V2/uploads/tutors/{{tutorDetails.profile_pic}}"
+                                  alt="Image">
+                                <br>
+
+
+                              </div>
+                              <div class="col-9">
+                                <div class="row">
+                                  <div class="col-sm-4">
+                                    <p><strong>Father Name: </strong> {{ tutorDetails.father_name }}</p>
+                                    <p><strong>Phone No: </strong> {{ tutorDetails.mobile_no_1 }}</p>
+                                    <p><strong>Religion: </strong> {{ tutorDetails.religion }}</p>
+                                    <p><strong>Blood Group: </strong> {{ tutorDetails.blood_group }}</p>
+                                  </div>
+                                  <div class="col-sm-4">
+                                    <p><strong>Mother Name: </strong> {{ tutorDetails.mother_name }}</p>
+                                    <p><strong>Phone No 2: </strong> {{ tutorDetails.mobile_no_2 }}</p>
+                                    <p><strong>Marital Status: </strong> {{ tutorDetails.marital_status }}</p>
+                                  </div>
+                                  <div class="col-sm-4">
+                                    <p><strong>Gender: </strong> {{ tutorDetails.gender }}</p>
+                                    <p><strong>Email: </strong> {{ tutorDetails.email }}</p>
+                                    <p *ngIf="tutorDetails.date_of_birth && tutorDetails.date_of_birth!='1970-01-01 00:00:00'"><strong>Date of Birth: </strong>
+                                      {{ tutorDetails.date_of_birth | date : 'MMM d, y' }}</p>
+
+                                      <p><strong *ngIf="tutorDetails.created_at">Register date: </strong>
+                                        {{ tutorDetails.created_at | date : 'MMM d, y' }}</p>
+
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card user-card mb-3">
+                    <div class="card-block">
+                      <div class="media">
+                        <div class="media-body">
+                          <div class="col-xs-12">
+                            <!-- <h5 class="d-inline-block">{{ tabTitle }}</h5> -->
+                            <button class="btn btn-info btn-mini float-right active"
+                              *ngIf="activeTab == 'tabTransaction'" (click)="changeTab('tabTransaction')">Transaction
+                              Info</button>
+                            <!-- <button class="btn btn-info btn-mini float-right"
+                                      *ngIf="activeTab != 'tabTransaction'"
+                                      (click)="changeTab('tabTransaction')">Transaction Info</button> -->
+                            <button class="btn btn-info btn-mini float-right mr-2 active"
+                              *ngIf="activeTab == 'tabTuition'" (click)="changeTab('tabTuition')">Tuition
+                              Info</button>
+                            <button class="btn btn-info btn-mini float-right mr-2" *ngIf="activeTab != 'tabTuition'"
+                              (click)="changeTab('tabTuition')">Tuition
+                              Info</button>
+                            <button class="btn btn-info btn-mini float-right mr-2 active"
+                              *ngIf="activeTab == 'tabBasic'" (click)="changeTab('tabBasic')">Basic
+                              Info</button>
+                            <button class="btn btn-info btn-mini float-right mr-2" *ngIf="activeTab != 'tabBasic'"
+                              (click)="changeTab('tabBasic')">Basic
+                              Info</button>
+                            <hr>
+                          </div>
+                          <div class="col-xs-12" *ngIf="activeTab == 'tabBasic'">
+                            <h5 class="d-inline-block">{{ tabSubTitle }}</h5>
+                            <hr>
+                            <div class="col-md-12" style="margin-top: 30px;">
+                              <h5>Intro video <span *ngIf="tutorDetails.intro_video" class="badge badge-success"><i
+                                    class="fa fa-check"></i> Completed</span>
+                                <!-- <button *ngIf="tutorDetails.intro_video" class="btn btn-danger btn-mini pull-right ml-5 py-1" (click)="deleteVideo(tutorDetails)"> <i class="fa fa-trash"></i> Delete</button> -->
+                              </h5>
+                              <div class="row mt-4">
+                                <div class="col-md-12" *ngIf="tutorDetails.intro_video">
+                                  <video width="320" height="240" controls>
+                                    <source src="{{ baseUrl }}/{{ tutorDetails.intro_video }}" type="video/mp4">
+                                    <source src="{{ baseUrl }}/{{ tutorDetails.intro_video }}" type="video/ogg">
+                                    Your browser does not support the video tag.
+                                  </video>
+                                </div>
+                                <div class="col-md-12" *ngIf="!tutorDetails.intro_video">
+                                  <i>Intro video has not uploaded yet</i>
+                                </div>
+                              </div>
+                              <hr>
+                            </div>
+                            <div class="col-lg-12" style="margin-top: 30px;">
+                              <h5 class="mb-2">Biography <span *ngIf="tutorDetails.bio" class="badge badge-success"><i
+                                    class="fa fa-check"></i> Completed</span></h5>
+                              <button class="btn btn-info btn-mini float-right"
+                                (click)="openModalBio(templateBio,tutorDetails)"> <i class="fa fa-pencil"></i>
+                                Edit</button>
+                              <p>{{ tutorDetails.bio }}</p>
+                              <hr>
+                            </div>
+                            <div class="col-lg-12" style="margin-top: 30px;">
+                              <h5 class="mb-2">Address <span
+                                  *ngIf="tutorDetails.current_address && tutorDetails.permanent_address"
+                                  class="badge badge-success"><i class="fa fa-check"></i> Completed</span></h5>
+                              <button class="btn btn-info btn-mini float-right"
+                                (click)="openModalAddress(templateAddress,tutorDetails)"> <i class="fa fa-pencil"></i>
+                                Edit</button>
+                              <p><strong>Present Address: </strong> {{ tutorDetails.current_address }}</p>
+                              <p><strong>Permanent Address: </strong> {{ tutorDetails.permanent_address }}</p>
+                              <hr>
+                            </div>
+                            <div class="col-lg-12" style="margin-top: 30px;">
+                              <h5 class="mb-2">Certificate <span *ngIf="tutorDetails.certificates.length > 0"
+                                  class="badge badge-success"><i class="fa fa-check"></i> Completed</span></h5>
+                              <button class="btn btn-info btn-mini float-right"
+                                (click)="UploadIdentityFile(UploadNidTemplate, 'Certificate')"> <i
+                                  class="fa fa-upload"></i> Upload</button>
+                              <div class="row">
+                                <div class="col-md-4"
+                                  *ngFor="let certificate of tutorDetails.certificates; let i=index">
+
+
+                                  <div class="form-group row">
+
+                                    <div class="col-sm-2" style="position: relative;">
+                                      <a href="https://api.bacbontutors.com/V2/uploads/certificates/{{ certificate.file }}"
+                                        target="_blank">
+                                        <img src="assets/images/image.png"
+                                          style="height: auto; border: 2px solid rgba(162, 162, 162, 0.38); width: 50px;">
+                                        <i style=" top: -10px;right:-10px; position: absolute;"
+                                          *ngIf="certificate.is_approved" class="fa fa-check text-success fa-2x"></i>
+                                      </a>
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <ng-select placeholder="Action" [searchable]="false" [items]="actions"
+                                        (change)="certificateActionChange($event,certificate,i)" appendTo="body"
+                                        class="mt-2" [clearable]="false">
+                                      </ng-select>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <hr>
+                            </div>
+
+                            <div class="col-lg-12" style="margin-top: 30px;">
+                              <h5 class="mb-2">Identity <span *ngIf="tutorDetails.nids.length > 0"
+                                  class="badge badge-success"><i class="fa fa-check"></i> Completed</span></h5>
+                              <button class="btn btn-info btn-mini float-right"
+                                (click)="UploadIdentityFile(UploadNidTemplate, '')"> <i class="fa fa-upload"></i>
+                                Upload</button>
+                              <hr>
+                              <div class="row">
+                                <div class="col-lg-12 mt-2">
+                                  <h6>National ID:</h6>
+                                </div>
+                                <div class="col-md-4" *ngFor="let nid of tutorDetails.nids; let i=index">
+
+                                  <div class="form-group row">
+
+                                    <div class="col-sm-2" style="position: relative;">
+                                      <a href="https://api.bacbontutors.com/V2/uploads/nids/{{ nid.file }}"
+                                        target="_blank">
+                                        <img src="assets/images/image.png"
+                                          style="height: auto; border: 2px solid rgba(162, 162, 162, 0.38); width: 50px;">
+                                        <i style=" top: -10px;right:-10px; position: absolute;" *ngIf="nid.is_approved"
+                                          class="fa fa-check text-success fa-2x"></i>
+                                      </a>
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <ng-select placeholder="Action" [searchable]="false" [items]="actions"
+                                        (change)="nidActionChange($event,nid,i)" appendTo="body" class="mt-2"
+                                        [clearable]="false">
+                                      </ng-select>
+
+
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-12 mt-2">
+                                  <h6 class="mt-2">Passport:</h6>
+                                </div>
+                                <div class="col-md-4" *ngFor="let passport of tutorDetails.passports; let i=index">
+
+
+                                  <div class="form-group row">
+
+                                    <div class="col-sm-2" style="position: relative;">
+                                      <a href="https://api.bacbontutors.com/V2/uploads/passports/{{ passport.file }}"
+                                        target="_blank">
+                                        <img src="assets/images/image.png"
+                                          style="height: auto; border: 2px solid rgba(162, 162, 162, 0.38); width: 50px;">
+                                        <i style=" top: -10px;right:-10px; position: absolute;"
+                                          *ngIf="passport.is_approved" class="fa fa-check text-success fa-2x"></i>
+                                      </a>
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <ng-select placeholder="Action" [searchable]="false" [items]="actions"
+                                        (change)="passportActionChange($event,passport,i)" appendTo="body" class="mt-2"
+                                        [clearable]="false">
+                                      </ng-select>
+
+
+                                    </div>
+                                  </div>
+
+                                </div>
+                              </div>
+                              <div class="row">
+                                <div class="col-lg-12 mt-2">
+                                  <h6 class="mt-2">Birth Certificate:</h6>
+                                </div>
+                                <div class="col-md-4" *ngFor="let bs of tutorDetails.birth_certificates; let i=index">
+
+
+                                  <div class="form-group row">
+
+                                    <div class="col-sm-2" style="position: relative;">
+                                      <a href="https://api.bacbontutors.com/V2/uploads/birth_certificates/{{ bs.file }}"
+                                        target="_blank">
+                                        <img src="assets/images/image.png"
+                                          style="height: auto; border: 2px solid rgba(162, 162, 162, 0.38); width: 50px;">
+                                        <i style=" top: -10px;right:-10px; position: absolute;" *ngIf="bs.is_approved"
+                                          class="fa fa-check text-success fa-2x"></i>
+                                      </a>
+                                    </div>
+                                    <div class="col-sm-4">
+                                      <ng-select placeholder="Action" [searchable]="false" [items]="actions"
+                                        (change)="bsActionChange($event,bs,i)" appendTo="body" class="mt-2"
+                                        [clearable]="false">
+                                      </ng-select>
+
+                                    </div>
+                                  </div>
+
+
+                                  <!--<a (click)="deleteFile('Certificate', certificate)" data-toggle="modal" data-target="#docDeleteModal" class="btn btn-danger btn-xs link-btn"><i class="icon_trash_alt"></i></a>-->
+                                </div>
+                              </div>
+                              <hr>
+
+                              <div class="row mt-5">
+                                <div class="col-lg-12 mt-2 mb-4">
+                                  <h5 class="mt-2">Preferred Subjects And Results <span
+                                      *ngIf="tutorDetails.preferred_subjects_for_admin.length > 0 "
+                                      class="badge badge-success"><i class="fa fa-check"></i> Completed</span>
+                                  </h5>
+                                </div>
+                                <div class="col-md-12" *ngIf="tutorDetails.preferred_subjects_for_admin.length > 0">
+
+                                  <div class="services_list clearfix">
+                                    <ul>
+                                      <li
+                                        *ngFor="let subject of tutorDetails.preferred_subjects_for_admin; let i=index">
+                                        <div class="row">
+                                          <div class="col-sm-6">
+                                            <b>{{ subject.course_name }}</b> <br />
+                                            {{ subject.medium_name }} <br />
+                                            {{ subject.class_name }} <br />
+                                            <div class="progress">
+                                              <div class="progress-bar bg-success progress-bar-striped"
+                                                role="progressbar"
+                                                style="width: {{ (subject.rating/5)*100 | number : '1.0-0' }}%"
+                                                aria-valuemin="0" aria-valuemax="100">Grade:
+                                                {{ subject.rating }}, out of 5</div>
+                                            </div>
+                                          </div>
+                                          <div class="col-sm-6 text-right text-sm">
+                                            <p class="m-0">
+                                              <em><b> Allowed for Participation:</b>
+                                                {{ subject.attempt_number}}
+                                                {{subject.attempt_number === 1 ? ' time': ' times' }}</em> <i
+                                                class="fa fa-pencil cursor-pointer ml-2"
+                                                (click)="openModalParticipationAllow(templateParticipationUpdate,subject)"></i>
+                                            </p>
+                                            <p class="m-0">
+                                              <em><b>Participated:</b>
+                                                {{ subject.participation_count}}
+                                                {{subject.participation_count === 1 ? ' time': ' times' }}</em>
+                                            </p>
+                                            <p class="m-0">
+                                              <em><b>Home Tuition</b>
+                                                {{ subject.salary_max }} Tk
+                                                {{subject.salary_method === 'Month'? ' / Month' : '/ Week'}}</em>
+                                            </p>
+                                            <p class="m-0">
+                                              <em><b>Online Tuition </b>
+                                                {{ subject.online_hour_rate }} Tk / Hour </em>
+                                            </p>
+                                          </div>
+                                        </div>
+                                      </li>
+                                      <li *ngIf="tutorDetails.preferred_subjects_for_admin.length == 0">
+                                        <em>This tutor did not select any subjects</em>
+                                      </li>
+                                    </ul>
+                                  </div>
+
+
+                                </div>
+
+                                <div class="col-md-12" *ngIf="tutorDetails.preferred_subjects_for_admin.length == 0">
+                                  <i>This tutor did not select any subjects</i>
+                                </div>
+                              </div>
+                              <hr>
+
+                              <div class="row mt-5">
+                                <div class="col-lg-12 mt-2 mb-4">
+                                  <h5 class="mt-2">Education <span *ngIf="tutorDetails.has_educations"
+                                      class="badge badge-success"><i class="fa fa-check"></i> Completed</span>
+                                  </h5>
+
+                                  <button (click)="addEducationModal(updateEducationTemplate)"
+                                    class="btn btn-info btn-mini float-right link-a"><i class="fa fa-plus"></i>
+                                    Add New</button>
+                                </div>
+                                <div class="col-md-12" *ngIf="tutorDetails.educations.length > 0">
+
+
+                                  <div class="wrapper_indent">
+                                    <div class="row">
+                                      <div class="col-lg-12">
+                                        <table style="border: 1px groove #ffffff;" class="table table-borderless"
+                                          *ngFor="let education of tutorDetails.educations; let i=index">
+                                          <tbody>
+                                            <tr>
+                                              <td colspan="2">
+                                                <a (click)="updateEducationModal(education, updateEducationTemplate)"
+                                                  class="float-right link-a font-weight-bold cursor-pointer"><i
+                                                    class="fa fa-edit"></i> Edit</a>
+                                              </td>
+                                            </tr>
+                                            <tr class="pb-0">
+                                              <td style="width: 30%"><strong>Title</strong></td>
+                                              <td>{{ education.edu_title }}</td>
+                                            </tr>
+                                            <tr class="pb-0">
+                                              <td><strong>Institute</strong></td>
+                                              <td>{{ education.institute }}</td>
+                                            </tr>
+                                            <tr class="pb-0">
+                                              <td><strong>Discipline</strong></td>
+                                              <td>{{ education.division }}</td>
+                                            </tr>
+                                            <tr class="pb-0">
+                                              <td><strong>Completion Status</strong></td>
+                                              <td>{{ education.completion_status }}</td>
+                                            </tr>
+                                            <tr class="pb-0" *ngIf="education.passing_year && education.passing_year!='1970-01-01 00:00:00'">
+                                              <td><strong>Passing Year</strong></td>
+                                              <td>{{ education.passing_year | date:"yyyy" }}</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </div>
+                                  </div>
+
+
+                                </div>
+
+                                <div class="col-md-12" *ngIf="tutorDetails.educations.length == 0">
+                                  <i>This tutor has not updated education history</i>
+                                </div>
+                              </div>
+
+                              <hr>
+
+                              <div class="row mt-5">
+                                <div class="col-lg-12 mt-2 mb-4">
+                                  <h5 class="mt-2">Work Experience <span class="badge badge-default">
+                                      Optional</span></h5>
+
+                                  <button (click)="addJobModal(updateJobTemplate)"
+                                    class="btn btn-info btn-mini float-right link-a"><i class="fa fa-plus"></i>
+                                    Add New</button>
+                                </div>
+                                <div class="col-md-12" *ngIf="tutorDetails.work_experiences.length > 0">
+
+                                  <div class="wrapper_indent add_bottom_25 row">
+                                    <div class="col-lg-12">
+                                      <table style="border: 1px groove #ffffff;" class="table table-borderless"
+                                        *ngFor="let work of tutorDetails.work_experiences; let i=index">
+                                        <tbody>
+                                          <tr>
+                                            <td colspan="2">
+                                              <a (click)="updateJobModal(work, updateJobTemplate)"
+                                                class="float-right link-a font-weight-bold cursor-pointer"><i
+                                                  class="fa fa-edit"></i> Edit</a>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td style="width: 30%"><strong>Designation</strong></td>
+                                            <td>{{ work.work_title }}</td>
+                                          </tr>
+                                          <tr>
+                                            <td><strong>Organization</strong></td>
+                                            <td>{{ work.organization }}</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+
+
+                                </div>
+
+                                <div class="col-md-12" *ngIf="tutorDetails.work_experiences.length == 0">
+                                  <i>This tutor has not updated work experience</i>
+                                </div>
+                              </div>
+
+                              <hr>
+
+                              <div class="row mt-5">
+                                <div class="col-lg-12 mt-2 mb-4">
+                                  <h5 class="mt-2">Tution Areas <span *ngIf="tutorDetails.has_tuition_area"
+                                      class="badge badge-success"><i class="fa fa-check"></i> Completed</span>
+                                  </h5>
+                                </div>
+                                <div class="col-md-12" *ngIf="tutorDetails.locations.length > 0">
+
+                                  <div class="wrapper_indent add_bottom_25">
+                                    <div class="col-lg-12">
+                                      <p class="mb-0" *ngFor="let location of tutorDetails.locations; let i=index">
+                                        {{ i+1 }}. {{ location.area_name }}</p>
+                                    </div>
+                                  </div>
+
+
+                                </div>
+
+                                <div class="col-md-12" *ngIf="tutorDetails.locations.length == 0">
+                                  <i>This tutor did not set tuition areas</i>
+                                </div>
+                              </div>
+
+                              <hr>
+
+                              <div class="row mt-5">
+                                <div class="col-lg-12 mt-2 mb-4">
+                                  <h5 class="mt-2">Cognitives Answer
+                                  </h5>
+                                </div>
+                                <div class="col-md-12" *ngIf="tutorDetails.congnitives.length > 0">
+                                  <div class="wrapper_indent add_bottom_25">
+                                    <div class="col-lg-12">
+                                      <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"
+                                          *ngFor="let cognitive of tutorDetails.congnitives; let i=index">
+                                          <b>{{ i + 1 }}. {{ cognitive.title }} :</b>
+                                          {{ cognitive.answer }}
+                                        </li>
+                                      </ul>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-12" *ngIf="tutorDetails.congnitives.length == 0">
+                                  <i>This tutor did not give the cognitive test</i>
+                                </div>
+                              </div>
+
+
+                              <hr>
+
+                              <div class="row mt-5">
+                                <div class="col-lg-12 mt-2 mb-4">
+                                  <h5 class="mt-2">Tutor Schedule <span *ngIf="tutorDetails.has_schedule.length > 0 "
+                                      class="badge badge-success"><i class="fa fa-check"></i> Completed</span>
+                                  </h5>
+
+                                  <button (click)="OpenUpdateScheduletModal(updateScheduleTemplate)"
+                                    class="btn btn-info btn-mini float-right link-a"><i class="fa fa-edit"></i>
+                                    Edit</button>
+
+                                </div>
+                                <div class="col-md-12" *ngIf="tutorDetails.availibilities.length > 0">
+                                  <div class="row">
+                                    <div class="col-lg-12 table-responsive">
+                                      <table class="table table-bordered" *ngIf="is_loaded">
+                                        <thead>
+                                          <tr class="bg-primary">
+                                            <th scope="col">Day</th>
+                                            <th scope="col">Morning
+                                              <br />Before 12.0 Pm
+                                            </th>
+                                            <th scope="col">Afternoon
+                                              <br />12:00 PM - 5:00 PM
+                                            </th>
+                                            <th scope="col">Evening
+                                              <br />After 5:00 PM
+                                            </th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td><strong>Saturday</strong></td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.sat && available.session == 1"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.sat && available.session == 2"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.sat && available.session == 3"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td><strong>Sunday</strong></td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.sun && available.session == 1"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.sun && available.session == 2"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.sun && available.session == 3"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td><strong>Monday</strong></td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.mon && available.session == 1"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.mon && available.session == 2"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.mon && available.session == 3"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td><strong>Tuesday</strong></td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.tue && available.session == 1"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.tue && available.session == 2"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.tue && available.session == 3"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td><strong>Wednesday</strong></td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.wed && available.session == 1"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.wed && available.session == 2"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.wed && available.session == 3"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td><strong>Thursday</strong></td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.thu && available.session == 1"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.thu && available.session == 2"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.thu && available.session == 3"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td><strong>Friday</strong></td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.fri && available.session == 1"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.fri && available.session == 2"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                            <td class="text-center">
+                                              <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+                                                <i *ngIf="available.fri && available.session == 3"
+                                                  class="fa fa-check-circle text-success fa-2x"></i>
+                                              </span>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="col-md-12" *ngIf="tutorDetails.availibilities.length == 0">
+                                  <i>This tutor did not set any schedule</i>
+                                </div>
+                              </div>
+
+                              <hr>
+                              <div class="row mt-5">
+                                <div class="col-lg-12 mt-2 mb-4">
+                                  <h5 class="mt-2">References <span *ngIf="tutorDetails.has_reference"
+                                      class="badge badge-success"><i class="fa fa-check"></i> Completed</span>
+                                  </h5>
+                                </div>
+                                <div class="col-md-12" *ngIf="tutorDetails.references.length > 0">
+
+                                  <div class="row">
+                                    <div class="col-md-6"
+                                      *ngFor="let reference of tutorDetails.references; let i=index">
+                                      <table class="table table-borderless table-referance">
+                                        <tbody>
+                                          <tr>
+                                            <td colspan="2">
+                                              <a (click)="openUpdateReferenceModal(reference, updateReferencesTemplate)"
+                                                class="float-right link-a btn btn-info btn-mini"><i
+                                                  class="fa fa-edit"></i> Edit</a>
+                                            </td>
+                                          </tr>
+                                          <tr>
+                                            <td style="width: 30%"><strong>Name</strong></td>
+                                            <td>{{ reference.name }} <span *ngIf="reference.is_blood_connected"
+                                                class="badge badge-success">First blood</span> </td>
+                                          </tr>
+                                          <tr [ngClass]="{'border-right': i == 0}">
+                                            <td><strong>Phone</strong></td>
+                                            <td>{{ reference.mobile_no }}</td>
+                                          </tr>
+                                          <tr [ngClass]="{'border-right': i == 0}">
+                                            <td><strong>Relation</strong></td>
+                                            <td>{{ reference.relation }}</td>
+                                          </tr>
+                                          <tr [ngClass]="{'border-right': i == 0}">
+                                            <td><strong>Designation</strong></td>
+                                            <td>{{ reference.designation}}</td>
+                                          </tr>
+                                          <tr [ngClass]="{'border-right': i == 0}">
+                                            <td><strong>Organization</strong></td>
+                                            <td>{{ reference.organization}}</td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+
+
+                                </div>
+
+                                <div class="col-md-12" *ngIf="tutorDetails.references.length == 0">
+                                  <i> No reference has been supplied yet.</i>
+                                </div>
+                              </div>
+
+
+                              <hr>
+                              <div class="row mt-5">
+                                <div class="col-lg-12 mt-2 mb-4">
+                                  <h5 class="mt-2">Ratings and Comments </h5>
+                                </div>
+                                <div class="col-md-8 offset-md-2" *ngIf="tutorDetails.allcomments.length > 0">
+
+
+                                  <div class="row box my-2"
+                                    *ngFor="let rating of tutorDetails.allcomments; let i=index">
+                                    <div class="col-xs-3 col-md-3 text-center">
+                                      <img style="width: 100px; height: 100px;"
+                                        src="{{baseUrl}}/uploads/guardians/{{rating.profile_pic}}" class="rounded" />
+                                    </div>
+                                    <div class="col-xs-9 col-md-9 section-box">
+                                      <h6>
+                                        {{rating.guardian_name}}
+                                      </h6>
+
+                                      <p>{{ rating.comments }}</p>
+                                      <hr />
+                                      <div class="row rating-desc">
+                                        <div class="col-md-12">
+                                          <label class="ml-2 label label-md label-info gold-color"> <i
+                                              class="icofont-star"></i>
+                                            {{ rating.rating }}</label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+
+                                </div>
+
+                                <div class="col-md-12" *ngIf="tutorDetails.allcomments.length == 0">
+                                  <i> No Rating and Comment given yet.</i>
+                                </div>
+                              </div>
+
+
+                            </div>
+                          </div>
+
+                          <div class="col-xs-12" *ngIf="activeTab == 'tabTuition'">
+                            <h5 class="d-inline-block">{{ tabSubTitle }}</h5>
+                            <hr>
+
+
+
+
+                            <div class="col-md-12 row border-buttom-dashed mb-2"
+                              *ngFor="let connection of tutorDetails.connections; let i=index">
+                              <div class="col-md-4">
+                                <figure class="tg-tutordp">
+                                  <a href="javascript:;" *ngIf="connection.profile_pic">
+                                    <img src="{{baseUrl}}/uploads/guardians/{{connection.profile_pic}}"
+                                      alt="image description">
+                                  </a>
+
+                                  <a href="javascript:;" *ngIf="!connection.profile_pic">
+
+                                    <img *ngIf="connection.gender == 'Male' || connection.gender == null"
+                                      src="assets/images/man.png" alt="image description">
+
+                                    <img *ngIf="connection.gender == 'Female'" src="assets/images/woman.png"
+                                      alt="image description">
+                                  </a>
+
+                                </figure>
+
+                                <a [routerLink]="[ '/guardian-details/', connection.guardian_id ]"> <b>{{
+                                    connection.guardian_name}}</b></a>
+                                <br><small> {{ connection.guardian_code }}</small><br>
+                                <i class="fa fa-phone"></i> {{ connection.mobile_no }} <br>
+
+                              </div>
+                              <div class="col-md-8">
+                                <div class="row" *ngFor="let student of connection.students; let ind=index">
+                                  <div class="col-md-5">
+                                    <b>Student Name: </b> {{ student.student_name }} <br>
+                                    <b>Age: </b> {{ student.student_age }} <br>
+                                    <b>Gender: </b> {{ student.student_gender }} <br>
+                                    <b>Amount: </b> {{ student.amount }} TK<br>
+                                    <div *ngIf=" student.day_slot"> <b>Slot (days): </b> {{ student.day_slot }}
+                                      <br>
+                                    </div>
+                                    <b>From: </b> {{ student.from_date | amDateFormat:'DD MMM YYYY'}} <br>
+
+                                    <div *ngIf=" student.to_date"> <b>To: </b>
+                                      {{ student.to_date | amDateFormat:'DD MMM YYYY' }} <br></div>
+                                    <b>Hire Mode: </b> {{ student.hire_mode }}
+                                  </div>
+                                  <div class="col-md-6">
+                                    <div class="row" *ngFor="let subject of student.subjects; let i=index">
+                                      <div class="col-md-12">
+                                        <b>Subject: </b> {{ subject.course_name }} <br>
+                                        <b>Medium: </b> {{ subject.medium_name }} <br>
+                                        <b>Class: </b> {{ subject.class_name }} <br>
+                                        <b>Amount: </b> {{ subject.amount }} TK
+                                        <div class="divider" *ngIf="i < student.subjects.length -1"> </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div class="col-md-12" *ngIf=" student.to_date" style="margin-top: 10px">
+                                    <b>Installments:</b>
+                                    <div class="row" *ngFor="let installment of student.installments; let index=index">
+
+                                      <div class="col-md-3">#Installment {{installment.install_no}}</div>
+                                      <div class="col-md-3">{{ installment.amount }} BDT</div>
+                                      <div class="col-md-3">
+                                        {{ installment.install_date | amDateFormat:'DD MMM YYYY'}}</div>
+                                      <div class="col-md-3"><i *ngIf="installment.is_paid"
+                                          class="fa fa-check btn btn-success btn-xs"></i></div>
+                                    </div>
+
+                                  </div>
+                                </div>
+
+                                <!-- <div class="divider" *ngIf="index < connections.length -1"> </div> -->
+                              </div>
+
+                            </div>
+                            <div *ngIf="tutorDetails.connections.length === 0" class="col-md-12 tg-hounoradnawards">
+                              <br>
+                              <i> No connection has been created yet.</i>
+                            </div>
+
+
+
+
+
+
+                          </div>
+
+                          <!-- <div class="col-xs-12" *ngIf="activeTab == 'tabTransaction'">
+                                    <h5 class="d-inline-block">{{ tabSubTitle }}</h5>
+                                    <hr>
+                                  </div> -->
+
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+            <div class="card-footer ">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>
+
+
+
+<ng-template #templateAddress>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left "> Update Address</h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideAddress()">
+      <i class="icofont icofont-close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <form [formGroup]="addressForm" class="col-sm-12" autocomplete="off">
+
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label font-weight-bold"> Current Address </label>
+          <div class="col-sm-9">
+            <textarea rows="3" formControlName="current_address"
+              [ngClass]="{ 'is-invalid': submitted && address.current_address.errors }" type="text" class="form-control"
+              autocomplete="off"></textarea>
+            <div *ngIf="submitted && address.current_address.errors" class="error-text">
+              <span *ngIf="address.current_address.errors.maxlength" class="text-danger"> Current address must be not
+                then 250
+                characters</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label font-weight-bold"> Permanent Address </label>
+          <div class="col-sm-9">
+            <textarea rows="3" formControlName="permanent_address"
+              [ngClass]="{ 'is-invalid': submitted && address.permanent_address.errors }" type="text"
+              class="form-control" autocomplete="off"></textarea>
+            <div *ngIf="submitted && address.permanent_address.errors" class="error-text">
+              <span *ngIf="address.permanent_address.errors.maxlength" class="text-danger"> Permanent address must be
+                not then 250
+                characters</span>
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideAddress()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+      <button class="btn btn-success btn-outline-success" (click)="onFormSubmitAddress()">
+        <i class="icofont icofont-check-circled"></i> Update
+      </button>
+
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #templateBio>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left "> Update Biography</h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideBio()">
+      <i class="icofont icofont-close"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <form [formGroup]="bioForm" class="col-sm-12" autocomplete="off">
+
+        <div class="form-group row">
+          <label class="col-sm-2 col-form-label font-weight-bold"> Bio </label>
+          <div class="col-sm-10">
+            <textarea rows="3" formControlName="text" [ngClass]="{ 'is-invalid': submitted && bio.text.errors }"
+              type="text" class="form-control" autocomplete="off"></textarea>
+
+            <div *ngIf="submitted && bio.text.errors" class="error-text">
+              <span *ngIf="bio.text.errors.required" class="text-danger">Bio text is required</span>
+              <span *ngIf="bio.text.errors.minlength" class="text-danger">Boi text must be at least 150
+                characters</span>
+              <span *ngIf="bio.text.errors.maxlength" class="text-danger">Bio text must be not then 250
+                characters</span>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideBio()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+      <button class="btn btn-success btn-outline-success" (click)="onFormSubmitBio()">
+        <i class="icofont icofont-check-circled"></i> Update
+      </button>
+
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #profileTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <!--<app-card>
+            <div class="form-floating">
+                <textarea class="form-control" [(ngModel)]="cover_letter" placeholder="Cover letter text (optional)" id="floatingTextarea2" rows="4" cols="50"></textarea>
+            </div>
+      </app-card>-->
+    <form [formGroup]="profileGeneralForm">
+      <div class="row">
+        <div class="col-md-6" style="border-right: 1px solid rgb(238, 238, 238);">
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Name </label>
+            <input formControlName="name" [ngClass]="{ 'is-invalid': submitted && pf.name.errors }" type="text"
+              class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.name.errors" class="error-text">
+              <span *ngIf="pf.name.errors.required" class="text-danger">Name is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Email </label>
+            <input formControlName="email" [ngClass]="{ 'is-invalid': submitted && pf.email.errors }" type="text"
+              class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.email.errors" class="error-text">
+              <span *ngIf="pf.email.errors.required" class="text-danger">Email is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Mobile no 1 </label>
+            <input formControlName="mobile_no_1" [ngClass]="{ 'is-invalid': submitted && pf.mobile_no_1.errors }"
+              type="text" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.mobile_no_1.errors" class="error-text">
+              <span *ngIf="pf.mobile_no_1.errors.required" class="text-danger">Mobile No 1 is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold"> Mobile no 2 (Optional) </label>
+            <input formControlName="mobile_no_2" [ngClass]="{ 'is-invalid': submitted && pf.mobile_no_2.errors }"
+              type="text" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.mobile_no_2.errors" class="error-text">
+              <span *ngIf="pf.mobile_no_2.errors.required" class="text-danger">Mobile No 2 is required</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Father name </label>
+            <input formControlName="father_name" [ngClass]="{ 'is-invalid': submitted && pf.father_name.errors }"
+              type="text" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.father_name.errors" class="error-text">
+              <span *ngIf="pf.father_name.errors.required" class="text-danger">Father name is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Mother name </label>
+            <input formControlName="mother_name" [ngClass]="{ 'is-invalid': submitted && pf.mother_name.errors }"
+              type="text" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.mother_name.errors" class="error-text">
+              <span *ngIf="pf.mother_name.errors.required" class="text-danger">Mother name is required</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Religion </label>
+            <select id="religion" name="religion" formControlName="religion" class="form-control form-select">
+              <option *ngFor="let religion of religions; let i=index" value="{{ religion.Id }}">{{ religion.Name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Date of Birth </label>
+            <input formControlName="date_of_birth" [ngClass]="{ 'is-invalid': submitted && pf.date_of_birth.errors }"
+              type="date" class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pf.date_of_birth.errors" class="error-text">
+              <span *ngIf="pf.date_of_birth.errors.required" class="text-danger">Mobile No 2 is required</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Blood group </label>
+            <select name="blood_group" formControlName="blood_group" class="form-control form-select">
+              <option *ngFor="let group of blood_group_types; let i=index" value="{{ group.Id }}">{{ group.Name }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold required"> Marital status </label>
+            <select id="marital_status" formControlName="marital_status" name="" class="form-control form-select">
+              <option *ngFor="let marital_status of marital_status_types; let i=index" value="{{ marital_status.Id }}">
+                {{ marital_status.Name }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label for="gender" class="col-form-label font-weight-bold required">Gender:</label>
+            <select id="gender" name="" formControlName="gender" class="form-control form-select">
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="updateProfileInformation()"> <i
+          class="icofont icofont-check-circled"></i> Save</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #UploadNidTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" [(ngModel)]="uploadType" name="inlineRadioOptions" id="uploadTypeC"
+        value="Certificate">
+      <label class="form-check-label" for="uploadTypeC">Certificate</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" [(ngModel)]="uploadType" name="inlineRadioOptions" id="uploadType1"
+        value="NID">
+      <label class="form-check-label" for="uploadType1">National ID</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" [(ngModel)]="uploadType" name="inlineRadioOptions" id="uploadType2"
+        value="Passport">
+      <label class="form-check-label" for="uploadType2">Passport</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" [(ngModel)]="uploadType" name="inlineRadioOptions" id="uploadType3"
+        value="BirthCertificate">
+      <label class="form-check-label" for="uploadType3">Birth Certificate</label>
+    </div>
+    <br /><br />
+    <form action="#" method="post" enctype="multipart/form-data">
+      <input type="file" (change)="onSelectUpoladFile($event)" id="files" accept="image/x-png,image/jpeg"
+        class="filer_input">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateIdentityFileSubmit()"> <i
+          class="icofont icofont-check-circled"></i> Upload</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #templateParticipationUpdate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left "> Update Participation Allow Number</h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideParticipationAllow()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <form [formGroup]="perticipationAllowForm" class="col-sm-12" autocomplete="off">
+
+        <div class="form-group row">
+          <label class="col-sm-5 col-form-label font-weight-bold"> Count </label>
+          <div class="col-sm-7">
+            <input numeric numericType="number" (keyup)="checkValidityAttempt($event.target.value)"
+              formControlName="count" [ngClass]="{ 'is-invalid': submitted && pa.count.errors }" type="text"
+              class="form-control" autocomplete="off">
+            <div *ngIf="submitted && pa.count.errors" class="error-text">
+              <span *ngIf="pa.count.errors.required" class="text-danger">Count is required</span>
+            </div>
+            <div *ngIf="invalidAttemptNumber" class="error-text">
+              <span class="text-danger">Participation Allow number is not possible less than percipated number</span>
+
+            </div>
+          </div>
+        </div>
+
+      </form>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideParticipationAllow()"> <i
+          class="icofont icofont-close"></i>Close</button>
+
+      <button class="btn btn-success btn-outline-success" (click)="participationAllowSubmit()">
+        <i class="icofont icofont-check-circled"></i> Update
+      </button>
+
+    </div>
+
+  </div>
+</ng-template>
+
+<ng-template #updateEducationTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <app-card>
+      <div class="row">
+        <form [formGroup]="educationForm" class="col-md-12">
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="eduTitle" class="col-md-3">Title:</label>
+              <div class="col-md-9">
+                <ng-select (change)="changeInstituteType($event)" formControlName="edu_title"
+                  placeholder="--Select Title--" [items]="instituteTypeList" [clearable]='true'
+                  [clearOnBackspace]='false' bindLabel="education_level" bindValue="id">
+                </ng-select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="Institute" class="col-md-3">Institute:</label>
+              <div class="col-md-9">
+                <ng-select formControlName="institute" placeholder="--Select Institute--" [items]="instituteList"
+                  [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                </ng-select>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="Deparment" class="col-md-3">Deparment:</label>
+              <div class="col-md-9">
+                <input type="text" name="division" formControlName="division" class="form-control" aria-required="true"
+                  aria-invalid="false">
+                <span class="error-text"></span>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="CompletionStatus" class="col-md-3">Completion status:</label>
+              <div class="col-md-9">
+                <select id="CompletionStatus" (change)="ChangeCompletionStatus($event)"
+                  formControlName="completion_status" name="completion_status" class="form-control form-select">
+                  <option value="Passed">Passed</option>
+                  <option value="Enrolled">Enrolled</option>
+                </select>
+                <span class="error-text"></span>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="!is_enrolled">
+              <label for="Grade" class="col-md-3">Grade:</label>
+              <div class="col-md-9">
+                <input type="text" name="grade" formControlName="grade" id="Grade" class="form-control"
+                  aria-required="false" aria-invalid="false">
+                <span class="error-text"></span>
+              </div>
+            </div>
+            <div class="form-group row" *ngIf="!is_enrolled">
+              <label for="CompletionStatus" class="col-md-3">Passing year:</label>
+              <div class="col-md-9">
+                <input type="date" formControlName="passing_year" class="form-control" placeholder="select date"
+                  autocomplete="off">
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </app-card>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateEducationSubmit()"> <i
+          class="icofont icofont-check-circled"></i> Update</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateJobTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideWE()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <div class="row">
+      <form [formGroup]="jobForm" class="col-md-12">
+        <div class="col-md-12">
+          <div class="form-group row">
+            <label for="Title" class="col-md-3">Title:</label>
+            <div class="col-md-9">
+              <input type="text" name="title" formControlName="title" id="Title" class="form-control"
+                aria-required="true" aria-invalid="false">
+              <span class="error-text"></span>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="organization" class="col-md-3">Organization:</label>
+            <div class="col-md-9">
+              <input type="text" name="organization" formControlName="organization" id="organization"
+                class="form-control" aria-required="true" aria-invalid="false">
+              <span class="error-text"></span>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHideWE()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateJobSubmit()"> <i class="icofont icofont-check-circled"></i>
+        Update</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateScheduleTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSchedule()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <table class="table table-bordered" *ngIf="is_loaded">
+      <thead>
+        <tr class="bg-primary">
+          <th scope="col">Day</th>
+          <th scope="col">Morning <br />Before 12:00 pm</th>
+          <th scope="col">Afternoon <br />12:00 pm - 5:00 pm</th>
+          <th scope="col">Evening <br />After 5:00 pm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Saturday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'sat', 1)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.sat && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'sat', 2)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.sat && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'sat', 3)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.sat && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Sunday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'sun', 1)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.sun && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'sun', 2)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.sun && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'sun', 3)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.sun && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Monday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'mon', 1)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.mon && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'mon', 2)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.mon && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'mon', 3)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.mon && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Tueday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'tue', 1)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.tue && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'tue', 2)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.tue && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'tue', 3)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.tue && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Wednesday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'wed', 1)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.wed && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'wed', 2)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.wed && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'wed', 3)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.wed && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Thursday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'thu', 1)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.thu && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'thu', 2)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.thu && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'thu', 3)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.thu && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Friday</strong></td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'fri', 1)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.fri && available.session == 1" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'fri', 2)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.fri && available.session == 2" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+          <td class="link-td" (click)="setOrRemoveDay(tutorDetails.availibilities, 'fri', 3)">
+            <span *ngFor="let available of tutorDetails.availibilities; let i=index">
+              <i *ngIf="available.fri && available.session == 3" class="fa fa-check-circle text-success fa-2x"></i>
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHideSchedule()"> <i class="icofont icofont-close"></i>
+        Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateScheduleSubmit(tutorDetails.availibilities)"> <i
+          class="icofont icofont-check-circled"></i> Update</button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #updateReferencesTemplate>
+  <div class="modal-header ">
+    <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+    <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideRef()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+  <div class="modal-body ">
+    <div class="row">
+      <form [formGroup]="referencesForm" class="col-md-12">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group row">
+              <label for="ReferenceName" class="col-md-3">Name:</label>
+              <div class="col-md-9"><input type="text" name="name" formControlName="name" id="ReferenceName"
+                  class="form-control" aria-required="true" aria-invalid="false"><span class="text-danger"></span></div>
+            </div>
+            <div class="form-group row">
+              <label for="MobileNo" class="col-md-3">Mobile no:</label>
+              <div class="col-md-9"><input type="text" name="mobile_no" formControlName="mobile_no" id="MobileNo"
+                  class="form-control" aria-required="true" aria-invalid="false"><span class="text-danger"></span></div>
+            </div>
+            <div class="form-group row">
+              <label for="Relation" class="col-md-3">Relation:</label>
+              <div class="col-md-9"><input type="text" name="relation" formControlName="relation" id="Relation"
+                  class="form-control"><span class="text-danger"></span></div>
+            </div>
+            <div class="form-group row">
+              <label for="Designation" class="col-md-3">Designation:</label>
+              <div class="col-md-9"><input type="text" name="designation" formControlName="designation" id="Designation"
+                  class="form-control"><span class="text-danger"></span></div>
+            </div>
+            <div class="form-group row">
+              <label for="Organization" class="col-md-3">Organization:</label>
+              <div class="col-md-9"><input type="text" name="organization" formControlName="organization"
+                  id="Organization" class="form-control"><span class="text-danger"></span></div>
+            </div>
+            <div class="row" style="">
+              <label for="" class="col-md-3">Blood connection: </label>
+              <div class="col-md-9">
+                <div class="checkbox"><label><input name="is_blood_connected" style="margin-right: 8px;"
+                      formControlName="is_blood_connected" type="checkbox" value="">First Blood</label></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <div class="pr-4">
+      <button class="btn btn-danger mr-2" (click)="modalHideRef()"> <i class="icofont icofont-close"></i> Close</button>
+      <button class="btn btn-success mr-2" (click)="UpdateReferencesSubmit()"> <i
+          class="icofont icofont-check-circled"></i> Update</button>
+    </div>
+  </div>
+</ng-template>

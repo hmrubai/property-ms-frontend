@@ -1,0 +1,10 @@
+@media (min-width: 992px) {
+    .modal-lg {
+        max-width: 1024px !important;
+    }
+}
+
+.image-size{
+    width: 40px !important;
+    height: 40px !important;
+}

@@ -1,0 +1,541 @@
+<block-ui>
+  <div class="card ">
+    <div class="card-header row">
+      <div class="col-md-8 col-12">
+        <h5><i class="fa fa-user"></i>&nbsp; WRITTEN EXAM LIST: <span *ngIf="is_loaded"> {{ examDetails.session_name }} - {{ examDetails.exam_name  }} </span></h5>
+      </div>
+      <div class="col-md-4 col-12 text-right">
+        <button class="btn btn-secondary btn-mini float-right" (click)="backToLocation()">
+          <i class="fa fa-arrow-circle-left "></i> Back </button>
+        <button class="btn btn-success btn-mini float-right mr-2" (click)="openAddWrittenQuestionModal(writtenQuestionAddTemplate)">
+          <i class="icofont-plus"></i> Add New Written Exam</button>
+        <!--<button class="btn btn-success btn-mini float-right mr-2" (click)="openAddWrittenQuestionModal(uploadTemplate)">
+          <i class="fa fa-arrow-up"></i> Add New Written Question</button>-->
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12">
+          <ngx-datatable class="material table-bordered" [rows]="writtenQuestionList" #dataTable [loadingIndicator]="loadingIndicator"
+            [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+            [externalPaging]="false" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" [scrollbarH]="true">
+
+            <ngx-datatable-column [width]="60" name="Sl" [draggable]="false" [sortable]="false">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                <span> {{ (page.pageNumber * page.size) + rowIndex + 1 }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="250" name="exam Name" prop="exam_name" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                {{ value }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="90" name="Duration" prop="duration" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span title="{{ value }}"> {{ value }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="90" name="Is Active" prop="is_active" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <button *ngIf="value" class="btn btn-mini btn-success count-width">Active</button>
+                <button *ngIf="!value" class="btn btn-mini btn-secondary count-width">Inactive</button>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Action" [draggable]="false" [sortable]="false" headerClass="text-center"
+              cellClass="text-center">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <button class="btn btn-info btn-mini mr-2" (click)="seeQuestion(row)">
+                  <i class="fa fa-eye"></i> See Questions
+                </button>
+                <button class="btn btn-danger btn-mini mr-2" (click)="deleteWrittenQuestion(row)">
+                  <i class="fa fa-trash"></i> Delete
+                </button>
+                <button class="btn btn-info btn-mini mr-2" (click)="editWrittenQuestion(row, writtenQuestionAddTemplate)">
+                  <i class="fa fa-edit"></i> Edit
+                </button>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>
+
+<ng-template #template>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <div class="row">
+                <div class="col-sm-12" >
+                    <h5 class="btn btn-success btn-sm float-right download-btn"><a href="/assets/sample_file/Grading_Policy.xlsx" download><i class="fa fa-arrow-circle-down"></i> Download Sample File </a> </h5>
+                    <div class="form-group">
+                        <label class="col-form-label required"> Select File </label>
+                        <input type="file" class="form-control" (change)="addfile($event)" placeholder="Upload file" accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                    </div>
+                </div>
+            </div>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i>Close</button>
+            <button class="btn btn-success btn-sm" (click)="onFormSubmit()"><i class="feather icon-save"></i>{{btnSaveText}}</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #questionTemplate>
+    <div class="modal-header ">
+      <i class="fa fa-file m-1"></i>
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="questionForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="col-form-label required">Question </label>
+              <input type="text" formControlName="question" [ngClass]="{ 'is-invalid': submitted && f.question.errors }"
+                placeholder="Enter Question" type="text" class="form-control" />
+              <div *ngIf="submitted && f.question.errors" class="error-text">
+                <span *ngIf="f.question.errors.required" class="text-danger"> Question is required</span>
+                <span *ngIf="f.question.errors.maxlength" class="text-danger">Question must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 01 </label>
+              <input type="text" formControlName="option1" [ngClass]="{ 'is-invalid': submitted && f.option1.errors }"
+                placeholder="Enter Option 01" class="form-control" />
+              <div *ngIf="submitted && f.option1.errors" class="error-text">
+                <span *ngIf="f.option1.errors.required" class="text-danger">Option 01 is required</span>
+                <span *ngIf="f.option1.errors.maxlength" class="text-danger">Option 01 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 02 </label>
+              <input type="text" formControlName="option2" [ngClass]="{ 'is-invalid': submitted && f.option2.errors }"
+                placeholder="Enter Option 02" class="form-control" />
+              <div *ngIf="submitted && f.option2.errors" class="error-text">
+                <span *ngIf="f.option2.errors.required" class="text-danger">Option 02 is required</span>
+                <span *ngIf="f.option2.errors.maxlength" class="text-danger">Option 02 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 03 </label>
+              <input type="text" formControlName="option3" [ngClass]="{ 'is-invalid': submitted && f.option3.errors }"
+                placeholder="Enter Option 03" class="form-control" />
+              <div *ngIf="submitted && f.option3.errors" class="error-text">
+                <span *ngIf="f.option3.errors.required" class="text-danger">Option 03 is required</span>
+                <span *ngIf="f.option3.errors.maxlength" class="text-danger">Option 03 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 04 </label>
+              <input type="text" formControlName="option4" [ngClass]="{ 'is-invalid': submitted && f.option4.errors }"
+                placeholder="Enter Option 04" class="form-control" />
+              <div *ngIf="submitted && f.option4.errors" class="error-text">
+                <span *ngIf="f.option4.errors.required" class="text-danger">Option 04 is required</span>
+                <span *ngIf="f.option4.errors.maxlength" class="text-danger">Option 04 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 05 </label>
+              <input type="text" formControlName="option5" [ngClass]="{ 'is-invalid': submitted && f.option5.errors }"
+                placeholder="Enter Option 05" class="form-control" />
+              <div *ngIf="submitted && f.option5.errors" class="error-text">
+                <span *ngIf="f.option5.errors.required" class="text-danger">Option 05 is required</span>
+                <span *ngIf="f.option5.errors.maxlength" class="text-danger">Option 05 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 06 </label>
+              <input type="text" formControlName="option6" [ngClass]="{ 'is-invalid': submitted && f.option6.errors }"
+                placeholder="Enter Option 06" class="form-control" />
+              <div *ngIf="submitted && f.option6.errors" class="error-text">
+                <span *ngIf="f.option6.errors.required" class="text-danger">Option 06 is required</span>
+                <span *ngIf="f.option6.errors.maxlength" class="text-danger">Option 06 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer" formControlName="correct_answer">
+                  <label class="custom-control-label" for="correct_answer"> Correct Answer 01</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer2" formControlName="correct_answer2">
+                  <label class="custom-control-label" for="correct_answer2"> Correct Answer 02</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer3" formControlName="correct_answer3">
+                  <label class="custom-control-label" for="correct_answer3"> Correct Answer 03</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer4" formControlName="correct_answer4">
+                  <label class="custom-control-label" for="correct_answer4"> Correct Answer 04</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer5" formControlName="correct_answer5">
+                  <label class="custom-control-label" for="correct_answer5"> Correct Answer 05</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer6" formControlName="correct_answer6">
+                  <label class="custom-control-label" for="correct_answer6"> Correct Answer 06</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group">
+              <label class="col-form-label required">Explanation Text </label>
+              <textarea type="text" formControlName="explanation_text" rows="2"
+                  [ngClass]="{ 'is-invalid': submitted && f.explanation_text.errors }" placeholder="Explanation Text"
+                  type="text" class="form-control"></textarea>
+              <div *ngIf="submitted && f.explanation_text.errors" class="error-text">
+                <span *ngIf="f.explanation_text.errors.required" class="text-danger"> Explanation Text is required</span>
+                <span *ngIf="f.explanation_text.errors.maxlength" class="text-danger">Explanation Text must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i>Close</button>
+      <button class="btn btn-success btn-sm" (click)="onUpdateQuestionFormSubmit()"><i class="feather icon-save"></i>{{btnSaveText}}</button>
+    </div>
+</ng-template>
+
+<ng-template #questionAddTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left" [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button" class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="questionForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="col-form-label required">Question </label>
+              <input type="text" formControlName="question" [ngClass]="{ 'is-invalid': submitted && f.question.errors }"
+                placeholder="Enter Question" type="text" class="form-control" />
+              <div *ngIf="submitted && f.question.errors" class="error-text">
+                <span *ngIf="f.question.errors.required" class="text-danger"> Question is required</span>
+                <span *ngIf="f.question.errors.maxlength" class="text-danger">Question must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 01 </label>
+              <input type="text" formControlName="option1" [ngClass]="{ 'is-invalid': submitted && f.option1.errors }"
+                placeholder="Enter Option 01" class="form-control" />
+              <div *ngIf="submitted && f.option1.errors" class="error-text">
+                <span *ngIf="f.option1.errors.required" class="text-danger">Option 01 is required</span>
+                <span *ngIf="f.option1.errors.maxlength" class="text-danger">Option 01 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 02 </label>
+              <input type="text" formControlName="option2" [ngClass]="{ 'is-invalid': submitted && f.option2.errors }"
+                placeholder="Enter Option 02" class="form-control" />
+              <div *ngIf="submitted && f.option2.errors" class="error-text">
+                <span *ngIf="f.option2.errors.required" class="text-danger">Option 02 is required</span>
+                <span *ngIf="f.option2.errors.maxlength" class="text-danger">Option 02 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 03 </label>
+              <input type="text" formControlName="option3" [ngClass]="{ 'is-invalid': submitted && f.option3.errors }"
+                placeholder="Enter Option 03" class="form-control" />
+              <div *ngIf="submitted && f.option3.errors" class="error-text">
+                <span *ngIf="f.option3.errors.required" class="text-danger">Option 03 is required</span>
+                <span *ngIf="f.option3.errors.maxlength" class="text-danger">Option 03 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 04 </label>
+              <input type="text" formControlName="option4" [ngClass]="{ 'is-invalid': submitted && f.option4.errors }"
+                placeholder="Enter Option 04" class="form-control" />
+              <div *ngIf="submitted && f.option4.errors" class="error-text">
+                <span *ngIf="f.option4.errors.required" class="text-danger">Option 04 is required</span>
+                <span *ngIf="f.option4.errors.maxlength" class="text-danger">Option 04 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 05 </label>
+              <input type="text" formControlName="option5" [ngClass]="{ 'is-invalid': submitted && f.option5.errors }"
+                placeholder="Enter Option 05" class="form-control" />
+              <div *ngIf="submitted && f.option5.errors" class="error-text">
+                <span *ngIf="f.option5.errors.required" class="text-danger">Option 05 is required</span>
+                <span *ngIf="f.option5.errors.maxlength" class="text-danger">Option 05 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Option 06 </label>
+              <input type="text" formControlName="option6" [ngClass]="{ 'is-invalid': submitted && f.option6.errors }"
+                placeholder="Enter Option 06" class="form-control" />
+              <div *ngIf="submitted && f.option6.errors" class="error-text">
+                <span *ngIf="f.option6.errors.required" class="text-danger">Option 06 is required</span>
+                <span *ngIf="f.option6.errors.maxlength" class="text-danger">Option 06 must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer" formControlName="correct_answer">
+                  <label class="custom-control-label" for="correct_answer"> Correct Answer 01</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer2" formControlName="correct_answer2">
+                  <label class="custom-control-label" for="correct_answer2"> Correct Answer 02</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer3" formControlName="correct_answer3">
+                  <label class="custom-control-label" for="correct_answer3"> Correct Answer 03</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer4" formControlName="correct_answer4">
+                  <label class="custom-control-label" for="correct_answer4"> Correct Answer 04</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer5" formControlName="correct_answer5">
+                  <label class="custom-control-label" for="correct_answer5"> Correct Answer 05</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group row">
+              <div class="col-12">
+                <div class="custom-control custom-checkbox col-form-label">
+                  <input type="checkbox" class="custom-control-input" id="correct_answer6" formControlName="correct_answer6">
+                  <label class="custom-control-label" for="correct_answer6"> Correct Answer 06</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group">
+              <label class="col-form-label required">Explanation Text </label>
+              <textarea type="text" formControlName="explanation_text" rows="2"
+                  [ngClass]="{ 'is-invalid': submitted && f.explanation_text.errors }" placeholder="Explanation Text"
+                  type="text" class="form-control"></textarea>
+              <div *ngIf="submitted && f.explanation_text.errors" class="error-text">
+                <span *ngIf="f.explanation_text.errors.required" class="text-danger"> Explanation Text is required</span>
+                <span *ngIf="f.explanation_text.errors.maxlength" class="text-danger">Explanation Text must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i>Close</button>
+      <button class="btn btn-success btn-sm" (click)="onAddQuestionFormSubmit()"><i class="feather icon-save"></i>{{btnSaveText}}</button>
+    </div>
+</ng-template>
+
+<ng-template #writtenQuestionAddTemplate>
+    <div class="modal-header ">
+      <i class="fa fa-file m-1"></i>
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="rqForm">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="col-form-label required">Exam Name </label>
+              <input type="text" formControlName="exam_name" [ngClass]="{ 'is-invalid': submitted && rf.exam_name.errors }"
+                placeholder="Enter Exam Name" type="text" class="form-control" />
+              <div *ngIf="submitted && rf.exam_name.errors" class="error-text">
+                <span *ngIf="rf.exam_name.errors.required" class="text-danger"> Exam Name is required</span>
+                <span *ngIf="rf.exam_name.errors.maxlength" class="text-danger">Exam Name must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Duration </label>
+              <input type="number" [min]="1" formControlName="duration" [ngClass]="{ 'is-invalid': submitted && rf.duration.errors }"
+                placeholder="Enter Duration" class="form-control" />
+              <div *ngIf="submitted && rf.duration.errors" class="error-text">
+                <span *ngIf="rf.duration.errors.required" class="text-danger">Duration is required</span>
+                <span *ngIf="rf.duration.errors.maxlength" class="text-danger">Duration must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-6">
+            <div class="form-group">
+                <div class="col-12 mt-4">
+                    <div class="custom-control custom-checkbox col-form-label">
+                      <input type="checkbox" formControlName="is_active" class="custom-control-input" [ngClass]="{ 'is-invalid': submitted && rf.is_active.errors }" id="is_active">
+                      <label class="custom-control-label" for="is_active"> Is Active?</label>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i>Close</button>
+      <button class="btn btn-success btn-sm" (click)="onAddWrittenQuestionFormSubmit()"><i class="feather icon-save"></i>{{btnSaveText}}</button>
+    </div>
+</ng-template>
+
+<ng-template #uploadTemplate>
+    <div class="modal-header ">
+        <i class="fa fa-file m-1"></i>
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+          <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+    <form [formGroup]="uploadForm">
+        <app-card>
+            <div class="row">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="col-form-label required">Total Marks </label>
+                    <input type="number" [min]="1" formControlName="total_marks" [ngClass]="{ 'is-invalid': submitted && uf.total_marks.errors }"
+                      placeholder="Enter Marks" class="form-control" />
+                    <div *ngIf="submitted && uf.total_marks.errors" class="error-text">
+                      <span *ngIf="uf.total_marks.errors.required" class="text-danger">Marks is required</span>
+                      <span *ngIf="uf.total_marks.errors.maxlength" class="text-danger">Marks must be within 250 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label class="col-form-label required">No Of Questions </label>
+                    <input type="number" [min]="1" formControlName="no_of_questions" [ngClass]="{ 'is-invalid': submitted && uf.no_of_questions.errors }"
+                      placeholder="Enter the No Of Questions" class="form-control" />
+                    <div *ngIf="submitted && uf.no_of_questions.errors" class="error-text">
+                      <span *ngIf="uf.no_of_questions.errors.required" class="text-danger">No Of Questions is required</span>
+                      <span *ngIf="uf.no_of_questions.errors.maxlength" class="text-danger">No Of Questions must be within 250 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-12" >
+                    <div class="form-group">
+                        <label class="col-form-label required"> Select File </label>
+                        <input type="file" class="form-control" (change)="onSelectFile($event)" placeholder="Upload file" accept="application/pdf">
+                    </div>
+                </div>
+            </div>
+        </app-card>
+      </form>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i>Close</button>
+            <button class="btn btn-success btn-sm" (click)="submitAttachment()"><i class="feather icon-save"></i>{{btnSaveText}}</button>
+        </div>
+
+    </div>
+</ng-template>

@@ -1,0 +1,213 @@
+<block-ui>
+  <div class="row">
+
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>Model Exam List <span *ngIf="is_loaded">( {{ packageDetails.name }} - {{ packageDetails.project_name }} )</span> </h5>
+              <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Add Model Exam</button>
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+                <!-- <div class="col-lg-4 mb-3">
+                  <ng-select [clearable]="false" [clearOnBackspace]="false" (change)="onInstituteChange($event)"
+                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select institute">
+
+                  </ng-select>
+                </div> -->
+              </div>
+              <div class="row ">
+                <div class="col-lg-12 ">
+                  <!-- <ngx-datatable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="true" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size"
+                    (page)="setPage($event)"> -->
+                  <ngx-datatable  #dataTable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="false" [limit]="10">
+
+
+                      <!-- Row Detail Template -->
+                    <ngx-datatable-row-detail [rowHeight]="'auto'" #myDetailRow >
+                      <ng-template let-row="row" let-expanded="expanded" ngx-datatable-row-detail-template>
+                        <div style="padding-left:35px;">
+                          <div class="w-100">
+                            <table
+                                class="table table-xs table-hover table-bordered table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Type</th>
+                                        <th scope="col">Title</th>
+                                        <!--<th scope="col">Description</th>-->
+                                        <th scope="col">Mark</th>
+                                        <th scope="col">No Of Solved Videos</th>
+                                        <th scope="col">Unit Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of row.item_list">
+                                      
+                                        <th> {{item.type_name}} </th>
+                                        <th> {{item.title}} </th>
+                                        <!--<th [innerHtml]="item.description"></th>-->
+                                        <th> {{item.mark}} </th>
+                                        <th> {{item.solved_videos.length}} </th>
+                                        <th> {{item.unit_price}} </th>
+                                        <!-- <th>
+                                            {{SubsItemsStaus[item.status]}}
+                                          </th> -->
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        </div>
+                      </ng-template>
+                    </ngx-datatable-row-detail>
+                    <!-- Column Templates -->
+                    <ngx-datatable-column
+                      [width]="50"
+                      [resizeable]="false"
+                      [sortable]="false"
+                      [draggable]="false"
+                      [canAutoResize]="false"
+                    >
+                      <ng-template let-row="row" let-expanded="expanded" ngx-datatable-cell-template>
+                        <a
+                          href="javascript:void(0)"
+                          [class.datatable-icon-right]="!expanded"
+                          [class.datatable-icon-down]="expanded"
+                          title="Expand/Collapse Row"
+                          (click)="toggleExpandRow(row)"
+                        >
+                        </a>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="50" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <span> {{ rowIndex + 1}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="300" name="Model Exam Name" prop="name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+                    
+                    <ngx-datatable-column [width]="200" name="Intro Video URL" prop="intro_video_url" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="40" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <button class="btn btn-info btn-mini" (click)="getItem(row,template)"><i
+                            class="icofont icofont-edit"></i>Edit</button>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                  </ngx-datatable>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <form [formGroup]="entryForm">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+              </div>
+              <div class="card-block">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Model Exam Name </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="name" placeholder="Enter name"
+                      [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.name.errors" class="error-text">
+                      <span *ngIf="f.name.errors.required" class="text-danger"> Model Exam Name is required</span>
+                      <span *ngIf="f.name.errors.maxlength" class="text-danger">Model Exam Name must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Description </label>
+                  <div class="col-sm-9">
+                    <textarea rows="3" type="text" formControlName="description" placeholder="Enter description"
+                      [ngClass]="{ 'is-invalid': submitted && f.description.errors }" class="form-control" ></textarea>
+
+                      <div *ngIf="submitted && f.description.errors" class="error-text">
+                        <span *ngIf="f.description.errors.required" class="text-danger"> Description is required</span>
+                        <span *ngIf="f.description.errors.maxlength" class="text-danger">Description must be not more then 550 characters</span>
+                      </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <div class="col-md-12">
+                    <div class="form-group row">
+                      <label class="col-sm-3 col-form-label required">Intro Video URL </label>
+                      <div class="col-sm-9">
+                        <input type="text" formControlName="intro_video_url" placeholder="Intro Video URL: https://www.youtube.com/Vsydheimk8dj"
+                          [ngClass]="{ 'is-invalid': submitted && f.intro_video_url.errors }"  class="form-control" />
+                        <div *ngIf="submitted && f.intro_video_url.errors" class="error-text">
+                          <span *ngIf="f.intro_video_url.errors.required" class="text-danger"> Intro Video URL is required</span>                      
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-12" >
+                      <div class="form-group row">
+                          <label class="col-sm-3 col-form-label ">Select Thumbnail File</label>
+                          <div class="col-sm-9">
+                            <input type="file" class="form-control" (change)="onSelectFile($event)" placeholder="Upload Thumbnail" accept="image/x-png,image/jpeg">
+                          </div>
+                      </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Attach Item File </label>
+                  <div class="col-sm-9 pt-2">
+                    <input type="file" formControlName="file" (change)="addfile($event)" placeholder="Upload file" 
+                      accept=".csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" placeholder="Insert file"
+                    />
+                    <div *ngIf="submitted && f.file.errors" class="error-text">
+                      <span *ngIf="f.file.errors.required" class="text-danger"> File is required</span>                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+        <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+      </div>
+    </div>
+  </ng-template>
+</block-ui>

@@ -1,0 +1,269 @@
+<block-ui>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card card-border-primary">
+                        <div class="card-block ">
+                            <div class="row" *ngIf="is_loaded">
+                                <div class="col-lg-12">
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="row">
+                                                        <div class="col-lg-12">
+                                                            <h4>Quiz Details</h4>
+                                                            <hr/>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <table class="table table-borderless">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="width: 20%"><strong>Title</strong></td>
+                                                                        <td>{{ quizDetails.title  }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>Description</strong></td>
+                                                                        <td>{{ quizDetails.description  }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>Batch Name</strong></td>
+                                                                        <td>{{ quizDetails.batch_name  }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-sm-3">
+                                                            <table class="table table-borderless">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="width: 20%"><strong>Duration</strong></td>
+                                                                        <td>{{ secondsToDhms(quizDetails.duration)  }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>Mark</strong></td>
+                                                                        <td> {{ obtained_mark }} / {{ quizDetails.mark  }}</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><strong>Total question</strong></td>
+                                                                        <td>{{ quizDetails.total_question  }}</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="col-sm-5">
+                                                            <button *ngIf="quizDetails.is_active" class="btn btn-sm btn-success count-width float-right">Active</button>
+                                                            <button *ngIf="!quizDetails.is_active" class="btn btn-sm btn-secondary count-width float-right">Inactive</button>
+                                                            <h5>Student Infromation</h5>
+                                                            <br/><br/>
+                                                            <div class="media">
+                                                                <a class="media-left" href="javascript:;">
+                                                                    <img *ngIf="!quizDetails.answer.profile_pic" class="media-object img-circle card-list-img" src="assets/images/avatar-5.png" alt="Generic placeholder image">
+                                                                    <img *ngIf="quizDetails.answer.profile_pic" class="media-object img-circle card-list-img" src="{{ quizDetails.answer.profile_pic }}" alt="Generic placeholder image">
+                                                                </a>
+                                                                <div class="media-body">
+                                                                    <div class="col-xs-12">
+                                                                        <h6 class="d-inline-block">{{ quizDetails.answer.name }}</h6>
+                                                                    </div>
+                                                                    <div class="f-13 text-muted"><i class="icofont-phone"></i> <strong>{{ quizDetails.answer.mobile_no }}</strong> </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-lg-12">
+                                                            <hr/>
+                                                            <h4>Question Papers</h4>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <ul class="list-inline">
+                                                                <li class="list-inline-item">
+                                                                    <a href="{{ quizDetails.question_paper.file_url }}" target="_blank">
+                                                                        <img src="assets/images/pdf.png" alt="" style="height: 50px; width: auto;">
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+
+                                                        <div class="col-lg-12">
+                                                            <br/>
+                                                            <table class="table table-bordered">
+                                                                <thead>
+                                                                    <tr>
+                                                                    <th scope="col">Model Answer</th>
+                                                                    <th scope="col">Marking Criteria</th>
+                                                                    <th scope="col">Wrtting Feedback</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <a href="{{ quizDetails.answer_model }}" target="_blank">
+                                                                                <img src="assets/images/pdf.png" alt="" style="height: 50px; width: auto;">
+                                                                            </a>
+                                                                            <span *ngIf="!quizDetails.answer_model"> No file uploaded </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <a href="{{ quizDetails.marking_crieteria }}" target="_blank">
+                                                                                <img src="assets/images/pdf.png" alt="" style="height: 50px; width: auto;">
+                                                                            </a>
+                                                                            <span *ngIf="!quizDetails.marking_crieteria"> No file uploaded </span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <a *ngIf="quizDetails.writing_feedback" href="{{ quizDetails.writing_feedback }}" target="_blank">
+                                                                                <img src="assets/images/pdf.png" alt="" style="height: 50px; width: auto;">
+                                                                            </a>
+                                                                            <span *ngIf="!quizDetails.writing_feedback"> No file uploaded </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        
+                                                        <div class="col-lg-12">
+                                                            <br/>
+                                                            <h4>Answer Files:</h4>
+                                                            <ul class="list-inline">
+                                                                <li class="list-inline-item" *ngFor="let item of quizDetails.answer.answer_files; let i=index">
+                                                                    <a target="_blank" class="media-left" href="{{ item.file_url }}">
+                                                                        <img *ngIf="item.file_url" class="media-object card-list-img answer-images" src="{{ item.file_url }}" alt="Answer image">
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                            <hr/>
+                                                        </div>
+                                                        <div class="col-lg-12">
+                                                            <br/>
+                                                            <h4>Marks:</h4>
+                                                            <table class="table table-bordered">
+                                                                <tbody>
+                                                                    <tr  *ngFor="let item of quizDetails.answer.marks; let i=index" >
+                                                                        <td>
+                                                                            <span>Question {{ i+1 }}</span>
+                                                                        </td>
+                                                                        <td>
+                                                                            <span *ngIf="!item.mark"> <input type="number" (input)="submitAnswer(item, $event.target.value)" class="form-control" /> </span>
+                                                                            <span *ngIf="item.mark"> {{ item.mark }} 
+                                                                                <span *ngIf="item.name">( Given By {{ item.name }} at {{ item.updated_at | date: 'MMM d, y, h:mm:ss a' }})</span> 
+                                                                                <span *ngIf="item.admin_name">( Given By {{ item.admin_name }} at {{ item.marked_at }} )</span> 
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <button class="btn btn-success" (click)="submitMark()" *ngIf="is_submit_available">Submit Mark</button>
+                                                            <hr/>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <!--<div class="col-lg-12" *ngFor="let item of correctionDetails.details; let i=index">
+                                    <ul class="list-view">
+                                        <li>
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="media">
+                                                        <div class="media-body">
+                                                            <div class="f-13 text-muted inline tutor-name">
+                                                                <h6>{{item.created_by }}'s 
+                                                                <span *ngIf="item.status_id === 0">
+                                                                    Assigned
+                                                                </span> 
+                                                                <span  *ngIf="item.status_id === 1 && item.created_by == 'Student'">
+                                                                    Answer
+                                                                </span>
+                                                                <span *ngIf="item.status_id === 2">
+                                                                    Feedback
+                                                                </span>
+                                                                <span *ngIf="item.status_id > 1 && item.created_by == 'Student'">
+                                                                    Re-Write
+                                                                </span>
+                                                                <span *ngIf="item.status_id === 4">
+                                                                    Correction
+                                                                </span> </h6>
+                                                            </div>
+                                                            <div class="f-13 text-muted float-right answer-date"> {{ item.submission_date | date : 'MMM d, y, h:mm:ss a' }} </div><br/>
+                                                            <div class="f-13 text-muted float-right answer-mark" *ngIf="item.status_id === 4"> Given Mark : {{ item.given_mark }} / {{ correctionDetails.total_mark }}  </div>
+                                                            <br/>
+                                                            <div class="f-13 text-muted" *ngIf="item.answer">{{ item.answer }}</div>
+                                                            <div class="f-13 text-muted" *ngIf="item.correction_note" [innerHTML]="item.correction_note"></div>
+                                                            <br *ngIf="item.answer"/>
+                                                            <div class="f-13 text-muted tutor-name" *ngIf="item.total_words"> TOTAL WORDS: {{ item.total_words }}</div>
+                                                            <br/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="list-view"  *ngIf="item.tutor_feedback">
+                                        <li>
+                                            <div class="card user-card">
+                                                <div class="card-block">
+                                                    <div class="media">
+                                                        <div class="media-body">
+                                                            <div class="f-13 text-muted inline tutor-name">
+                                                                <h6>{{item.created_by }}'s Feedback</h6>
+                                                            </div>
+                                                            <br/>
+                                                            <div class="f-13 text-muted" *ngIf="item.tutor_feedback">{{ item.tutor_feedback }}</div>
+                                                            <br/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block-ui>
+
+<ng-template #template>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-form-label required">Teacher </label> 
+                    <ng-select placeholder="Select Teacher" formControlName="teacher_id" [items]="instructorList"
+                        [clearable]='true' [clearOnBackspace]='true' bindLabel="email" bindValue="id">
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                          <div> {{item.first_name}} {{item.last_name}} - ({{item.email}})</div>
+                        </ng-template>
+                    </ng-select>
+
+                    <div *ngIf="submitted && f.teacher_id.errors" class="error-text">
+                        <span *ngIf="f.teacher_id.errors.required" class="text-danger"> Teacher is required</span>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+
+            <button class="btn btn-success btn-outline-success" (click)="onSetInstructorSubmit()">
+                <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+            </button>
+
+        </div>
+
+    </div>
+</ng-template>

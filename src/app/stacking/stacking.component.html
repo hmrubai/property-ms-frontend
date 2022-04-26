@@ -1,0 +1,181 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <div class="col-lg-3 float-right">
+                                <input type="date" class="form-control" autocomplete="off" required>
+                            </div>
+                            <div class="col-lg-5 float-right">
+                                <ng-select (change)="onPromoChange($event)"
+                                    [clearable]="true" [clearOnBackspace]="false" [(ngModel)]="promo_id" [items]="propertyList" class="col-lg-12 inline-row"
+                                    [multiple]=false bindLabel="name" bindValue="id"
+                                    placeholder="Select Property">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div> {{item.name}} | {{item.address}} - ({{item.total_floor_space}} m<sup>2</sup>)</div>
+                                    </ng-template>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 mt-4">
+                                    <h4> <i class="fa fa-list"></i> Stacking</h4>
+                                    <img src="assets/images/Stacking.png" width="100%" alt="">
+                                </div>
+                                    
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!--<ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Promo Code</label>
+                            <input formControlName="promo_code" [ngClass]="{ 'is-invalid': submitted && f.promo_code.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.promo_code.errors" class="error-text">
+                                <span *ngIf="f.promo_code.errors.required" class="text-danger">Promo Code is required</span>
+                                <span *ngIf="f.promo_code.errors.maxlength" class="text-danger">Promo Code must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Promo Amount</label>
+                            <input formControlName="promo_value" [ngClass]="{ 'is-invalid': submitted && f.promo_value.errors }" type="number"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.promo_value.errors" class="error-text">
+                                <span *ngIf="f.promo_value.errors.required" class="text-danger">Promo Amount is required</span>
+                                <span *ngIf="f.promo_value.errors.maxlength" class="text-danger">Promo Amount must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Package</label>
+                            <ng-select [clearable]="true" [clearOnBackspace]="false" formControlName="beat_package_id" [items]="packageList"
+                                    [multiple]=false bindLabel="name" bindValue="id" placeholder="Select Package">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div> {{item.name}} - ({{item.price_of_package}}৳)</div>
+                                    </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.beat_package_id.errors" class="error-text">
+                                <span *ngIf="f.beat_package_id.errors.required" class="text-danger">Package is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Collaborator</label>
+                            <ng-select [clearable]="true" [clearOnBackspace]="false" formControlName="collaborator_id" [items]="collaboratorList"
+                                    [multiple]=false bindLabel="name" bindValue="id" placeholder="Select Collaborator">
+                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                        <div> {{item.name}} - ({{item.email}})</div>
+                                    </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.collaborator_id.errors" class="error-text">
+                                <span *ngIf="f.collaborator_id.errors.required" class="text-danger">Collaborator is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-6 col-form-label">Is Active? </label>
+                        <div class="col-sm-6 mt-2">
+                            <div class="checkbox-fade fade-in-primary">
+                            <label>
+                                <input type="checkbox" formControlName="is_active">
+                                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #passwordTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="passwordForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': password_submitted && pcf.password.errors }" autocomplete="off" required>
+                            <div *ngIf="password_submitted && pcf.password.errors" class="error-text">
+                                <span *ngIf="pcf.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="pcf.password.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': password_submitted && pcf.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="password_submitted && pcf.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="pcf.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onUpdatePasswordFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>-->
+
+</block-ui>

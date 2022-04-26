@@ -1,0 +1,106 @@
+<block-ui>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="card card-border-primary">
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12"  *ngFor="let job of jobList; let i=index">
+                                    <div class="card user-card mb-3">
+                                        <div class="card-block">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="col-xs-12">
+                                                        <h5 class="d-inline-block">{{ job.title }}</h5> 
+                                                        <label  *ngIf="job.status == 'Pending'" class="label label-md label-warning float-right">{{ job.status }}</label>
+                                                        <label  *ngIf="job.status == 'Approved'" class="label label-md label-success float-right">{{ job.status }}</label>
+                                                        <label  *ngIf="job.status == 'Closed'" class="label label-md label-default float-right">{{ job.status }}</label>
+                                                        <h5 class="float-right">POSTED AT: {{ job.created_at | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY' }}</h5> 
+                                                        <hr>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <p class="mb-3"><strong>Job Code:</strong> {{ job.job_code }}</p>
+                                                            <p><strong>{{ job.slot_days_amount }}days / {{ job.slot_days_type }}</strong> </p> 
+                                                            <p><strong>Tutor Gender Preference: </strong> {{ job.preferred_tutor_gender }}</p>
+                                                            <p><strong>Student Gender: </strong> {{ job.child_gender }}</p>
+                                                            <p class="mb-3" *ngIf="!job.admin_id"><strong>Posted By:</strong> Guardian</p>
+                                                            <p class="mb-3" *ngIf="job.admin_id"><strong>Posted By:</strong> Admin</p>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p class="mb-3"><strong>Class:</strong> {{ job.class_name }}</p>
+                                                            <p><strong>Salary: </strong>{{ job.salary_amount }} / {{ job.salary_duration_type }} </p> 
+                                                            <p><strong>Tutoring Time:</strong> {{ job.tuition_time }}</p>
+                                                            <p><strong>Location: </strong> {{ job.area_name }}, {{ job.district_name }}</p>
+                                                            <p class="mb-3"><strong>Guardian Name:</strong> {{ job.guardian_name }}</p>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p class="mb-3"><strong>Medium:</strong> {{ job.medium_name }}</p>
+                                                            <select name="select" (change)="ChangeStatus($event.target.value, job)" class="form-control col-sm-5 mr-2" style="display: inline-block">
+                                                                <option value="">Change Status</option>
+                                                                <option *ngIf="job.status == 'Pending'" selected value="Pending">Pending</option>
+                                                                <option *ngIf="job.status != 'Pending'" value="Pending">Pending</option>
+                                                                <option *ngIf="job.status == 'Approved'" selected value="Approved">Approved</option>
+                                                                <option *ngIf="job.status != 'Approved'" value="Approved">Approved</option>
+                                                                <option *ngIf="job.status == 'Closed'" selected value="Closed">Closed</option>
+                                                                <option *ngIf="job.status != 'Closed'" value="Closed">Closed</option>
+                                                            </select>
+                                                            <button class="btn btn-danger btn-sm button-margin-top" (click)="DeleteJob(job)">Delete</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</block-ui>
+
+<ng-template #template>
+    <div class="modal-header ">
+        <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+        <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+            <i class="icofont icofont-close"></i>
+        </button>
+    </div>
+    <div class="modal-body ">
+        <app-card>
+            <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                <div class="form-group">
+                    <label class="col-form-label required">Teacher </label> 
+                    <ng-select placeholder="Select Teacher" formControlName="teacher_id" [items]="instructorList"
+                        [clearable]='true' [clearOnBackspace]='true' bindLabel="email" bindValue="id">
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                          <div> {{item.first_name}} {{item.last_name}} - ({{item.email}})</div>
+                        </ng-template>
+                    </ng-select>
+
+                    <div *ngIf="submitted && f.teacher_id.errors" class="error-text">
+                        <span *ngIf="f.teacher_id.errors.required" class="text-danger"> Teacher is required</span>
+                    </div>
+                </div>
+            </form>
+        </app-card>
+    </div>
+    <div class="modal-footer">
+        <div class="pr-4">
+            <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                    class="icofont icofont-close"></i>Close</button>
+
+            <button class="btn btn-success btn-outline-success" (click)="onSetInstructorSubmit()">
+                <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+            </button>
+
+        </div>
+
+    </div>
+</ng-template>

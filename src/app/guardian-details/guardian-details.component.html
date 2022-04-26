@@ -1,0 +1,1333 @@
+<block-ui>
+  <div class="row" *ngIf="guardian">
+    <div class="col-lg-12">
+      <div class="cover-profile">
+        <div class="profile-bg-img">
+          <img class="profile-bg-img img-fluid" src="assets/images/profile_back.jpg" alt="bg-img">
+          <div class="card-block user-info">
+            <div class="col-md-12">
+              <div class="media-left">
+                <a href="#" class="profile-image">
+                  <img *ngIf="!guardian.profile_pic" class="user-img img-circle" src="assets/images/avatar-1.png"
+                    alt="user-img">
+                  <img *ngIf="guardian.profile_pic" class="user-img img-circle profile-pic"
+                    src="{{baseUrl}}/uploads/guardians/{{guardian.profile_pic}}" alt="user-img">
+                </a>
+              </div>
+              <div class="media-body row">
+                <div class="col-lg-12">
+                  <div class="user-title">
+                    <h2>{{guardian.name}}</h2>
+                    <!-- <span *ngIf="guardian.mobile_no" class="text-white">Mobile: {{guardian.mobile_no}}</span> -->
+                  </div>
+                </div>
+                <div>
+                  <div class="pull-right cover-btn">
+                    <button (click)="openSearchTutorModal(templateSearchTutor)" type="button"
+                      class="btn btn-primary m-r-10"><i class="icofont icofont-live-messenger"></i>
+                      Hire Tutor</button>
+                    <button type="button" (click)="openJobModal(templateCreateJob)" class="btn btn-primary m-r-10"><i
+                        class="icofont icofont-briefcase-1"></i>
+                      Create Job</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" *ngIf="guardian">
+    <div class="col-lg-12">
+      <tabset [justified]="true">
+
+        <tab>
+          <ng-template tabHeading>
+            <b>Basic Information</b>
+          </ng-template>
+
+          <div class="card mt-3 mb-3">
+            <div class="card-header">
+              <h5 class="card-header-text">Personal Information</h5>
+
+              <button class="btn btn-info btn-mini float-right ml-2"
+              (click)="updateCurrentAddressModal(guardian, templateAddress)"><i class="fa fa-edit"></i> Address Edit</button>
+              <button class="btn btn-success btn-mini float-right"
+              (click)="openProfileModal(guardian, profileTemplate)"><i class="fa fa-edit"></i> Profile Edit</button>
+            </div>
+            <div class="card-block">
+              <div class="view-info">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="general-info">
+                        <div class="col-lg-12 col-xl-12">
+
+                          <div class="row">
+                            <div class="col-sm-3">
+                              <p><strong>Name: </strong> {{guardian.name}}</p>
+                              <p><strong>Code: </strong> {{ guardian.guardian_code }}</p>
+                              <p><strong>Email: </strong> {{ guardian.email }}</p>
+                              <p><strong>Mobile: </strong> {{ guardian.mobile_no }}</p>
+                            </div>
+                            <div class="col-sm-3">
+                              <p><strong>Gender: </strong> {{ guardian.gender }}</p>
+                              <p *ngIf="guardian.date_of_birth"><strong>Date of Birth: </strong> {{ guardian.date_of_birth | date : 'MMM d, y'}}</p>
+                              <p><strong>Register Date: </strong>{{ guardian.created_at | date : 'MMM d, y'}}</p>
+                            
+                            </div>
+
+                            <div class="col-sm-5">
+                              <p><strong>Division: </strong> <span *ngIf="guardian.division">{{ guardian.division.name }}</span> </p>
+                              <p><strong>District: </strong> <span *ngIf="guardian.district">{{ guardian.district.name }}</span></p>
+                              <p><strong>Area: </strong> <span *ngIf="guardian.area">{{ guardian.area.name }}</span></p>
+                              <p><strong>Address: </strong> {{ guardian.address }}</p>
+                            </div>
+                          </div> <!-- end of row -->
+                          
+                        </div>
+                      <!-- end of row -->
+                    </div>
+                    <!-- end of general info -->
+                  </div>
+                  <!-- end of col-lg-12 -->
+                </div>
+                <!-- end of row -->
+              </div>
+              <!-- end of view-info -->
+              <div class="edit-info" style="display: none;">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <div class="general-info">
+                      <div class="row">
+                        <div class="col-lg-6">
+                          <table class="table">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-addon"><i class="icofont icofont-user"></i></span>
+                                    <input type="text" class="form-control" placeholder="Full Name">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="form-radio">
+                                    <div class="group-add-on">
+                                      <div class="radio radiofill radio-inline">
+                                        <label>
+                                          <input type="radio" name="radio" checked=""><i class="helper"></i> Male
+                                        </label>
+                                      </div>
+                                      <div class="radio radiofill radio-inline">
+                                        <label>
+                                          <input type="radio" name="radio"><i class="helper"></i> Female
+                                        </label>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <input id="dropper-default" class="form-control" type="text"
+                                    placeholder="Select Your Birth Date">
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <select id="hello-single" class="form-control">
+                                    <option value="">---- Marital Status ----</option>
+                                    <option value="married">Married</option>
+                                    <option value="unmarried">Unmarried</option>
+                                  </select>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-addon"><i class="icofont icofont-location-pin"></i></span>
+                                    <input type="text" class="form-control" placeholder="Address">
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <!-- end of table col-lg-6 -->
+                        <div class="col-lg-6">
+                          <table class="table">
+                            <tbody>
+                              <tr>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-addon"><i class="icofont icofont-mobile-phone"></i></span>
+                                    <input type="text" class="form-control" placeholder="Mobile Number">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-addon"><i
+                                        class="icofont icofont-social-twitter"></i></span>
+                                    <input type="text" class="form-control" placeholder="Twitter Id">
+                                  </div>
+                                </td>
+                              </tr>
+                              <!-- <tr>
+                                      <td>
+                                          <div class="input-group">
+                                              <span class="input-group-addon" id="basic-addon1">@</span>
+                                              <input type="text" class="form-control" placeholder="Twitter Id">
+                                          </div>
+                                      </td>
+                              </tr> -->
+                              <tr>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-addon"><i class="icofont icofont-social-skype"></i></span>
+                                    <input type="email" class="form-control" placeholder="Skype Id">
+                                  </div>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <div class="input-group">
+                                    <span class="input-group-addon"><i class="icofont icofont-earth"></i></span>
+                                    <input type="text" class="form-control" placeholder="website">
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <!-- end of table col-lg-6 -->
+                      </div>
+                      <!-- end of row -->
+                      <div class="text-center">
+                        <a href="#!" class="btn btn-primary waves-effect waves-light m-r-20">Save</a>
+                        <a href="#!" id="edit-cancel" class="btn btn-default waves-effect">Cancel</a>
+                      </div>
+                    </div>
+                    <!-- end of edit info -->
+                  </div>
+                  <!-- end of col-lg-12 -->
+                </div>
+                <!-- end of row -->
+              </div>
+              <!-- end of edit-info -->
+            </div>
+            <!-- end of card-block -->
+          </div>
+
+          <div class="card mt-3 mb-3">
+            <div class="card-header">
+              <h5 class="card-header-text">Identity</h5>
+              <!--  <button id="edit-btn" type="button" class="btn btn-sm btn-primary waves-effect waves-light f-right">
+                <i class="icofont icofont-edit"></i>
+              </button> -->
+            </div>
+            <div class="card-block">
+
+              <div class="col-lg-12 col-sm-12 mob-product-btn">
+
+                <div class="row">
+                  <div class="col-md-2">
+                    <h6 class="m-t-10 f-w-600">National ID:</h6>
+                  </div>
+                  <div class="col-md-1" *ngFor="let nid of guardian.nids">
+                    <a tooltip="Click To Show" type="button" target="_blank"
+                      href="{{baseUrl}}/uploads/guardian_nids/{{nid.file}}"
+                      class="btn btn-outline-primary waves-effect waves-light m-r-10">
+                      <i class="icofont f-24 m-0"
+                        [ngClass]="this.getFileType(nid.file) == 'pdf' ? 'icofont-file-pdf' : 'icofont-file-image'"></i>
+                    </a>
+                  </div>
+                  <p *ngIf="guardian.nids.length == 0">No NID has been uploaded</p>
+                </div>
+              </div>
+              <hr>
+              <div class="col-lg-12 col-sm-12 mob-product-btn">
+                <div class="row">
+                  <div class="col-md-2">
+                    <h6 class="m-t-10 f-w-600">Passport:</h6>
+                  </div>
+                  <div class="col-md-1" *ngFor="let passport of guardian.passports">
+                    <a tooltip="Click To Show" type="button" target="_blank"
+                      href="{{baseUrl}}/uploads/passports/{{passport.file}}"
+                      class="btn btn-outline-primary waves-effect waves-light m-r-10">
+                      <i class="icofont f-24 m-0"
+                        [ngClass]="this.getFileType(passport.file) == 'pdf' ? 'icofont-file-pdf' : 'icofont-file-image'"></i>
+                    </a>
+                  </div>
+                  <p *ngIf="guardian.passports.length == 0">No Passport has been uploaded</p>
+                </div>
+              </div>
+              <hr>
+              <div class="col-lg-12 col-sm-12 mob-product-btn">
+                <div class="row">
+                  <div class="col-md-2">
+                    <h6 class="m-t-10 f-w-600">Birth Certificate:</h6>
+                  </div>
+                  <div class="col-md-1" *ngFor="let certificate of guardian.birth_certificates">
+                    <a tooltip="Click To Show" type="button" target="_blank"
+                      href="{{baseUrl}}/uploads/guardian_birth_certificates/{{certificate.file}}"
+                      class="btn btn-outline-primary waves-effect waves-light m-r-10">
+                      <i class="icofont f-24 m-0"
+                        [ngClass]="this.getFileType(certificate.file) == 'pdf' ? 'icofont-file-pdf' : 'icofont-file-image'"></i>
+                    </a>
+                  </div>
+                  <p *ngIf="guardian.birth_certificates.length == 0">No Certificate has been uploaded</p>
+                </div>
+              </div>
+
+            </div>
+            <!-- end of card-block -->
+          </div>
+
+          <div class="card mt-3 mb-3" *ngIf="guardian.kids.length != 0">
+            <div class="card-header">
+              <h5 class="card-header-text">Kids Information</h5>
+               <!-- <button id="edit-btn" type="button" class="btn btn-sm btn-primary waves-effect waves-light f-right">
+                <i class="icofont icofont-edit"></i>
+              </button> -->
+
+              <button class="btn btn-info btn-mini float-right mb-1"(click)="openCreateStudentModal(templateCreateUpdateStudent)"><i class="fa fa-plus"></i>Add Student
+              </button>
+            </div>
+            <div class="card-block">
+              <div class="row">
+                <div class="col-lg-3" *ngFor="let kid of guardian.kids">
+                  <div class="card card-border-primary">
+                    <div class="card-block">
+                      <div class="row">
+                        <div class="col-sm-12">
+
+                          <table class="table">
+                            <tbody>
+                              <tr>
+                                <th>Name :</th>
+                                <td>{{kid.name}}</td>
+                              </tr>
+                              <tr>
+                                <th>Age :</th>
+                                <td>{{kid.age}}</td>
+                              </tr>
+                              <tr>
+                                <th>Gender :</th>
+                                <td>{{kid.gender}}</td>
+                              </tr>
+                              <tr>
+                                <th>Class :</th>
+                                <td>{{kid.class_name}}</td>
+                              </tr>
+                              <tr>
+                                <th>Institute :</th>
+                                <td>{{kid.institute_name}}</td>
+                              </tr>
+                              <tr>
+                                <td colspan="2">  
+                                  <button class="btn btn-info btn-mini mb-1"(click)="openUpdateStudentModal(kid, templateCreateUpdateStudent)"><i class="fa fa-edit"></i>Edit Student
+                                </button>
+                              </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+            <!-- end of card-block -->
+          </div>
+
+          <div class="card mt-3 mb-3" *ngIf="guardian.is_submitted_coginitve">
+            <div class="card-header">
+              <h5 class="card-header-text">Cognitives Answer</h5>
+              <!--  <button id="edit-btn" type="button" class="btn btn-sm btn-primary waves-effect waves-light f-right">
+                <i class="icofont icofont-edit"></i>
+              </button> -->
+            </div>
+            <div class="card-block">
+              <ol class="list-unstyled line-height-30">
+                <li class="text-height-3" *ngFor="let cog of guardian.congnitives;let i=index">
+                  {{i+1}}. {{cog.title}} : <b>{{cog.answer}}</b>
+                </li>
+              </ol>
+            </div>
+          </div>
+
+        </tab>
+        <tab>
+          <ng-template tabHeading>
+            <b>Tuition Information</b>
+          </ng-template>
+
+          <div class="card mt-3 mb-3" *ngIf="guardian.connections.length != 0">
+            <div class="card-header">
+              <h5 class="card-header-text"> Connected Tutors</h5>
+              <!--  <button id="edit-btn" type="button" class="btn btn-sm btn-primary waves-effect waves-light f-right">
+                <i class="icofont icofont-edit"></i>
+              </button> -->
+            </div>
+            <div class="card-block">
+              <div class="row">
+                <div class="col-md-12 mb-5" *ngFor="let connection of guardian.connections; let i=index">
+                  <div class="row user-info">
+                    <div class="col-md-4">
+
+                      <div class="media-left">
+                        <a href="javascript:;" class="profile-image">
+                          <img *ngIf="!connection.profile_pic" class="user-img img-circle profile-pic"
+                            src="assets/images/avatar-5.png" alt="Image">
+                          <img *ngIf="connection.profile_pic" class="user-img img-circle profile-pic"
+                            src="{{baseUrl}}/uploads/tutors/{{connection.profile_pic}}" alt="Image">
+                        </a>
+                      </div>
+                      <div class="media-body row">
+                        <div class="col-lg-12">
+                          <a [routerLink]="['/tutor-details',connection.tutor_id ]"
+                            class=""><b>{{connection.tutor_name}}</b></a>
+                          <br>
+                          <small> {{connection.tutor_code}}</small><br><i class="fa fa-phone"></i>
+                          {{connection.mobile_no}} <br>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="col-md-8">
+                      <div class="row" *ngFor="let student of connection.students; let i=index">
+                        <div class="col-md-5"><b>Student Name: </b> {{student.student_name}} <br><b>Age: </b>
+                          {{student.student_age}} <br><b>Gender: </b>
+                          {{student.student_gender}} <br><b>Amount: </b> {{student.amount}} TK<br>
+                          <div><b>Slot (days): </b> {{student.day_slot}} <br></div>
+                          <b>From: </b> {{student.from_date | amDateFormat:'DD MMM YYYY'}} <br>
+                          <!----><b>Hire Mode: </b> {{student.hire_mode}} <br>
+                        </div>
+                        <div class="col-md-6">
+                          <div *ngFor="let subject of student.subjects; let i=index">
+                            <b>Subject: </b> {{subject.course_name}} <br />
+                            <b>Medium: </b> {{subject.medium_name}} <br />
+                            <b>Class: </b> {{subject.class_name}} <br />
+                            <b>Amount: </b> {{subject.amount}} TK
+                            <div *ngIf="student.subjects.length != (i+1)" class="divider"></div>
+                          </div>
+                        </div>
+                        <!---->
+                      </div>
+                    </div>
+                  </div>
+                  <div class="divider mt-3 mb-3"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-3 mb-3" *ngIf="guardian.connections.length == 0">
+
+            <div class="card-block">
+              <div class="row">
+                <div class="col-md-12 mb-5">
+                  <div class="user-info">
+                    <h5>No Tuition Information Found</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+        </tab>
+
+      </tabset>
+    </div>
+  </div>
+
+  <ng-template #profileTemplate>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <!--<app-card>
+              <div class="form-floating">
+                  <textarea class="form-control" [(ngModel)]="cover_letter" placeholder="Cover letter text (optional)" id="floatingTextarea2" rows="4" cols="50"></textarea>
+              </div>
+        </app-card>-->
+      <form [formGroup]="profileGeneralForm">
+        <div class="row">
+          <div class="col-md-12" style="border-right: 1px solid rgb(238, 238, 238);">
+            <div class="form-group">
+              <label class="col-form-label font-weight-bold required"> Name </label>
+              <input formControlName="name" [ngClass]="{ 'is-invalid': submitted && pf.name.errors }" type="text"
+                class="form-control" autocomplete="off">
+              <div *ngIf="submitted && pf.name.errors" class="error-text">
+                <span *ngIf="pf.name.errors.required" class="text-danger">Name is required</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-form-label font-weight-bold required"> Email </label>
+              <input formControlName="email" readonly [ngClass]="{ 'is-invalid': submitted && pf.email.errors }" type="text"
+                class="form-control" autocomplete="off">
+              <div *ngIf="submitted && pf.email.errors" class="error-text">
+                <span *ngIf="pf.email.errors.required" class="text-danger">Email is required</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-form-label font-weight-bold required"> Mobile No. </label>
+              <input formControlName="mobile_no" readonly [ngClass]="{ 'is-invalid': submitted && pf.mobile_no.errors }"
+                type="text" class="form-control" autocomplete="off">
+              
+                <div *ngIf="submitted && pf.mobile_no.errors" class="error-text">
+                <span *ngIf="pf.mobile_no.errors.required" class="text-danger">Mobile No is required</span>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label class="col-form-label font-weight-bold required"> Date of Birth </label>
+              <input formControlName="date_of_birth" [ngClass]="{ 'is-invalid': submitted && pf.date_of_birth.errors }"
+                type="date" class="form-control" autocomplete="off">
+              <div *ngIf="submitted && pf.date_of_birth.errors" class="error-text">
+                <span *ngIf="pf.date_of_birth.errors.required" class="text-danger">Mobile No 2 is required</span>
+              </div>
+            </div>
+  
+            <div class="form-group">
+              <label for="gender" class="col-form-label font-weight-bold required">Gender:</label>
+              <select id="gender" name="" formControlName="gender" class="form-control form-select">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+              </select>
+            </div>
+            
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i> Close</button>
+        <button class="btn btn-success mr-2" (click)="updateProfileInformation()"> <i
+            class="icofont icofont-check-circled"></i> Save</button>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #templateAddress>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left "> Update Address</h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <app-card>
+        <form [formGroup]="currentAddressForm" class="col-sm-12" autocomplete="off">
+
+          <div class="form-group row">
+            <label for="eduTitle" class="col-md-3">Division:</label>
+            <div class="col-md-12">
+  
+                <ng-select (change)="onDivisionChange($event)" formControlName="division_id" [clearable]="false"
+                [clearOnBackspace]="false" [items]="divisionList" [multiple]=false
+                bindLabel="name" bindValue="id" placeholder="Select Division">
+                </ng-select>
+            </div>
+        </div>
+  
+        <div class="form-group row"> 
+            <label for="eduTitle" class="col-md-3">District:</label>
+            <div class="col-md-12">
+  
+                <ng-select (change)="onDistrictChange($event)" formControlName="district_id" [clearable]="false"
+                [clearOnBackspace]="false" [items]="districts" [multiple]=false
+                bindLabel="name" bindValue="id" placeholder="Select Distict">
+                </ng-select>
+            </div>
+        </div>
+  
+        <div class="form-group row"> 
+            <label for="eduTitle" class="col-md-3">Area:</label>
+            <div class="col-md-12">
+  
+                <ng-select formControlName="area_id" [clearable]="false"
+                [clearOnBackspace]="false" [items]="areaList" [multiple]=false
+                bindLabel="name" bindValue="id" placeholder="Select Distict">
+                </ng-select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="eduTitle" class="col-md-3">Address:</label>
+            <div class="col-md-12">
+                <textarea class="form-control" formControlName="address" placeholder="Current Address" id="floatingTextarea2" rows="4" cols="50"></textarea>
+                <!-- <textarea class="form-control" [(ngModel)]="address" placeholder="Current Address" id="floatingTextarea2" rows="4" cols="50"></textarea> -->
+            </div>
+        </div>
+  
+        </form>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i>Close</button>
+  
+        <button class="btn btn-success btn-outline-success" (click)="onFormSubmitAddress()">
+          <i class="icofont icofont-check-circled"></i> Update
+        </button>
+  
+      </div>
+  
+    </div>
+  </ng-template>
+
+  <ng-template #templateCreateUpdateStudent>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitleAddStudent" id="modalTitleAddStudent"></h4>
+      <button type="button " class="close pull-right " aria-label="Close "
+        (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <app-card>
+        <form [formGroup]="FormStudent" autocomplete="off">
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold">Student Name</label>
+            <input type="text" class="form-control" formControlName="name"
+              [ngClass]="{ 'is-invalid': submitted && std.name.errors }">
+            <div *ngIf="submitted && std.name.errors" class="error-text">
+              <span *ngIf="std.name.errors.required" class="text-danger">Name is required</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="col-form-label font-weight-bold">Age</label>
+                <input type="text" numeric numericType="number" class="form-control" formControlName="age"
+                  [ngClass]="{ 'is-invalid': submitted && std.age.errors }">
+
+                <div *ngIf="submitted && std.age.errors" class="error-text">
+                  <span *ngIf="std.age.errors.required" class="text-danger">Age is required</span>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="col-form-label font-weight-bold">Gender</label>
+                <ng-select [clearable]="false" formControlName="gender" [clearOnBackspace]="false"
+                  [items]="[{'id':'Male',name:'Male'},{'id':'Female',name:'Female'}]" bindLabel="name" bindValue="id"
+                  placeholder="Select gender">
+                </ng-select>
+                <div *ngIf="submitted && std.gender.errors" class="error-text">
+                  <span *ngIf="std.gender.errors.required" class="text-danger">Gender is required</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="form-group">
+            <label class="col-form-label font-weight-bold" >Student Name</label>
+              <input type="text" class="form-control" formControlName="name" [ngClass]="{ 'is-invalid': submitted && s.institute.errors }">
+              <div *ngIf="submitted && s.institute.errors" class="error-text">
+                <span *ngIf="s.institute.errors.required" class="text-danger">Institute is required</span>
+            </div>
+          </div> -->
+          </div>
+          <div class="form-group" *ngIf="classlist.length>0">
+              <label class="col-form-label font-weight-bold">Class</label>
+            
+              <ng-select formControlName="class_id" [clearable]="false"
+                [clearOnBackspace]="false" [items]="classlist" [multiple]=false
+                bindLabel="name" bindValue="id" placeholder="Select Class">
+              </ng-select>
+
+              <div *ngIf="submitted && std.class_id.errors" class="error-text">
+                  <span *ngIf="std.class_id.errors.required" class="text-danger"> Class is required</span>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold">Student's Institute</label>
+            <input type="text" class="form-control" formControlName="institute">
+            <div *ngIf="submitted && std.institute.errors" class="error-text">
+              <span *ngIf="std.institute.errors.required" class="text-danger">Institute is required</span>
+            </div>
+          </div>
+        </form>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-outline-danger " (click)="modalHide()"> <i
+          class="icofont icofont-close"></i>Close</button>
+        <button class="btn btn-success btn-outline-success mr-2" [innerHtml]="stdUpdateSubmit" id="stdUpdateSubmit" (click)="CreateUpdateStudentSubmit()"> <i
+            class="icofont icofont-check-circled"></i>Add </button>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateAddStudent>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitleAddStudent" id="modalTitleAddStudent"></h4>
+      <button type="button " class="close pull-right " aria-label="Close "
+        (click)="modalHideAddStudent(templateHireTutor)">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <app-card>
+        <form [formGroup]="entryFormStudent" autocomplete="off">
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold">Student Name</label>
+            <input type="text" class="form-control" formControlName="name"
+              [ngClass]="{ 'is-invalid': submitted && s.name.errors }">
+            <div *ngIf="submitted && s.name.errors" class="error-text">
+              <span *ngIf="s.name.errors.required" class="text-danger">Name is required</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="col-form-label font-weight-bold">Age</label>
+                <input type="text" numeric numericType="number" class="form-control" formControlName="age"
+                  [ngClass]="{ 'is-invalid': submitted && s.age.errors }">
+
+                <div *ngIf="submitted && s.age.errors" class="error-text">
+                  <span *ngIf="s.age.errors.required" class="text-danger">Age is required</span>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="col-form-label font-weight-bold">Gender</label>
+                <ng-select [clearable]="false" formControlName="gender" [clearOnBackspace]="false"
+                  [items]="[{'id':'Male',name:'Male'},{'id':'Female',name:'Female'}]" bindLabel="name" bindValue="id"
+                  placeholder="Select gender">
+                </ng-select>
+                <div *ngIf="submitted && s.gender.errors" class="error-text">
+                  <span *ngIf="s.gender.errors.required" class="text-danger">Gender is required</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div class="form-group">
+            <label class="col-form-label font-weight-bold" >Student Name</label>
+              <input type="text" class="form-control" formControlName="name" [ngClass]="{ 'is-invalid': submitted && s.institute.errors }">
+              <div *ngIf="submitted && s.institute.errors" class="error-text">
+                <span *ngIf="s.institute.errors.required" class="text-danger">Institute is required</span>
+            </div>
+          </div> -->
+
+          </div>
+          <div class="form-group">
+            <label class="col-form-label font-weight-bold">Student's Institute</label>
+            <input type="text" class="form-control" formControlName="institute">
+          </div>
+        </form>
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-outline-danger " (click)="modalHideAddStudent(templateHireTutor)"> <i
+          class="icofont icofont-close"></i>Close</button>
+        <button class="btn btn-success btn-outline-success mr-2" (click)="AddStudentInList(templateHireTutor)"> <i
+            class="icofont icofont-check-circled"></i>Add </button>
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateSearchTutor>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideSearchTutor()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body custom-scroll">
+      <app-card>
+        <div class="form-group">
+          <input type="text" (ngModelChange)='inputValueChanged($event)' class="form-control"
+            placeholder="Search by name, moble number .." [(ngModel)]="tutorSearchText" autocomplete="off">
+        </div>
+
+        <h6 *ngIf="isSearching">Searching...</h6>
+        <h6 *ngIf="noDataFoundTextShow && !isSearching">No Data Found.</h6>
+
+        <div class="col-lg-12 list-margin mb-3" *ngFor="let tutor of tutorSearchResult">
+          <!-- <div class="col-lg-6 list-margin" *ngFor="let tutor of tutorList | paginate: { itemsPerPage: page.size, currentPage: page.pageNumber, totalItems: page.totalElements }"> -->
+          <ul class="list-view">
+            <li>
+              <div class="card user-card card-min-height">
+                <div class="card-block">
+                  <div class="media">
+                    <a class="media-left" href="#">
+                      <img *ngIf="!tutor.profile_pic" class="media-object img-circle card-list-img"
+                        src="assets/images/avatar-5.png" alt="Image">
+                      <img *ngIf="tutor.profile_pic"
+                        class="media-object img-circle card-list-img image-size profile-pic"
+                        src="{{baseUrl}}/uploads/tutors/{{tutor.profile_pic}}" alt="Image">
+                    </a>
+                    <div class="media-body">
+
+                      <div class="col-xs-12 my-1">
+                        <h5 class="d-inline-block py-1"><a [routerLink]="['/tutor-details',tutor.id ]" class="name-a">{{
+                            tutor.name }}</a> </h5>
+                        <label class="label label-md label-warning"> <i class="icofont-star"></i>{{
+                          tutor.guardian_rating }}</label>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-7">
+                          <div class="progress progress-margin">
+                            <div class="progress-bar bg-success" role="progressbar"
+                              style="width: {{ tutor.profile_progress * 100 / 14 | number : '1.0-0' }}%"
+                              aria-valuemin="0" aria-valuemax="100">
+                              <strong>{{ tutor.profile_progress * 100 / 14 | number : '1.1-1' }}%
+                                Completed</strong>
+                            </div>
+                          </div>
+                          <div class="f-13 text-muted my-1"><i class="icofont-phone"></i>
+                            <strong>{{ tutor.mobile_no_1 }}
+                            </strong>
+                          </div>
+                        </div>
+                        <div class="col-sm-5">
+                          <label class="btn btn-info float-right" (click)="openHireTutorModal(tutor,templateHireTutor)">
+                            Hire Now</label>
+                        </div>
+                      </div>
+
+
+                      <div class="f-13 text-muted">
+                        <div class="row">
+                          <div class="col-md-12" *ngFor="let subject of tutor.preferred_subjects; let i=index">
+                            <div class="my-1 row "
+                              [ngClass]="tutor.preferred_subjects.length != (i+1) ? 'border-buttom-dashed' : ''">
+                              <div class="col-md-4">
+                                {{ subject.course_name }} ( {{ subject.class_name }} )<br>
+                                {{ subject.medium_name }} <br>
+
+                              </div>
+                              <div class="col-md-8">
+                                <span *ngIf="subject.salary_max "><b>Home Tuition:</b> {{ subject.salary_max }} BDT
+                                </span><br>
+                                <span *ngIf="subject.online_hour_rate "> <b>Online Tuition :</b>
+                                  {{ subject.online_hour_rate }} BDT </span>
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </div>
+                      <hr />
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+
+
+      </app-card>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideSearchTutor()"> <i
+            class="icofont icofont-close"></i>Close</button>
+
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateHireTutor>
+    <div class="modal-header ">
+      <h4 style="text-transform: uppercase;" class="modal-title pull-left " [innerHtml]="modalTitleHire"
+        id="modalTitleHire"></h4>
+      <button type="button " class="close pull-right " aria-label="Close "
+        (click)="modalHideHireTutor(templateSearchTutor)">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body" *ngIf="guardian">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="card mt-3 mb-3">
+            <div class="card-block">
+
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label font-weight-bold">Guardian</label>
+                <div class="col-sm-8">
+                  <!-- <h5>{{guardian.name}}</h5> -->
+                  <input type="text" readonly class="form-control" value="{{guardian.name}}">
+                </div>
+              </div>
+              <div class="form-group row mt-3">
+                <div class="col-sm-12">
+                  <button class="btn btn-info btn-mini float-right mb-1"
+                    (click)="openAddStudentModal(templateAddStudent)">
+                    <i class="fa fa-plus"></i>Add Student
+                  </button>
+                </div>
+                <label class="col-sm-4 col-form-label font-weight-bold">Select Student</label>
+                <div class="col-sm-8">
+
+                  <ng-select [items]="guardian.kids" [(ngModel)]="selectedStudent" bindLabel="name" [clearable]=false
+                    placeholder="Select Student">
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+
+                      <div style="margin: 10px 0;" class="card">
+                        <div class="card-body">
+                          <h5 class="card-title">Name: {{item.name}}</h5>
+                          <p class="card-text mb-0" *ngIf="item.gender">
+                            Gender: {{item.gender}}
+                          </p>
+                          <p class="card-text mb-0" *ngIf="item.class_name">
+                            Class: {{item.class_name}}
+                          </p>
+                          <p class="card-text mb-0" *ngIf="item.institute_name">
+                            {{item.institute_name}}
+                          </p>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </ng-select>
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label font-weight-bold">Start Date</label>
+                <div class="col-sm-8">
+                  <input type="text" readonly class="form-control" placeholder="Select date"
+                    [(ngModel)]="hireData.startDate" [bsConfig]="bsConfig" bsDatepicker>
+
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label font-weight-bold">Charge (%)</label>
+                <div class="col-sm-8">
+                  <input type="number" class="form-control" placeholder="Charge (%)"
+                    [(ngModel)]="hireData.chargeAmount">
+                </div>
+              </div>
+              <div class="form-group row">
+                <label class="col-sm-4 col-form-label font-weight-bold">Charge Amount</label>
+                <div class="col-sm-8">
+                  <input type="number" class="form-control" placeholder="Charge Amount"
+                    [(ngModel)]="hireData.chargePercentage">
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+
+          <div class="card mt-3 mb-3">
+            <div class="card-block">
+              <div class="form-group">
+                <label class="col-form-label font-weight-bold">Hire Mode</label>
+                <div class="mt-1">
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="form-radio">
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" name="radio" id="homeTuition" [(ngModel)]="mode"
+                              value="home" (change)="onChangeHireMode($event)" [checked]="true" >
+                            <i class="helper" for="homeTuition"></i>Home Tuition
+                          </label>
+                        </div>
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" name="online" id="onlineTuition" [(ngModel)]="mode"
+                              value="online" (change)="onChangeHireMode($event)">
+                            <i class="helper" for="onlineTuition"></i>Online Tuition
+                          </label>
+                        </div>
+                        <div class="radio radio-inline">
+                          <label>
+                            <input type="radio" name="contract" id="contractTuition" [(ngModel)]="mode"
+                              value="contract" (change)="onChangeHireMode($event)">
+                            <i class="helper" for="contractTuition"></i>Contract
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row mt-4">
+                    <div class="col-md-12">
+                      <div *ngIf="mode === 'online'">
+                        <div class="form-group">
+                          <label class="font-weight-bold">Negotiated Amount / Hour</label>
+                          <input type="number" class="form-control" [(ngModel)]="hireData.amount"
+                            placeholder="Negotiated Amount / Hour">
+
+                        </div>
+                      </div>
+                      <div *ngIf="mode === 'home'">
+                        <div class="form-group row">
+                          <label class="font-weight-bold">Negotiated Amount </label>
+                          <input type="number" class="form-control" [(ngModel)]="hireData.amount"
+                            placeholder="Negotiated amount">
+
+                        </div>
+                        <div class="form-group row">
+                          <label class="font-weight-bold">Day Slot </label>
+                          <input type="number" class="form-control" [(ngModel)]="hireData.day_slot"
+                            placeholder="Day slot">
+
+                        </div>
+                      </div>
+
+
+                      <div *ngIf="mode === 'contract'">
+
+                        <div class="form-group row">
+                          <label class="font-weight-bold">Close Date </label>
+                          <input type="text" readonly class="form-control" placeholder="Select date"
+                            [(ngModel)]="hireData.closeDate" [bsConfig]="bsConfig" bsDatepicker>
+                          <!-- <Datepicker placeholder="select date" [(ngModel)]="hireData.close_date"></Datepicker> -->
+                        </div>
+                        <div class="form-group row">
+                          <label class="font-weight-bold">Negotiated Amount </label>
+                          <input type="number" class="form-control" [(ngModel)]="hireData.amount"
+                            placeholder="Negotiated amount">
+
+                        </div>
+                        <div class="form-group row">
+                          <label class="font-weight-bold">Day Slot </label>
+                          <input type="number" class="form-control" [(ngModel)]="hireData.day_slot"
+                            placeholder="Day slot">
+
+                        </div>
+                        <div class="form-group row">
+                          <label class="font-weight-bold">Installment Number </label>
+                          <input type="number" class="form-control" [(ngModel)]="hireData.installment_no"
+                            placeholder="Installment number">
+                        </div>
+                        <div *ngIf="hireData.installment_no">
+                          <div class="form-group row" *ngFor="let num of counter(hireData.installment_no); let i=index">
+                            <div class="col-md-6 ">
+                              <label>Date {{i+1}} </label>
+                              <input type="text" readonly class="form-control" placeholder="Select date"
+                                [bsConfig]="bsConfig" bsDatepicker [(ngModel)]="installmentDates[i]">
+
+                            </div>
+                            <div class="col-md-6 ">
+                              <label>Installment </label>
+                              <input type="number" class="form-control" placeholder="Install amount"
+                                [(ngModel)]="installmentAmounts[i]">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr>
+
+          <div class="row" *ngIf="searchedTutor">
+            <div class="col-md-12">
+              <div class="card user-card card-min-height">
+                <div class="card-block">
+                  <div class="media">
+                    <a class="media-left" href="#">
+                      <img *ngIf="!searchedTutor.profile_pic" class="media-object img-circle card-list-img"
+                        src="assets/images/avatar-5.png" alt="Image">
+                      <img *ngIf="searchedTutor.profile_pic"
+                        class="media-object img-circle card-list-img image-size profile-pic"
+                        src="{{baseUrl}}/uploads/tutors/{{searchedTutor.profile_pic}}" alt="Image">
+                    </a>
+                    <div class="media-body">
+
+                      <div class="col-xs-12 my-1">
+                        <h5 class="d-inline-block py-1"><a [routerLink]="['/tutor-details',searchedTutor.id ]"
+                            class="name-a">{{ searchedTutor.name }}</a> </h5>
+                        <label class="label label-md label-warning"> <i class="icofont-star"></i>{{
+                          searchedTutor.guardian_rating }}</label>
+                      </div>
+
+
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="progress progress-margin">
+                            <div class="progress-bar bg-success" role="progressbar"
+                              style="width: {{ searchedTutor.profile_progress * 100 / 14 | number : '1.0-0' }}%"
+                              aria-valuemin="0" aria-valuemax="100">
+                              <strong>{{ searchedTutor.profile_progress * 100 / 14 | number : '1.1-1' }}%
+                                Completed</strong>
+                            </div>
+                          </div>
+                          <div class="f-13 text-muted my-1"><i class="icofont-phone"></i>
+                            <strong>{{ searchedTutor.mobile_no_1 }}
+                            </strong>
+                          </div>
+                        </div>
+                      </div>
+
+
+                      <div class="f-13 text-muted">
+                        <div class="row">
+                          <div class="col-md-12" *ngFor="let subject of searchedTutor.preferred_subjects; let i=index">
+                            <div class="my-1 row "
+                              [ngClass]="searchedTutor.preferred_subjects.length != (i+1) ? 'border-buttom-dashed' : ''">
+                              <div class="col-md-5">
+                                {{ subject.course_name }} ( {{ subject.class_name }} )<br>
+                                {{ subject.medium_name }} <br>
+
+                              </div>
+                              <div class="col-md-2 mt-2">
+                                <div class="checkbox-fade fade-in-primary">
+                                  <label>
+                                    <input id="check{{i}}" type="checkbox"
+                                      [(ngModel)]="searchedTutor.preferred_subjects[i].checked">
+                                    <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                                  </label>
+                                </div>
+
+                              </div>
+                              <div class="col-md-5">
+                                <input type="number" class="form-control"
+                                  [(ngModel)]="searchedTutor.preferred_subjects[i].amount">
+                              </div>
+
+                            </div>
+
+                          </div>
+                        </div>
+
+                      </div>
+                      <hr />
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-success btn-outline-success mr-2" (click)="SubmitHireTutor(templateSearchTutor)"> <i
+            class="icofont icofont-check-circled"></i>Submit</button>
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideHireTutor(templateSearchTutor)"> <i
+            class="icofont icofont-close"></i>Close</button>
+
+
+      </div>
+
+    </div>
+  </ng-template>
+
+  <ng-template #templateCreateJob>
+    <div class="modal-header ">
+      <h4 style="text-transform: uppercase;" class="modal-title pull-left " [innerHtml]="modalTitleJob"
+        id="modalTitleJob"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHideCreateJob()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body" *ngIf="guardian">
+      <form [formGroup]="entryFormJob">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card mt-3 ml-3 ">
+              
+
+                <div class="form-group row mt-3">
+                  <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Select Student</label>
+                  <div class="col-md-5 col-sm-12">
+                    <ng-select [items]="guardian.kids" formControlName="name" bindLabel="name" [clearable]=false
+                      placeholder="Select Student">
+                      <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+
+                        <div  class="card">
+                          <div class="card-body">
+                            <h5 class="card-title font-weight-bold">Name: {{item.name}}</h5>
+                            <p class="card-text mb-0 font-weight-bold" *ngIf="item.gender">
+                              Gender: {{item.gender}}
+                            </p>
+                            <p class="card-text mb-0 font-weight-bold" *ngIf="item.class_name">
+                              Class: {{item.class_name}}
+                            </p>
+                            <p class="card-text mb-0 font-weight-bold" *ngIf="item.institute_name">
+                              {{item.institute_name}}
+                            </p>
+                          </div>
+                        </div>
+                      </ng-template>
+                    </ng-select>
+                    <div *ngIf="submitted && f.name.errors" class="error-text">
+                      <span *ngIf="f.name.errors.required" class="text-danger"> student is
+                        required</span>
+                    </div>
+                  </div>
+                  <label class="col-md-1 col-sm-12 col-form-label font-weight-bold required">Title</label>
+                  <div class="col-md-4 col-sm-12">
+                    <input type="text" formControlName="title" class="form-control" placeholder="Job title">
+                    <div *ngIf="job_submitted && f.title.errors" class="error-text">
+                      <span *ngIf="f.title.errors.required" class="text-danger"> title is
+                        required</span>
+                    </div>
+                  </div>
+                </div>
+
+              <div class="form-group row">
+                <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Slot</label>
+                <div class="col-md-6 col-sm-12">
+                  <input type="number" class="form-control" formControlName="slot" placeholder="Days per week/month">
+                  <div *ngIf="job_submitted && f.slot.errors" class="error-text">
+                    <span *ngIf="f.slot.errors.required" class="text-danger"> slot is
+                      required</span>
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                  <ng-select [clearable]="false" formControlName="slot_type" [clearOnBackspace]="false"
+                    [items]="[{'id':'Week',name:'Week'},{'id':'Month',name:'Month'}]" bindLabel="name" bindValue="id"
+                    placeholder="Select type">
+                  </ng-select>
+                  <div *ngIf="job_submitted && f.slot_type.errors" class="error-text">
+                    <span *ngIf="f.slot_type.errors.required" class="text-danger"> slot type is
+                      required</span>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Salary</label>
+                <div class="col-md-6 col-sm-12">
+                  <input type="number" formControlName="salary" class="form-control" placeholder="salary">
+                  <div *ngIf="job_submitted && f.salary.errors" class="error-text">
+                    <span *ngIf="f.salary.errors.required" class="text-danger"> salary is
+                      required</span>
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                  <ng-select [clearable]="false" formControlName="salary_type" [clearOnBackspace]="false"
+                    [items]="[{'id':'Hour',name:'Hour'},{'id':'Week',name:'Week'},{'id':'Month',name:'Month'}]"
+                    bindLabel="name" bindValue="id" placeholder="Select type">
+                  </ng-select>
+                  <div *ngIf="job_submitted && f.salary_type.errors" class="error-text">
+                    <span *ngIf="f.salary_type.errors.required" class="text-danger"> salary type is
+                      required</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Tuitoring Time</label>
+                <div class="col-md-6 col-sm-12">
+                  <input type="text" formControlName="time" class="form-control" placeholder="Ex. 12:00">
+                  <div *ngIf="job_submitted && f.time.errors" class="error-text">
+                    <span *ngIf="f.time.errors.required" class="text-danger"> tutoring time is
+                      required</span>
+                  </div>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                  <ng-select [clearable]="false" formControlName="meridian" [clearOnBackspace]="false"
+                    [items]="[{'id':'AM',name:'AM'},{'id':'PM',name:'PM'}]"
+                    bindLabel="name" bindValue="id" placeholder="Select meridian">
+                  </ng-select>
+                  <div *ngIf="job_submitted && f.meridian.errors" class="error-text">
+                    <span *ngIf="f.time.errors.required" class="text-danger"> meridian is
+                      required</span>
+                  </div>
+                </div>
+              </div>
+
+           
+
+              <div class="form-group row">
+                <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Medium</label>
+                <div class="col-md-5 col-sm-12">
+                  <ng-select [clearable]="false" formControlName="medium" [items]="mediumList"
+                    [clearOnBackspace]="false" bindLabel="name" bindValue="id" placeholder="Select medium">
+                  </ng-select>
+                  <div *ngIf="job_submitted && f.medium.errors" class="error-text">
+                    <span *ngIf="f.medium.errors.required" class="text-danger"> medium is
+                      required</span>
+                  </div>
+                </div>
+                <label class="col-md-1 col-sm-6 col-form-label font-weight-bold required">Subject</label>
+                <div class="col-md-4 col-sm-12">
+                  <ng-select [multiple]="true" formControlName="subject">
+                    <ng-option *ngFor="let subject of subjectList" placeholder="Select subjects" [value]="subject">{{subject.name}}</ng-option>
+                  </ng-select>
+                 
+                  <div *ngIf="job_submitted && f.subject.errors" class="error-text">
+                    <span *ngIf="f.subject.errors.required" class="text-danger"> subject is
+                      required</span>
+                  </div>
+                </div>
+              </div>
+
+             
+
+              <div class="form-group row">
+                <label class="col-md-2 col-sm-6 col-form-label font-weight-bold">Note(Optional)</label>
+                <div class="col-md-10 col-sm-12">
+                  <textarea type="text" formControlName="note" class="form-control" placeholder="Note"></textarea>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+    </form>
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-success btn-outline-success mr-2" (click)="SubmitCreateJob()"> <i
+            class="icofont icofont-check-circled"></i>Submit</button>
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHideCreateJob()"> <i
+            class="icofont icofont-close"></i>Close</button>
+
+
+      </div>
+
+    </div>
+  </ng-template>
+
+</block-ui>

@@ -1,0 +1,98 @@
+<block-ui>
+  <div class="card ">
+    <div class="card-header row">
+      <div class="col-md-8 col-12">
+        <h5><i class="fa fa-user"></i>&nbsp; RESULT: <span *ngIf="is_loaded"> {{ examDetails.session_name }} - {{ examDetails.exam_name  }} </span></h5>
+      </div>
+      <div class="col-md-4 col-12 text-right">
+        <button class="btn btn-secondary btn-mini float-right" (click)="backToLocation()">
+          <i class="fa fa-arrow-circle-left "></i> Back </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12">
+          <ngx-datatable class="material table-bordered" [rows]="resultList" #dataTable [loadingIndicator]="loadingIndicator"
+            [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+            [externalPaging]="false" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" [scrollbarH]="true">
+
+            <ngx-datatable-column [width]="20" name="Sl" [draggable]="false" [sortable]="false">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                <span> {{ (page.pageNumber * page.size) + rowIndex + 1 }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="200" name="Tutor" prop="tutor_name" [draggable]="false" [sortable]="false">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <strong>{{ row.tutor_name }}</strong><br/>
+                {{ row.email }}<br/>
+                {{ row.mobile_no }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="100" name="Exam Mark" prop="total_mark" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span title="{{ value }}"> {{ value }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="100" name="Gained Mark" prop="mark" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span title="{{ value }}"> {{ value }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column [width]="100" name="Date" prop="created_at" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span title="{{ value | amLocal | amDateFormat: 'DD MMM, YYYY hh:mm A'  }}"> {{ value | amLocal | amDateFormat: 'DD MMM, YYYY hh:mm A'  }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Action" [draggable]="false" [sortable]="false" headerClass="text-center"
+              cellClass="text-center">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <button class="btn btn-info btn-mini mr-2" (click)="viewWrittenAnswer(row, viewResultTemplate)">
+                  <i class="fa fa-eye"></i> See Written Answer
+                </button>
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>
+
+<ng-template #viewResultTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="rqForm">
+        <div class="row">
+          
+          <div class="col-12" *ngFor="let answer of writtenAnswerDetails; let i=index">
+            <div class="card">
+                <div class="card-header">
+                    <strong>Question:</strong> {{ answer.question }}
+                    <span class="float-right">Word Count: {{ answer.min_word_count }} to  {{ answer.max_word_count }}</span>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Answer: </h5>
+                    <p class="card-text">{{ answer.answer }}</p>
+                </div>
+            </div>
+            <br/>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i>Close</button>
+    </div>
+</ng-template>

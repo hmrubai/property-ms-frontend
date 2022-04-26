@@ -1,0 +1,171 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header"></div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 pt-2 bp-2">
+                                    <div class="card user-card mb-3">
+                                        <div class="card-block">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <div class="col-xs-12">
+                                                        <h5 class="d-inline-block">{{ jobDetails.title }}</h5> 
+                                                        <h5 class="float-right">POSTED AT: {{ jobDetails.created_at | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY' }}</h5> 
+                                                        <hr>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-sm-4">
+                                                            <p class="mb-3"><strong>Job Code:</strong> {{ jobDetails.job_code }}</p>
+                                                            <p><strong>{{ jobDetails.slot_days_amount }}days / {{ jobDetails.slot_days_type }}</strong> </p> 
+                                                            <p><strong>Tutor Gender Preference: </strong> {{ jobDetails.preferred_tutor_gender }}</p>
+                                                            <p><strong>Student Gender: </strong> {{ jobDetails.child_gender }}</p>
+                                                            <p class="mb-3" *ngIf="!adminId"><strong>Posted By:</strong> Guardian</p>
+                                                            <p class="mb-3" *ngIf="adminId"><strong>Posted By:</strong> Admin</p>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p class="mb-3"><strong>Class:</strong> {{ jobDetails.class_name }}</p>
+                                                            <p><strong>Salary: </strong>{{ jobDetails.salary_amount }} / {{ jobDetails.salary_duration_type }} </p> 
+                                                            <p><strong>Tutoring Time:</strong> {{ jobDetails.tuition_time }}</p>
+                                                            <p><strong>Location: </strong> {{ jobDetails.area_name }}, {{ jobDetails.district_name }}</p>
+                                                            <p class="mb-3"><strong>Guardian Name:</strong> {{ jobDetails.guardian_name }}</p>
+                                                        </div>
+                                                        <div class="col-sm-4">
+                                                            <p class="mb-3"><strong>Medium:</strong> {{ jobDetails.medium_name }}</p>
+                                                                <ul class="list-inline">
+                                                                    <li class="list-inline-item"> <strong>Subject:</strong> </li>
+                                                                    <li class="list-inline-item" *ngFor="let subject of subjects; let i=index"> {{ subject.name }} </li>
+                                                                </ul>
+                                                            <!--<button class="btn btn-info btn-sm button-margin-top" [routerLink]="['/applied-job-details', jobDetails.id ]">Show Applicants ({{ jobDetails.applicants_count }}) </button>-->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-12" *ngIf="applicants.length > 0">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Tutor Name</th>
+                                                <th>Tutor Mobile No</th>
+                                                <th>Email</th>
+                                                <th>Applied Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let applicant of applicants; let i=index">
+                                                <td><a href="javascript:;">{{ applicant.name  }}</a></td>
+                                                <td>{{ applicant.mobile_no  }}</td>
+                                                <td>{{ applicant.email }}</td>
+                                                <td>{{ applicant.created_at | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A' }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-12" *ngIf="applicants.length == 0">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Tutor Name</th>
+                                                <th>Tutor Mobile No</th>
+                                                <th>Email</th>
+                                                <th>Applied Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="4">No Applicant Found!</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold"> Zoom ID </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_id" [ngClass]="{ 'is-invalid': submitted && f.zoom_id.errors }"
+                                type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_id.errors" class="error-text">
+                                <span *ngIf="f.zoom_id.errors.required" class="text-danger">Zoom ID is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom Password </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_password" [ngClass]="{ 'is-invalid': submitted && f.zoom_password.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_password.errors" class="error-text">
+                                <span *ngIf="f.zoom_password.errors.required" class="text-danger">Zoom Password is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom API Key </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_api_key" [ngClass]="{ 'is-invalid': submitted && f.zoom_api_key.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_api_key.errors" class="error-text">
+                                <span *ngIf="f.zoom_api_key.errors.required" class="text-danger">Zoom API Key is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom API Secret </label>
+                        <div class="col-sm-8">
+                            <input formControlName="zoom_api_secret" [ngClass]="{ 'is-invalid': submitted && f.zoom_api_secret.errors }" type="text" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.zoom_api_secret.errors" class="error-text">
+                                <span *ngIf="f.zoom_api_secret.errors.required" class="text-danger">Zoom API Secret is required</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Zoom Token </label>
+                        <div class="col-sm-8">
+                            <textarea formControlName="zoom_token" [ngClass]="{ 'is-invalid': submitted && f.zoom_token.errors }" type="text" class="form-control" autocomplete="off" cols="30" rows="5"></textarea>
+                            <div *ngIf="submitted && f.zoom_token.errors" class="error-text">
+                                <span *ngIf="f.zoom_token.errors.required" class="text-danger">Token is required</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>

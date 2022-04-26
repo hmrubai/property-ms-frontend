@@ -1,0 +1,116 @@
+<block-ui>
+  <div class="card ">
+    <div class="card-header row">
+      <div class="col-md-8 col-12">
+        <h5><i class="fa fa-user"></i>&nbsp; QUOTA LIST: <span *ngIf="is_loaded"> {{ examDetails.session_name }} - {{ examDetails.exam_name  }} </span></h5>
+      </div>
+      <div class="col-md-4 col-12 text-right">
+        <button class="btn btn-secondary btn-mini float-right" (click)="backToLocation()">
+          <i class="fa fa-arrow-circle-left "></i> Back </button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12">
+          <ngx-datatable class="material table-bordered" [rows]="quotaList" #dataTable [loadingIndicator]="loadingIndicator"
+            [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+            [externalPaging]="false" [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" [scrollbarH]="true">
+
+            <ngx-datatable-column [width]="20" name="Sl" [draggable]="false" [sortable]="false">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                <span> {{ (page.pageNumber * page.size) + rowIndex + 1 }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="200" name="Tutor" prop="tutor_name" [draggable]="false" [sortable]="false">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <strong>{{ row.tutor_name }}</strong><br/>
+                {{ row.email }}<br/>
+                {{ row.mobile_no }}
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="100" name="MCQ Permission" prop="mcq_quota" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span title="{{ value }}"> {{ value }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="100" name="MCQ Attempt" prop="mcq_attempt_count" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span title="{{ value }}"> {{ value }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+            
+            <ngx-datatable-column [width]="100" name="Written Permission" prop="written_quota" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span title="{{ value }}"> {{ value }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [width]="100" name="Written Attempt" prop="written_attempt_count" [draggable]="false" [sortable]="false">
+              <ng-template let-value="value" ngx-datatable-cell-template>
+                <span title="{{ value }}"> {{ value }} </span>
+              </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Action" [draggable]="false" [sortable]="false" headerClass="text-center"
+              cellClass="text-center">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <button class="btn btn-info btn-mini mr-2" (click)="editQuota(row, updateQuotaTemplate)">
+                  <i class="fa fa-edit"></i> Modify
+                </button>
+              </ng-template>
+            </ngx-datatable-column>
+
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</block-ui>
+
+<ng-template #updateQuotaTemplate>
+    <div class="modal-header ">
+      <i class="fa fa-file m-1"></i>
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="rqForm">
+        <div class="row">
+          
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">MCQ Permission </label>
+              <input type="number" [min]="1" formControlName="mcq_quota" [ngClass]="{ 'is-invalid': submitted && rf.mcq_quota.errors }"
+                placeholder="Enter MCQ Permission" class="form-control" />
+              <div *ngIf="submitted && rf.mcq_quota.errors" class="error-text">
+                <span *ngIf="rf.mcq_quota.errors.required" class="text-danger">MCQ Permission Count is required</span>
+                <span *ngIf="rf.mcq_quota.errors.maxlength" class="text-danger">MCQ Permission Count must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="col-6">
+            <div class="form-group">
+              <label class="col-form-label required">Written Permission </label>
+              <input type="number" [min]="1" formControlName="written_quota" [ngClass]="{ 'is-invalid': submitted && rf.written_quota.errors }"
+                placeholder="Enter Written Permission" class="form-control" />
+              <div *ngIf="submitted && rf.written_quota.errors" class="error-text">
+                <span *ngIf="rf.written_quota.errors.required" class="text-danger">Written Permission Count is required</span>
+                <span *ngIf="rf.written_quota.errors.maxlength" class="text-danger">Written Permission must be within 250 characters</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline-secondary btn-sm mr-2" (click)="modalHide()"> <i class="icofont icofont-close"></i>Close</button>
+      <button class="btn btn-success btn-sm" (click)="onUpdateQuotaSubmit()"><i class="feather icon-save"></i>{{btnSaveText}}</button>
+    </div>
+</ng-template>

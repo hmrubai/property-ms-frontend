@@ -1,0 +1,206 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Member List </h5>
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)">
+                                <i class=" icofont icofont-plus "></i>Add Member</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Image</th>
+                                                <th>Name</th>
+                                                <th>Email</th>
+                                                <th>Gender</th>
+                                                <th>Role</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let student of studentList; let i=index">
+                                                <td><img class="media-object img-circle card-list-img image-size" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td>
+                                                <td>{{ student.name  }}</td>
+                                                <td>{{ student.email  }}</td>
+                                                <td>{{ student.gender }}</td>
+                                                <td>{{ student.role.name }}</td>
+                                                <td>
+                                                    <button class="btn btn-info btn-mini mr-1" (click)="openPasswordModal(student, passwordTemplate)"> <i class="icofont-edit"></i> Change Password</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Name</label>
+                            <input formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.name.errors" class="error-text">
+                                <span *ngIf="f.name.errors.required" class="text-danger">Name is required</span>
+                                <span *ngIf="f.name.errors.maxlength" class="text-danger">Name must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Email</label>
+                            <input formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                                type="email" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.email.errors" class="error-text">
+                                <span *ngIf="f.email.errors.required" class="text-danger">Email is required</span>
+                                <span *ngIf="f.email.errors.email" class="text-danger">Please Enter valid email</span>
+                                <span *ngIf="f.email.errors.maxlength" class="text-danger">Email must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Gender</label>
+                            <ng-select placeholder="Select Gender" formControlName="gender" [items]="genderList"
+                                [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                    <div>{{item.name}}</div>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.gender.errors" class="error-text">
+                                <span *ngIf="f.gender.errors.required" class="text-danger"> Gender is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold required">Role </label> 
+                        <ng-select placeholder="Select Role" formControlName="role_id" [items]="roleList"
+                            [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                <div>{{item.name}}</div>
+                            </ng-template>
+                        </ng-select>
+                        <div *ngIf="submitted && f.role_id.errors" class="error-text">
+                            <span *ngIf="f.role_id.errors.required" class="text-danger"> Role is required</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.password.errors" class="error-text">
+                                <span *ngIf="f.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="f.password.errors.minlength" class="text-danger">Password must be 6 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+
+                            <div *ngIf="submitted && f.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="f.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #passwordTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="passwordForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': password_submitted && pcf.password.errors }" autocomplete="off" required>
+                            <div *ngIf="password_submitted && pcf.password.errors" class="error-text">
+                                <span *ngIf="pcf.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="pcf.password.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': password_submitted && pcf.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="password_submitted && pcf.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="pcf.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onUpdatePasswordFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+</block-ui>

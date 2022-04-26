@@ -1,0 +1,28 @@
+@media (min-width: 992px) {
+    .modal-lg {
+        max-width: 1024px !important;
+    }
+}
+
+.image-size-purchase{
+    width: 40px !important;
+    height: 40px !important;
+}
+
+.inline-row{
+    display: inline-block;
+}
+
+.type-ribbon {
+    border-radius: 25px;
+    color: #fff;
+    display: inline-block;
+    font-size: 12px;
+    font-size: 0.75rem;
+    line-height: 1;
+    position: relative;
+    padding: 6px 8px 6px 8px;
+    font-weight: 600;
+    min-width: 40px;
+    z-index: 9;
+}

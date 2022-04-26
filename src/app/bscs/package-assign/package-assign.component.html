@@ -1,0 +1,204 @@
+<block-ui>
+  <div class="row">
+   
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>Package Assign </h5>
+
+
+              <!-- <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Create Package</button> -->
+            
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+                
+              </div>
+              <div class="row ">
+                
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="col-form-label required">Select Customer Type </label>
+                    <ng-select [(ngModel)]="selectedRoleType" [clearable]="false" [clearOnBackspace]="false" (change)="onCustomerTypeChange($event)"
+                    [items]="roleTypes" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select type">  </ng-select>                 
+                  </div>                  
+                </div>
+
+                <div class="col-lg-4" *ngIf="studentList.length > 0">
+                  <div class="form-group">
+                    <label class="col-form-label required">Select Student </label>
+                    <ng-select [(ngModel)]="selectedCustomer" [clearable]="false" [clearOnBackspace]="false"
+                    [items]="studentList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select Student"> 
+                    <ng-template ng-label-tmp let-item="item">
+                      <p >{{item.name}} ({{item.mobile_no}})</p> 
+                  </ng-template>
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                      <p >{{item.name}} ({{item.mobile_no}})</p>                     
+                    </ng-template>
+                  
+                  </ng-select>                 
+                  </div>                  
+                </div> 
+
+                <div class="col-lg-4" *ngIf="instituteList.length > 0">
+                  <div class="form-group">
+                    <label class="col-form-label required">Select Institute </label>
+                    <ng-select [(ngModel)]="selectedInstitute" [clearable]="false" [clearOnBackspace]="false"
+                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select institute">  </ng-select>                 
+                  </div>                  
+                </div>
+
+                <div class="col-lg-4" *ngIf="instituteList.length > 0">
+                  <div class="form-group">
+                    <label class="col-form-label required">Student Count </label>
+                    <input numeric numericType="number" type="text" [(ngModel)]="insertQty" class="form-control">           
+                  </div>                  
+                </div>
+
+              </div>
+              <hr>
+              <div class="row" *ngIf="instituteList.length > 0 || studentList.length > 0">
+                
+                <div class="col-lg-4">
+                  <div class="form-group">
+                    <label class="col-form-label required">Select Package </label>
+                    <ng-select [clearable]="true" [(ngModel)]="selectedPackage" [clearOnBackspace]="false" (change)="onPackageChange($event)"
+                    [items]="packageList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select package">  </ng-select>                 
+                  </div>                  
+                </div>  
+
+              </div>
+              <hr>
+              <form [formGroup]="entryForm">
+              <div class="row" *ngIf="packageItemList.length > 0">
+                <div class="col-lg-12">
+                  <div class="table-responsive">
+                    <table class="table table-xs table-hover table-bordered table-striped">
+                      <thead>
+                        <tr>
+                         <th width="7%" scope="col">#</th>
+                         <th width="20%" scope="col">Type</th>
+                          <th width="20%" scope="col">Name</th>
+                          <th width="20%" scope="col">Unit Price</th>
+                           <th width="20%" scope="col">Item Qty</th>
+                          <th width="20%" scope="col">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody formArrayName="itemHistory" *ngFor="let item of itemFormArray; let i = index;">
+                          <tr  [formGroupName]="i">
+
+                            <th>                              
+                              <button *ngIf="itemFormArray.length > 1" class="btn btn-danger mr-1 btn-mini pull-right"
+                                title="Delete this item" (click)="removeItemHistory(i)"> <i class="icofont-ui-delete"></i>
+                              </button>
+
+                            </th>
+
+                            <th>
+                             <p>{{item_his.controls[i].get('type').value}}</p>
+                            </th>
+                            <th>
+                             <p>{{item_his.controls[i].get('item_name').value}}</p>
+                            </th>
+                            <th>
+                              <input type="text" (keyup)="onUnitPriceChange($event.target.value,item)"  numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('unit_price').errors}" formControlName="unit_price"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('unit_price').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('unit_price').errors.required" class="text-danger"> Unit price is required</small>
+                            </div>
+                            </th>
+                            <th>
+                              <input type="text" (keyup)="onQtyChange($event.target.value,item)"  numeric numericType="decimal" class="form-control" [ngClass]="{ 'is-invalid': submitted && item_his.controls[i].get('qty').errors}" formControlName="qty"  />
+                            <div *ngIf="submitted && item_his.controls[i].get('qty').errors" class="error-text">
+                              <small *ngIf="item_his.controls[i].get('qty').errors.required" class="text-danger">Qty is required</small>
+                            </div>
+                            </th>
+                            <th>
+                              <input type="text" readonly numeric numericType="decimal" class="form-control" formControlName="price"  />
+                            
+                            </th>  
+  
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                </div>
+
+
+                <div class="col-lg-4 offset-lg-8" *ngIf="packageItemList.length > 0">
+                  <table class="table table-xs table-hover table-striped">
+                      <tbody>
+                          <tr>
+                              <th>Total {{itemTotal()}}</th>
+                              <th class="text-right pr-4">{{totalAmount}}</th>
+                          </tr>
+                          <tr>
+                              <th>Discount</th>
+                              <td class="pr-1">
+                                  <input  type="text" class="form-control form-control-sm text-right pr-3"
+                                      numeric numericType="number" (change)="onChangeDiscount(discount)" [(ngModel)]="discount" [ngModelOptions]="{standalone: true}">
+                              </td>
+                          </tr>
+                        <tr>
+                              <th><h4>Total Payable</h4></th>
+                              <th class="text-right pr-4"><h4>{{totalAmount - discount}}</h4></th>
+                          </tr>
+                           <!-- <tr>
+                              <th>Paid Amount</th>
+                              <td class="pr-1">
+                                  <input type="text" class="form-control form-control-sm text-right pr-3"
+                                      numeric numericType="number" (change)="onChangePaid(paidAmount)"
+                                      [(ngModel)]="paidAmount" [ngModelOptions]="{standalone: true}">
+                              </td>
+                          </tr> -->  
+                      </tbody>
+                  </table>
+  
+                  <button [disabled]="discount > totalAmount" class="btn btn-success btn-sm btn-outline-success w-50 float-right" (click)="onFormSubmit()">
+                      <i class="icofont-save"></i> {{btnSaveText}}
+                  </button>
+              </div>
+
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+
+
+
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+
+        <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+
+      </div>
+
+    </div>
+  </ng-template>
+</block-ui>

@@ -1,0 +1,239 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Correction Dashboard</h5>
+                            <button type="button" [routerLink]="['/beat-correction-list']" class="btn btn-secondary btn-sm link-icon float-right">See correction list</button>
+                            <button type="button" [routerLink]="['/beat-corrector-list']" class="btn btn-secondary btn-sm link-icon float-right mr-2">Corrector list</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-6">
+                                    <table class="table table-bordered" *ngIf="isSummary">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="2">Corrections</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Total Corrections</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-info btn-sm col-sm-7">{{ summaryList.total_correction }}</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Under Corrections</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-danger btn-sm col-sm-7">{{ summaryList.under_correction }}</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Corrections Completed</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-success btn-sm col-sm-7">{{ summaryList.total_correction_done }}</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Corrections Completed (This year)</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-success btn-sm col-sm-7">{{ summaryList.total_correction_this_year_done }}</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Corrections Completed (This month)</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-success btn-sm col-sm-7">{{ summaryList.total_correction_this_month_done }}</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Corrections Completed (Last 30 days)</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-success btn-sm col-sm-7">{{ summaryList.total_correction_last_30_days_done }}</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Corrections Completed (Last 7 days)</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-danger btn-sm col-sm-7">{{ summaryList.total_correction_last_7_days_done }}</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Total Corrections Completed (Today)</td>
+                                                <td class="text-center">
+                                                    <button type="button" class="btn btn-danger btn-sm col-sm-7">{{ summaryList.total_correction_today_done }}</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-6">
+                                    <table class="table table-bordered" *ngIf="isSummary">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="3">Last 7 Days Activities</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Date</td>
+                                                <td>Completed corrections (number)</td>
+                                                <td>Available corrections (number)</td>
+                                            </tr>
+                                            <tr *ngFor="let item of summaryList.last_few_days_activities; let i=index">
+                                                <td>{{ item.date | date:'MMM d, y' }}</td>
+                                                <td>{{ item.completed_corrections }}</td>
+                                                <td>{{ item.available_corrections }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-lg-12 ">
+                                    <table class="table table-bordered" *ngIf="isSummary">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center" colspan="2">Available</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Available correction</td>
+                                                <td>{{ summaryList.available_correction }}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!--<div class="card-footer">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <button type="button" [routerLink]="['/wp-correction-list']" class="btn btn-secondary btn-sm link-icon">See correction list</button>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" [routerLink]="['/corrector-list']" class="btn btn-secondary btn-sm link-icon">Corrector list</button>
+                                </div>
+                                <div class="col-sm-4">
+                                    <button type="button" [routerLink]="['/project-student-list', 10 ]" class="btn btn-secondary mr-2 btn-sm link-icon">Student list (BAE)</button>
+                                    <button type="button" [routerLink]="['/project-student-list', 13 ]" class="btn btn-secondary btn-sm link-icon">Student list (Phase 6)</button>
+                                </div>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold"> Email </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold required"> {{f.Email.value}} </label>
+                            <input *ngIf="!f.id.value" formControlName="Email" [ngClass]="{ 'is-invalid': submitted && f.Email.errors }"
+                                type="email" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.Email.errors" class="error-text">
+                                <span *ngIf="f.Email.errors.required" class="text-danger">Email is required</span>
+                                <span *ngIf="f.Email.errors.maxlength" class="text-danger">Email must be not then 50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> First Name </label>
+                        <div class="col-sm-8">
+                            <input formControlName="FirstName"
+                                [ngClass]="{ 'is-invalid': submitted && f.FirstName.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.FirstName.errors" class="error-text">
+                                <span *ngIf="f.FirstName.errors.required" class="text-danger">First Name is
+                                    required</span>
+                                <span *ngIf="f.FirstName.errors.maxlength" class="text-danger">First Name must be not
+                                    then 50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Last Name </label>
+                        <div class="col-sm-8">
+                            <input formControlName="LastName"
+                                [ngClass]="{ 'is-invalid': submitted && f.LastName.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.LastName.errors" class="error-text">
+                                <span *ngIf="f.LastName.errors.required" class="text-danger">Last Name is
+                                    required</span>
+                                <span *ngIf="f.LastName.errors.maxlength" class="text-danger">Last Name must be not then
+                                    50
+                                    characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required"> Password </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold"> {{f.Password.value}} </label>
+                            <input *ngIf="!f.id.value" type="password" formControlName="Password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.Password.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.Password.errors" class="error-text">
+                                <span *ngIf="f.Password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="f.Password.errors.minlength" class="text-danger">Password must be 6
+                                    characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label font-weight-bold required">Confirm Pass. </label>
+                        <div class="col-sm-8">
+                            <label *ngIf="f.id.value" class="font-weight-bold"> {{f.ConfirmPassword.value}} </label>
+                            <input *ngIf="!f.id.value" type="password" formControlName="ConfirmPassword"
+                                [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+
+                            <div *ngIf="submitted && f.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="f.ConfirmPassword.errors.required " class="text-danger ">Confirm Password
+                                    is required</span>
+                                <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords not
+                                    match</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>

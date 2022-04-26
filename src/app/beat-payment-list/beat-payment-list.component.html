@@ -1,0 +1,298 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary">
+                        <div class="card-header">
+                            <h5>Payment List </h5>
+                            <div class="col-lg-5 float-right">
+                                <input type="text" (bsValueChange)="onDateValueChange($event)"
+                                        class="form-control col-lg-8 inline-row" bsDaterangepicker [bsConfig]="bsConfig"
+                                        [(ngModel)]="bsValue" placeholder="Select a date range"
+                                        [ngModelOptions]="{standalone: true}">
+                                <button class="btn btn-sm btn-secondary float-right inline-row" (click)="allClear()">Reset</button>
+                                <button class="btn btn-sm btn-success float-right inline-row mr-2" (click)="export()">Download</button>
+                            </div>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+
+                                    <ngx-datatable class="material table-bordered" [rows]="paymentList"
+                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                        [headerHeight]="30" [footerHeight]="50" rowHeight="auto" [limit]="10">
+
+                                        <ngx-datatable-column [width]="50" name="Image" prop="id" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> <img class="media-object img-circle card-list-img image-size-payment" src="assets/images/avatar-5.png" alt="Generic placeholder image"> </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Name" prop="name"  [width]="250" [draggable]="false" [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <span title="{{ row.name }}"> 
+                                                    <strong>{{ row.name }} ({{ row.phone }})</strong><br/>
+                                                    {{ row.email }}
+                                                </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Package" [width]="150" prop="item_name" [draggable]="false" [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <span title="{{ row.item_name }}"> {{ row.item_name }}<br/>
+                                                    {{ row.item_type }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column prop="paid_amount"  [width]="130" name="Amount" [draggable]="false" [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <span title="{{ row.paid_amount }}"> 
+                                                    <strong>Paid:</strong> {{ row.paid_amount }}<br/>
+                                                    <strong>Discount:</strong> {{ row.discount }}
+                                                </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Payment Method" prop="card_type" [draggable]="false" [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <span title="{{ row.card_type }}"> 
+                                                    <strong>{{ row.card_type }}</strong><br/>
+                                                    {{ row.transaction_id }}
+                                                </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Is Coupon?" [width]="100" prop="is_promo_applied" [draggable]="false" [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <span title="{{ row.is_promo_applied }}"> 
+                                                    <span *ngIf="row.is_promo_applied" class="type-ribbon bg-success">Yes</span>
+                                                    <span *ngIf="!row.is_promo_applied" class="type-ribbon bg-danger">No</span>
+                                                    <br/>
+                                                    <span *ngIf="row.is_promo_applied"><strong>{{ row.promo_code }}</strong> ({{ row.promo_value }}৳)</span>
+                                                </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Payment Date" [width]="130" prop="created_at" [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A' }}"> {{ value | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A' }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <!--<ngx-datatable-column [width]="60" name="Action" prop="id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-info btn-mini mr-1">
+                                                    <i class="icofont-eye"></i> See Details
+                                                </button>
+                                            </ng-template>
+                                        </ngx-datatable-column>-->
+                                    </ngx-datatable>
+
+                                    <!--<table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Image</th>
+                                                <th>Name</th>
+                                                <th>Package</th>
+                                                <th>Amount</th>
+                                                <th>Payment Method</th>
+                                                <th>Payment Date</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let payment of paymentList; let i=index">
+                                                <td><img class="media-object img-circle card-list-img image-size-payment" src="assets/images/avatar-5.png" alt="Generic placeholder image"></td>
+                                                <td>
+                                                    {{ payment.name  }}<br/>
+                                                    {{ payment.email  }}
+                                                </td>
+                                                <td>
+                                                    {{ payment.item_name }}<br/>
+                                                    {{ payment.item_type }}
+                                                </td>
+                                                <td>
+                                                    <strong>Paid:</strong> {{ payment.paid_amount }}<br/>
+                                                    <strong>Discount:</strong> {{ payment.discount }}
+                                                </td>
+                                                <td>
+                                                    {{ payment.card_type }}<br/>
+                                                    {{ payment.transaction_id }}
+                                                </td>
+                                                <td>{{ payment.created_at | amFromUtc | amLocal | amDateFormat:'DD MMM YYYY hh:mm:ss A'  }}</td>
+                                                
+                                                <td>
+                                                    <button class="btn btn-info btn-mini mr-1"> <i class="icofont-eye"></i> See Details</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>-->
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer ">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Name</label>
+                            <input formControlName="name" [ngClass]="{ 'is-invalid': submitted && f.name.errors }" type="text"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.name.errors" class="error-text">
+                                <span *ngIf="f.name.errors.required" class="text-danger">Name is required</span>
+                                <span *ngIf="f.name.errors.maxlength" class="text-danger">Name must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required"> Email</label>
+                            <input formControlName="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                                type="email" class="form-control" autocomplete="off">
+                            <div *ngIf="submitted && f.email.errors" class="error-text">
+                                <span *ngIf="f.email.errors.required" class="text-danger">Email is required</span>
+                                <span *ngIf="f.email.errors.email" class="text-danger">Please Enter valid email</span>
+                                <span *ngIf="f.email.errors.maxlength" class="text-danger">Email must be not then 50 characters</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Gender</label>
+                            <ng-select placeholder="Select Gender" formControlName="gender" [items]="genderList"
+                                [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                                <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                    <div>{{item.name}}</div>
+                                </ng-template>
+                            </ng-select>
+                            <div *ngIf="submitted && f.gender.errors" class="error-text">
+                                <span *ngIf="f.gender.errors.required" class="text-danger"> Gender is required</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold required">Role </label> 
+                        <ng-select placeholder="Select Role" formControlName="role_id" [items]="roleList"
+                            [clearable]='true' [clearOnBackspace]='true' bindLabel="name" bindValue="id">
+                            <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                                <div>{{item.name}}</div>
+                            </ng-template>
+                        </ng-select>
+                        <div *ngIf="submitted && f.role_id.errors" class="error-text">
+                            <span *ngIf="f.role_id.errors.required" class="text-danger"> Role is required</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': submitted && f.password.errors }" autocomplete="off" required>
+                            <div *ngIf="submitted && f.password.errors" class="error-text">
+                                <span *ngIf="f.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="f.password.errors.minlength" class="text-danger">Password must be 6 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': submitted && f.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+
+                            <div *ngIf="submitted && f.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="f.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="f.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #passwordTemplate>
+        <div class="modal-header ">
+            <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body ">
+            <app-card>
+                <form [formGroup]="passwordForm" class="col-sm-12" autocomplete="off">
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Password</label>
+                            <input type="password" formControlName="password" class="form-control"
+                                [ngClass]="{ 'is-invalid': password_submitted && pcf.password.errors }" autocomplete="off" required>
+                            <div *ngIf="password_submitted && pcf.password.errors" class="error-text">
+                                <span *ngIf="pcf.password.errors.required" class="text-danger">Password is required</span>
+                                <span *ngIf="pcf.password.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <label class="font-weight-bold required">Confirm Password</label>
+                            <input type="password" formControlName="ConfirmPassword" [ngClass]="{ 'is-invalid': password_submitted && pcf.ConfirmPassword.errors }"
+                                class="form-control" autocomplete="off">
+                            <div *ngIf="password_submitted && pcf.ConfirmPassword.errors " class="error-text ">
+                                <span *ngIf="pcf.ConfirmPassword.errors.required " class="text-danger ">Confirm Password is required</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.mustMatch" class="text-danger">Passwords does not match</span>
+                                <span *ngIf="pcf.ConfirmPassword.errors.minlength" class="text-danger">Password must be 8 characters minimum</span>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </app-card>
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+                <button class="btn btn-success btn-outline-success" (click)="onUpdatePasswordFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+            </div>
+        </div>
+    </ng-template>
+
+</block-ui>

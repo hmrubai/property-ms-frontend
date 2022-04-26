@@ -1,0 +1,250 @@
+<block-ui>
+    <div class="row">
+
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card card-border-primary" *ngFor="let quiz of quizList; let i=index">
+                        <div class="card-header">
+                            <h5>{{ quiz.batch_name }}</h5>
+                            <button class="btn btn-primary btn-sm float-right" (click)="openModal(template)">
+                                <i class=" icofont icofont-plus "></i>Add New Exam</button>
+                        </div>
+                        <div class="card-block ">
+                            <div class="row ">
+                                <div class="col-lg-12 ">
+
+                                    <ngx-datatable class="material table-bordered" [rows]="quiz.exams"
+                                        [loadingIndicator]="loadingIndicator" [columnMode]="ColumnMode.force"
+                                        [headerHeight]="30" [footerHeight]="50" rowHeight="auto">
+
+                                        <ngx-datatable-column name="Title" prop="title" [width]="100"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column name="Duration" prop="duration" [width]="20"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ secondsToDhms(value) }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column prop="mark" name="Mark" [width]="10" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <span title="{{ value }}"> {{ value }} </span>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column prop="is_active" [width]="10" name="Status"
+                                            [draggable]="false" [sortable]="false">
+                                            <ng-template let-value="value" ngx-datatable-cell-template>
+                                                <button *ngIf="value" class="btn btn-sm btn-success ">Active</button>
+                                                <button *ngIf="!value"
+                                                    class="btn btn-sm btn-secondary ">Inactive</button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+
+                                        <ngx-datatable-column [width]="60" name="Action" prop="Id" [draggable]="false"
+                                            [sortable]="false">
+                                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                                <button class="btn btn-info btn-mini mr-1"
+                                                    [routerLink]="['/quiz-details', row.id ]">
+                                                    <i class="icofont-eye"></i> View
+                                                </button>
+                                            </ng-template>
+                                        </ngx-datatable-column>
+                                    </ngx-datatable>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ng-template #template>
+        <div class="modal-header ">
+            <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+            <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+                <i class="icofont icofont-close"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="entryForm">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Project</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <ng-select formControlName="project" [items]="projectList" [clearable]="true"
+                                            [clearOnBackspace]="true" bindLabel="name" bindValue="id"
+                                            placeholder="Select project">
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.project.errors" class="error-text">
+                                            <span *ngIf="f.project.errors.required" class="text-danger"> project is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Batch</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <ng-select formControlName="batch" [items]="batchList" [clearable]="true"
+                                            [clearOnBackspace]="true" bindLabel="batch_name" bindValue="id"
+                                            placeholder="Select batch">
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.batch.errors" class="error-text">
+                                            <span *ngIf="f.batch.errors.required" class="text-danger"> batch is
+                                                required</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <!-- <div class="form-group row">
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold">Batch</label>
+                                    <div class="col-md-10 col-sm-12">
+                                        <ng-select formControlName="batch" [items]="batchList" [clearable]="true"
+                                            [clearOnBackspace]="true" bindLabel="batch_name" bindValue="id"
+                                            placeholder="Select batch">
+                                        </ng-select>
+                                        <div *ngIf="submitted && f.batch.errors" class="error-text">
+                                            <span *ngIf="f.batch.errors.required" class="text-danger"> batch is
+                                                required</span>
+                                        </div>
+                                    </div>
+
+                                </div> -->
+
+
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Exam Name</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <textarea type="text" formControlName="exam" class="form-control"
+                                            placeholder="Exam name"></textarea>
+                                        <div *ngIf="submitted && f.exam.errors" class="error-text">
+                                            <span *ngIf="f.exam.errors.required" class="text-danger"> exam is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                    <label class="col-md-2 col-sm-6 col-form-label font-weight-bold">Description</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <textarea type="text" formControlName="description" class="form-control"
+                                            placeholder="Description"></textarea>
+                                    </div>
+                                </div>
+                                
+
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Duration
+                                        (Minute)</label>
+                                    <div class="col-md-10 col-sm-12">
+                                        <input type="number" formControlName="duration" class="form-control"
+                                            placeholder="Duration (minute)">
+                                        <div *ngIf="submitted && f.duration.errors" class="error-text">
+                                            <span *ngIf="f.duration.errors.required" class="text-danger"> duration is
+                                                required</span>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Question Number
+                                        (Quanlity)</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <input type="number" formControlName="number" class="form-control"
+                                            placeholder="Question number">
+                                        <div *ngIf="submitted && f.number.errors" class="error-text">
+                                            <span *ngIf="f.number.errors.required" class="text-danger">question number
+                                                is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Mark</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <input type="number" formControlName="mark" class="form-control"
+                                            placeholder="Mark">
+                                        <div *ngIf="submitted && f.mark.errors" class="error-text">
+                                            <span *ngIf="f.mark.errors.required" class="text-danger"> mark is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold">Course
+                                        Name</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <textarea type="text" formControlName="course" class="form-control"
+                                            placeholder="Course name"></textarea>
+                                        <div *ngIf="submitted && f.course.errors" class="error-text">
+                                            <span *ngIf="f.course.errors.required" class="text-danger"> course is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold">Subject
+                                        Name</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <textarea type="text" formControlName="subject" class="form-control"
+                                            placeholder="Subject name"></textarea>
+                                        <div *ngIf="submitted && f.subject.errors" class="error-text">
+                                            <span *ngIf="f.subject.errors.required" class="text-danger"> subject is
+                                                required</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Exam
+                                        Papers</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <input type="file" (change)="onSelectUpoladExamPaper($event)" multiple
+                                            accept="application/pdf" class="filer_input">
+                                    </div>
+                                    <label class="col-md-2 col-sm-12 col-form-label font-weight-bold required">Answer
+                                        Model</label>
+                                    <div class="col-md-4 col-sm-12">
+                                        <input type="file" (change)="onSelectUpoladAnswerModel($event)"
+                                            accept="application/pdf" class="filer_input">
+                                    </div>
+                                </div>
+
+                              
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="modal-footer">
+            <div class="pr-4">
+
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+                        class="icofont icofont-close"></i>Close</button>
+
+                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
+                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
+                </button>
+
+            </div>
+
+        </div>
+    </ng-template>
+
+</block-ui>
