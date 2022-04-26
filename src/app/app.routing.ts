@@ -44,8 +44,19 @@ export const AppRoutes: Routes = [
       {
         path: 'property-cost-management',
         loadChildren: () => import('./property-cost-management/property-cost-management.module').then(m => m.PropertyCostManagementModule),
+        //canActivate: [AuthGuard]
+      },
+      {
+        path: 'master/property-masters',
+        loadChildren: () => import('./property-masters/property-masters.module').then(m => m.PropertyMasterListModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'master/room-masters',
+        loadChildren: () => import('./room-masters/room-masters.module').then(m => m.RoomMasterListModule),
+        // canActivate: [AuthGuard]
+      },
+      
       // {
       //   path: 'change-password',
       //   loadChildren: () => import('./change-password/change-password.module').then(m => m.ChangePasswordModule),

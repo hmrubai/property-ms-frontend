@@ -1,0 +1,276 @@
+<block-ui>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>Property List </h5>
+              <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Add New Property</button>
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+                <!-- <div class="col-lg-4 mb-3">
+                  <ng-select [clearable]="false" [clearOnBackspace]="false" (change)="onInstituteChange($event)"
+                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select institute">
+                  </ng-select>
+                </div> -->
+              </div>
+              <div class="row ">
+                <div class="col-lg-12 ">
+                  <ngx-datatable  #dataTable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="false" [limit]="10">
+                    
+                    <ngx-datatable-column [width]="40" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <span> {{ rowIndex + 1}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="250" name="Property Name" prop="property_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span title="{{ row.property_name }}"> {{ row.property_name }} ({{ row.property_name_jp }}) </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="200" name="Location" prop="location" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Gross Floor Area" prop="gross_floor_area_sm" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Gross Floor Area tsubo" prop="gross_floor_area_tsubo" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="120" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <!--<button class="btn btn-info btn-mini mr-2" [routerLink]="['/beat-model-exam-list', row.id ]"><i
+                            class="icofont icofont-eye"></i>Manage Model Exams</button>-->
+                        <button class="btn btn-info btn-mini" (click)="getItem(row, template)"><i
+                            class="icofont icofont-edit"></i>Edit</button>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                  </ngx-datatable>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <form [formGroup]="entryForm">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <!-- <h5>Institute Information</h5> -->
+              </div>
+              <div class="card-block">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Property Name </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="property_name" placeholder="Enter name in Eng"
+                      [ngClass]="{ 'is-invalid': submitted && f.property_name.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.property_name.errors" class="error-text">
+                      <span *ngIf="f.property_name.errors.required" class="text-danger"> Name is required</span>
+                      <span *ngIf="f.property_name.errors.maxlength" class="text-danger">Name must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Property Name in JP </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="property_name_jp" placeholder="Enter name in JP"
+                      [ngClass]="{ 'is-invalid': submitted && f.property_name_jp.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.property_name_jp.errors" class="error-text">
+                      <span *ngIf="f.property_name_jp.errors.required" class="text-danger"> Name is required</span>
+                      <span *ngIf="f.property_name_jp.errors.maxlength" class="text-danger">Name must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Location </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="location" placeholder="Location"
+                      [ngClass]="{ 'is-invalid': submitted && f.location.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.location.errors" class="error-text">
+                      <span *ngIf="f.location.errors.required" class="text-danger"> Location is required</span>
+                      <span *ngIf="f.location.errors.maxlength" class="text-danger">Location must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Gross Floor Area (m<sup>2</sup>) </label>
+                  <div class="col-sm-9">
+                    <input formControlName="gross_floor_area_sm" placeholder="Gross Floor Area"
+                      [ngClass]="{ 'is-invalid': submitted && f.gross_floor_area_sm.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.gross_floor_area_sm.errors" class="error-text">
+                      <span *ngIf="f.gross_floor_area_sm.errors.required" class="text-danger"> Gross Floor Area is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Gross Floor Area (tsubo) </label>
+                  <div class="col-sm-9">
+                    <input formControlName="gross_floor_area_tsubo" placeholder="Gross Floor Area (tsubo)"
+                      [ngClass]="{ 'is-invalid': submitted && f.gross_floor_area_tsubo.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.gross_floor_area_tsubo.errors" class="error-text">
+                      <span *ngIf="f.gross_floor_area_tsubo.errors.required" class="text-danger"> Gross Floor Area (tsubo) is required</span>
+                      <span *ngIf="f.gross_floor_area_tsubo.errors.maxlength" class="text-danger">Gross Floor Area (tsubo) must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Private Area (m<sup>2</sup>) </label>
+                  <div class="col-sm-9">
+                    <input formControlName="private_area_sm" placeholder="Private Area"
+                      [ngClass]="{ 'is-invalid': submitted && f.private_area_sm.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.private_area_sm.errors" class="error-text">
+                      <span *ngIf="f.private_area_sm.errors.required" class="text-danger"> Private Area is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Private Area (tsubo) </label>
+                  <div class="col-sm-9">
+                    <input formControlName="private_area_tsubo" placeholder="Private Area (tsubo)"
+                      [ngClass]="{ 'is-invalid': submitted && f.private_area_tsubo.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.private_area_tsubo.errors" class="error-text">
+                      <span *ngIf="f.private_area_tsubo.errors.required" class="text-danger"> Private Area (tsubo) is required</span>
+                      <span *ngIf="f.private_area_tsubo.errors.maxlength" class="text-danger">Private Area (tsubo) must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Building Structure </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="building_structure" placeholder="Building Structure"
+                      [ngClass]="{ 'is-invalid': submitted && f.building_structure.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.building_structure.errors" class="error-text">
+                      <span *ngIf="f.building_structure.errors.required" class="text-danger"> Building Structure is required</span>
+                      <span *ngIf="f.building_structure.errors.maxlength" class="text-danger">Building Structure must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Story </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="story" placeholder="Story"
+                      [ngClass]="{ 'is-invalid': submitted && f.story.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.story.errors" class="error-text">
+                      <span *ngIf="f.story.errors.required" class="text-danger"> Story is required</span>
+                      <span *ngIf="f.story.errors.maxlength" class="text-danger">Story must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Underground Story </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="underground_story" placeholder="Underground Story"
+                      [ngClass]="{ 'is-invalid': submitted && f.underground_story.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.underground_story.errors" class="error-text">
+                      <span *ngIf="f.underground_story.errors.required" class="text-danger"> Underground Story is required</span>
+                      <span *ngIf="f.underground_story.errors.maxlength" class="text-danger">Underground Story must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Date Of Completion </label>
+                  <div class="col-sm-9">
+                    <input formControlName="date_of_completion" placeholder="Date Of Completion"
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_completion.errors }" type="date" class="form-control" />
+                    <div *ngIf="submitted && f.date_of_completion.errors" class="error-text">
+                      <span *ngIf="f.date_of_completion.errors.required" class="text-danger"> Date Of Completion is required</span>
+                      <span *ngIf="f.date_of_completion.errors.maxlength" class="text-danger">Date Of Completion must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Owner On The Registry </label>
+                  <div class="col-sm-9">
+                    <input formControlName="owner_on_the_registry" placeholder="Owner On The Registry"
+                      [ngClass]="{ 'is-invalid': submitted && f.owner_on_the_registry.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.owner_on_the_registry.errors" class="error-text">
+                      <span *ngIf="f.owner_on_the_registry.errors.required" class="text-danger"> Owner On The Registry is required</span>
+                      <span *ngIf="f.owner_on_the_registry.errors.maxlength" class="text-danger">Owner On The Registry must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Owner Address </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="owner_address" placeholder="Owner Address"
+                      [ngClass]="{ 'is-invalid': submitted && f.owner_address.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.owner_address.errors" class="error-text">
+                      <span *ngIf="f.owner_address.errors.required" class="text-danger"> Story is required</span>
+                      <span *ngIf="f.owner_address.errors.maxlength" class="text-danger">Story must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Property Images </label>
+                  <div class="col-sm-9 pt-2">
+                    <input type="file" formControlName="property_image" (change)="onSelectFile($event)" placeholder="Upload file" accept="image/x-png,image/jpeg" placeholder="Insert file"/>
+                    <div *ngIf="submitted && f.property_image.errors" class="error-text">
+                      <span *ngIf="f.property_image.errors.required" class="text-danger"> File is required</span>                      
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group row text-left">
+                      <label class="col-sm-6 col-form-label">Is Active? </label>
+                      <div class="col-sm-6 mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_active">
+                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+        <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+      </div>
+    </div>
+  </ng-template>
+</block-ui>

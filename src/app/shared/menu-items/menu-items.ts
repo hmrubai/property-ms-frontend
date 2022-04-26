@@ -41,12 +41,12 @@ const MENUITEMS = [
         icon: 'ti-control-forward',
         children: [
           {
-            state: 'institute-list',
+            state: 'property-masters',
             name: 'Property',
             icon: 'ti-control-forward'
           },
           {
-            state: 'institute-member-list',
+            state: 'room-masters',
             name: 'Room',
             icon: 'ti-control-forward'
           },
