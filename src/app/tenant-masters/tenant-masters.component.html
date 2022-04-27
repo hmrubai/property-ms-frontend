@@ -1,0 +1,256 @@
+<block-ui>
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card card-border-primary">
+            <div class="card-header">
+              <h5>Tenant List </h5>
+              <button class="btn btn-primary float-right" (click)="openModal(template)"><i
+                  class=" icofont icofont-plus "></i> Add New Tenant</button>
+            </div>
+            <div class="card-block ">
+              <div class="row ">
+                <!-- <div class="col-lg-4 mb-3">
+                  <ng-select [clearable]="false" [clearOnBackspace]="false" (change)="onInstituteChange($event)"
+                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
+                    placeholder="Select institute">
+                  </ng-select>
+                </div> -->
+              </div>
+              <div class="row ">
+                <div class="col-lg-12 ">
+                  <ngx-datatable  #dataTable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
+                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
+                    [externalPaging]="false" [limit]="10">
+                    
+                    <ngx-datatable-column [width]="40" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <span> {{ rowIndex + 1}} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="250" name="Company Name" prop="company_name" [draggable]="false"
+                      [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span title="{{ row.company_name }}"> {{ row.company_name }} ({{ row.company_name_jp }}) </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="200" name="Email" prop="email" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="100" name="Address" prop="address" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="No. Of Employee" prop="number_of_employee" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="120" name="Action" prop="id" [draggable]="false" [sortable]="false">
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <!--<button class="btn btn-info btn-mini mr-2" [routerLink]="['/beat-model-exam-list', row.id ]"><i
+                            class="icofont icofont-eye"></i>Manage Model Exams</button>-->
+                        <button class="btn btn-info btn-mini" (click)="getItem(row, template)"><i
+                            class="icofont icofont-edit"></i>Edit</button>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                  </ngx-datatable>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #template>
+    <div class="modal-header ">
+      <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
+      <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
+        <i class="icofont icofont-close"></i>
+      </button>
+    </div>
+    <div class="modal-body ">
+      <form [formGroup]="entryForm">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="card">
+              <div class="card-header">
+                <!-- <h5>Institute Information</h5> -->
+                <!--
+
+                  "company_name",
+                  "company_name_jp",
+                  "email",
+                  "address",
+                  "type_of_industry",
+                  "number_of_employee",
+                  "representative_name",
+                  "establishment_date",
+                  "market_capitalization",
+                  "revenue",
+                  "is_active"
+
+                -->
+              </div>
+              <div class="card-block">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Company Name </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="company_name" placeholder="Enter Company Name"
+                      [ngClass]="{ 'is-invalid': submitted && f.company_name.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.company_name.errors" class="error-text">
+                      <span *ngIf="f.company_name.errors.required" class="text-danger"> Company Name is required</span>
+                      <span *ngIf="f.company_name.errors.maxlength" class="text-danger">Company Name must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Company Name (JP)</label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="company_name_jp" placeholder="Enter Company Name (JP)"
+                      [ngClass]="{ 'is-invalid': submitted && f.company_name_jp.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.company_name_jp.errors" class="error-text">
+                      <span *ngIf="f.company_name_jp.errors.required" class="text-danger"> Company Name is required</span>
+                      <span *ngIf="f.company_name_jp.errors.maxlength" class="text-danger">Company Name must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Email </label>
+                  <div class="col-sm-9">
+                    <input formControlName="email" placeholder="Enter Email"
+                      [ngClass]="{ 'is-invalid': submitted && f.email.errors }" type="email" class="form-control" />
+                    <div *ngIf="submitted && f.email.errors" class="error-text">
+                      <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
+                      <span *ngIf="f.email.errors.maxlength" class="text-danger">Email must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Address </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="address" placeholder="Enter Address"
+                      [ngClass]="{ 'is-invalid': submitted && f.address.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.address.errors" class="error-text">
+                      <span *ngIf="f.address.errors.required" class="text-danger"> Address is required</span>
+                      <span *ngIf="f.address.errors.maxlength" class="text-danger">Address must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Type Of Industry </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="type_of_industry" placeholder="Enter Type of industry"
+                      [ngClass]="{ 'is-invalid': submitted && f.type_of_industry.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.type_of_industry.errors" class="error-text">
+                      <span *ngIf="f.type_of_industry.errors.required" class="text-danger"> Type Of Industry is required</span>
+                      <span *ngIf="f.type_of_industry.errors.maxlength" class="text-danger">Type Of Industry must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Number Of Employee </label>
+                  <div class="col-sm-9">
+                    <input formControlName="number_of_employee" placeholder="Number Of Employee"
+                      [ngClass]="{ 'is-invalid': submitted && f.number_of_employee.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.number_of_employee.errors" class="error-text">
+                      <span *ngIf="f.number_of_employee.errors.required" class="text-danger"> Number Of Employee is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Representative Name </label>
+                  <div class="col-sm-9">
+                    <input type="text" rows="2" formControlName="representative_name" placeholder="Enter Representative Name"
+                      [ngClass]="{ 'is-invalid': submitted && f.representative_name.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.representative_name.errors" class="error-text">
+                      <span *ngIf="f.representative_name.errors.required" class="text-danger"> Representative Name is required</span>
+                      <span *ngIf="f.representative_name.errors.maxlength" class="text-danger">Representative Name must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Establishment Date </label>
+                  <div class="col-sm-9">
+                    <input formControlName="establishment_date" placeholder="Enter Representative Name"
+                      [ngClass]="{ 'is-invalid': submitted && f.establishment_date.errors }" type="date" class="form-control" />
+                    <div *ngIf="submitted && f.establishment_date.errors" class="error-text">
+                      <span *ngIf="f.establishment_date.errors.required" class="text-danger"> Representative Name is required</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Market Capitalization </label>
+                  <div class="col-sm-9">
+                    <input formControlName="market_capitalization" placeholder="Market Capitalization"
+                      [ngClass]="{ 'is-invalid': submitted && f.market_capitalization.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.market_capitalization.errors" class="error-text">
+                      <span *ngIf="f.market_capitalization.errors.required" class="text-danger"> Market Capitalization is required</span>
+                      <span *ngIf="f.market_capitalization.errors.maxlength" class="text-danger">Market Capitalization must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Revenue </label>
+                  <div class="col-sm-9">
+                    <input formControlName="revenue" placeholder="Revenue"
+                      [ngClass]="{ 'is-invalid': submitted && f.revenue.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.revenue.errors" class="error-text">
+                      <span *ngIf="f.revenue.errors.required" class="text-danger">Revenue is required</span>
+                      <span *ngIf="f.revenue.errors.maxlength" class="text-danger">Room Area (tsubo) must be not more then 550 characters</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label required">Property Images </label>
+                  <div class="col-sm-9 pt-2">
+                    <input type="file" formControlName="profile_image" (change)="onSelectFile($event)" placeholder="Upload file" accept="image/x-png,image/jpeg" placeholder="Insert file"/>
+                    <div *ngIf="submitted && f.profile_image.errors" class="error-text">
+                      <span *ngIf="f.profile_image.errors.required" class="text-danger"> File is required</span>                      
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group row text-left">
+                      <label class="col-sm-6 col-form-label">Is Active? </label>
+                      <div class="col-sm-6 mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_active">
+                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <div class="pr-4">
+        <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
+            class="icofont icofont-close"></i> Close</button>
+        <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()"><i
+            class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+      </div>
+    </div>
+  </ng-template>
+</block-ui>

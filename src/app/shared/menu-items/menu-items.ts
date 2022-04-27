@@ -51,7 +51,7 @@ const MENUITEMS = [
             icon: 'ti-control-forward'
           },
           {
-            state: 'institute-batch-list',
+            state: 'tenant-masters',
             name: 'Tenant',
             icon: 'ti-control-forward'
           },
@@ -91,8 +91,8 @@ const MENUITEMS = [
         // permission: 'Admin,SuperAdmin,Moderator'
       },
       {
-        state: 'contact-list',
-        name: 'Contact List',
+        state: 'contract-masters',
+        name: 'Contract List',
         type: 'link',
         icon: 'ti-control-forward',
         // permission: 'Admin,SuperAdmin,Moderator'

@@ -56,7 +56,21 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./room-masters/room-masters.module').then(m => m.RoomMasterListModule),
         // canActivate: [AuthGuard]
       },
-      
+      {
+        path: 'master/tenant-masters',
+        loadChildren: () => import('./tenant-masters/tenant-masters.module').then(m => m.TenantMasterListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'contract-masters',
+        loadChildren: () => import('./contract-masters/contract-masters.module').then(m => m.ContractMasterListModule),
+        // canActivate: [AuthGuard]
+      },
+      {
+        path: 'add-contract-masters',
+        loadChildren: () => import('./add-contract-masters/add-contract-masters.module').then(m => m.AddContractMasterListModule),
+        // canActivate: [AuthGuard]
+      },
       // {
       //   path: 'change-password',
       //   loadChildren: () => import('./change-password/change-password.module').then(m => m.ChangePasswordModule),

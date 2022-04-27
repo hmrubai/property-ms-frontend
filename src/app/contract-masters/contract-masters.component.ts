@@ -13,12 +13,12 @@ import * as XLSX from 'xlsx';
 import * as moment from 'moment';
 
 @Component({
-    selector: 'app-room-masters',
-    templateUrl: './room-masters.component.html',
+    selector: 'app-contract-masters',
+    templateUrl: './contract-masters.component.html',
     encapsulation: ViewEncapsulation.None
 })
 
-export class RoomMasterListComponent implements OnInit {
+export class ContractMasterListComponent implements OnInit {
     currentUser: any = null;
     entryForm: FormGroup;
     uploadForm: FormGroup;
@@ -70,22 +70,27 @@ export class RoomMasterListComponent implements OnInit {
 
 
     ngOnInit() {
+
         this.entryForm = this.formBuilder.group({
             id: [null],
-            property_id: [null, [Validators.required]],
-            room_number: [null, [Validators.required, Validators.maxLength(550)]],
-            room_number_jp: [null, [Validators.maxLength(550)]],
-            floor_no: [0, [Validators.required]],
-            room_area_sm: [0, [Validators.required]],
-            room_area_tsubo: [0],
-            uses: [null, [Validators.maxLength(550)]],
+            company_name: [null, [Validators.required]],
+            company_name_jp: [null, [Validators.maxLength(550)]],
+            email: [null, [Validators.required]],
+            address: [null, [Validators.required]],
+            type_of_industry: [null, [Validators.required]],
+            number_of_employee: [0, [Validators.required]],
+            representative_name: [null, [Validators.required]],
+            establishment_date: [null, [Validators.required]],
+            market_capitalization: [0, [Validators.required]],
+            revenue: [0, [Validators.required]],
+            profile_image: [null],
             is_active: [true]
         });
 
         this.uploadForm = this.formBuilder.group({
             feature_thumbnail: ['']
         });
-        this.getPropertyList();
+        //this.getPropertyList();
         this.getList();
     }
 
@@ -122,7 +127,7 @@ export class RoomMasterListComponent implements OnInit {
     getList() {
         this.loadingIndicator = true;
 
-        this._service.get('room-list').subscribe(res => {
+        this._service.get('tenant-list').subscribe(res => {
             if (!res.success) {
                 this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
                 return;
@@ -142,17 +147,20 @@ export class RoomMasterListComponent implements OnInit {
 
     getItem(item, template: TemplateRef<any>) 
     {
-        this.modalTitle = 'Update Room';
+        this.modalTitle = 'Update Tenant';
         this.btnSaveText = 'Update';
 
         this.entryForm.controls['id'].setValue(item.id);
-        this.entryForm.controls['property_id'].setValue(item.property_id);
-        this.entryForm.controls['room_number'].setValue(item.room_number);
-        this.entryForm.controls['room_number_jp'].setValue(item.room_number_jp);
-        this.entryForm.controls['floor_no'].setValue(item.floor_no);
-        this.entryForm.controls['room_area_sm'].setValue(item.room_area_sm);
-        this.entryForm.controls['room_area_tsubo'].setValue(item.room_area_tsubo);
-        this.entryForm.controls['uses'].setValue(item.uses);
+        this.entryForm.controls['company_name'].setValue(item.company_name);
+        this.entryForm.controls['company_name_jp'].setValue(item.company_name_jp);
+        this.entryForm.controls['email'].setValue(item.email);
+        this.entryForm.controls['address'].setValue(item.address);
+        this.entryForm.controls['type_of_industry'].setValue(item.type_of_industry);
+        this.entryForm.controls['number_of_employee'].setValue(item.number_of_employee);
+        this.entryForm.controls['representative_name'].setValue(item.representative_name);
+        this.entryForm.controls['establishment_date'].setValue(this.getOnlyDateFormatModal(item.establishment_date));
+        this.entryForm.controls['market_capitalization'].setValue(item.market_capitalization);
+        this.entryForm.controls['revenue'].setValue(item.revenue);
         this.entryForm.controls['is_active'].setValue(item.is_active);
 
         this.modalRef = this.modalService.show(template, this.modalConfig);
@@ -165,27 +173,30 @@ export class RoomMasterListComponent implements OnInit {
         }
 
         const formData = new FormData();
-        // if(this.uploadForm.get('feature_thumbnail').value){
-        //     formData.append('file', this.uploadForm.get('feature_thumbnail').value);
-        // }
+        if(this.uploadForm.get('feature_thumbnail').value){
+            formData.append('file', this.uploadForm.get('feature_thumbnail').value);
+        }
         
         this.entryForm.value.id ? this.blockUI.start('Saving...') : this.blockUI.start('Updating...');
 
         const params = {
             id: this.entryForm.value.id ? this.entryForm.value.id : null,
-            property_id: this.entryForm.value.property_id,
-            room_number: this.entryForm.value.room_number.trim(),
-            room_number_jp: this.entryForm.value.room_number_jp ? this.entryForm.value.room_number_jp.trim() : null,
-            floor_no: this.entryForm.value.floor_no,
-            room_area_sm: this.entryForm.value.room_area_sm,
-            room_area_tsubo: this.entryForm.value.room_area_tsubo,
-            uses: this.entryForm.value.uses,
+            company_name: this.entryForm.value.company_name.trim(),
+            company_name_jp: this.entryForm.value.company_name_jp ? this.entryForm.value.company_name_jp.trim() : null,
+            email: this.entryForm.value.email,
+            address: this.entryForm.value.address,
+            type_of_industry: this.entryForm.value.type_of_industry,
+            number_of_employee: this.entryForm.value.number_of_employee,
+            representative_name: this.entryForm.value.representative_name,
+            establishment_date: this.entryForm.value.establishment_date ? this.validateMinDateFormat(this.entryForm.value.establishment_date) : null,
+            market_capitalization: this.entryForm.value.market_capitalization,
+            revenue: this.entryForm.value.revenue,
             is_active: this.entryForm.value.is_active
         };
 
         formData.append('data', JSON.stringify(params));
 
-        this._service.post('save-update-room', formData).subscribe(
+        this._service.post('save-update-tenant', formData).subscribe(
             data => {
                 this.blockUI.stop();
                 if (data.success) {
@@ -207,13 +218,13 @@ export class RoomMasterListComponent implements OnInit {
         this.entryForm.reset();
         this.modalRef.hide();
         this.submitted = false;
-        this.modalTitle = 'Add New Room';
+        this.modalTitle = 'Add New Tenant';
         this.btnSaveText = 'Save';
         this.packagePrice = 0;
     }
 
     openModal(template: TemplateRef<any>) {
-        this.modalTitle = 'Add New Room';
+        this.modalTitle = 'Add New Tenant';
         this.btnSaveText = 'Save';
         this.entryForm.controls['is_active'].setValue(true);
         this.modalRef = this.modalService.show(template, this.modalConfig);

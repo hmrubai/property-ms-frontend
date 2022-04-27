@@ -30,26 +30,26 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="250" name="Property Name" prop="property_name" [draggable]="false"
+                    <ngx-datatable-column [width]="250" name="Room Number" prop="room_number" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span title="{{ row.property_name }}"> {{ row.property_name }} ({{ row.property_name_jp }}) </span>
+                        <span title="{{ row.room_number }}"> {{ row.room_number_jp }} ({{ row.property_name }}) </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="200" name="Location" prop="location" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="200" name="Floor No" prop="floor_no" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="100" name="Gross Floor Area" prop="gross_floor_area_sm" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="100" name="Room Area" prop="room_area_sm" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="Gross Floor Area tsubo" prop="gross_floor_area_tsubo" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="150" name="Room Area tsubo" prop="room_area_tsubo" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value }} </span>
                       </ng-template>
@@ -92,153 +92,79 @@
               </div>
               <div class="card-block">
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Property Name </label>
+                  <label class="col-sm-3 col-form-label required">Property </label>
                   <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="property_name" placeholder="Enter name in Eng"
-                      [ngClass]="{ 'is-invalid': submitted && f.property_name.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.property_name.errors" class="error-text">
-                      <span *ngIf="f.property_name.errors.required" class="text-danger"> Name is required</span>
-                      <span *ngIf="f.property_name.errors.maxlength" class="text-danger">Name must be not more then 550 characters</span>
+                    <ng-select [clearable]="false" formControlName="property_id" [clearOnBackspace]="false"
+                      [items]="propertyDLList" [multiple]=false bindLabel="property_name" bindValue="id" 
+                      [ngClass]="{ 'is-invalid': submitted && f.property_id.errors }" placeholder="Select Property">
+                    </ng-select>
+                    <div *ngIf="submitted && f.property_id.errors" class="error-text">
+                      <span *ngIf="f.property_id.errors.required" class="text-danger"> Property is required</span>
                     </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Property Name in JP </label>
+                  <label class="col-sm-3 col-form-label required">Room Number </label>
                   <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="property_name_jp" placeholder="Enter name in JP"
-                      [ngClass]="{ 'is-invalid': submitted && f.property_name_jp.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.property_name_jp.errors" class="error-text">
-                      <span *ngIf="f.property_name_jp.errors.required" class="text-danger"> Name is required</span>
-                      <span *ngIf="f.property_name_jp.errors.maxlength" class="text-danger">Name must be not more then 550 characters</span>
+                    <input type="text" rows="2" formControlName="room_number" placeholder="Enter Room Number in Eng"
+                      [ngClass]="{ 'is-invalid': submitted && f.room_number.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.room_number.errors" class="error-text">
+                      <span *ngIf="f.room_number.errors.required" class="text-danger"> Room Number is required</span>
+                      <span *ngIf="f.room_number.errors.maxlength" class="text-danger">Room Number must be not more then 550 characters</span>
                     </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Location </label>
+                  <label class="col-sm-3 col-form-label required">Room Number in JP </label>
                   <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="location" placeholder="Location"
-                      [ngClass]="{ 'is-invalid': submitted && f.location.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.location.errors" class="error-text">
-                      <span *ngIf="f.location.errors.required" class="text-danger"> Location is required</span>
-                      <span *ngIf="f.location.errors.maxlength" class="text-danger">Location must be not more then 550 characters</span>
+                    <input type="text" rows="2" formControlName="room_number_jp" placeholder="Enter name in JP"
+                      [ngClass]="{ 'is-invalid': submitted && f.room_number_jp.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.room_number_jp.errors" class="error-text">
+                      <span *ngIf="f.room_number_jp.errors.required" class="text-danger"> Room Number is required</span>
+                      <span *ngIf="f.room_number_jp.errors.maxlength" class="text-danger">Room Number must be not more then 550 characters</span>
                     </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Gross Floor Area (m<sup>2</sup>) </label>
+                  <label class="col-sm-3 col-form-label required">Floor No. </label>
                   <div class="col-sm-9">
-                    <input formControlName="gross_floor_area_sm" placeholder="Gross Floor Area"
-                      [ngClass]="{ 'is-invalid': submitted && f.gross_floor_area_sm.errors }" type="number" class="form-control" />
-                    <div *ngIf="submitted && f.gross_floor_area_sm.errors" class="error-text">
-                      <span *ngIf="f.gross_floor_area_sm.errors.required" class="text-danger"> Gross Floor Area is required</span>
+                    <input formControlName="floor_no" placeholder="Floor No"
+                      [ngClass]="{ 'is-invalid': submitted && f.floor_no.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.floor_no.errors" class="error-text">
+                      <span *ngIf="f.floor_no.errors.required" class="text-danger"> Floor No is required</span>
                     </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Gross Floor Area (tsubo) </label>
+                  <label class="col-sm-3 col-form-label required">Room Area (m<sup>2</sup>) </label>
                   <div class="col-sm-9">
-                    <input formControlName="gross_floor_area_tsubo" placeholder="Gross Floor Area (tsubo)"
-                      [ngClass]="{ 'is-invalid': submitted && f.gross_floor_area_tsubo.errors }" type="number" class="form-control" />
-                    <div *ngIf="submitted && f.gross_floor_area_tsubo.errors" class="error-text">
-                      <span *ngIf="f.gross_floor_area_tsubo.errors.required" class="text-danger"> Gross Floor Area (tsubo) is required</span>
-                      <span *ngIf="f.gross_floor_area_tsubo.errors.maxlength" class="text-danger">Gross Floor Area (tsubo) must be not more then 550 characters</span>
+                    <input formControlName="room_area_sm" placeholder="Room Area (tsubo)"
+                      [ngClass]="{ 'is-invalid': submitted && f.room_area_sm.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.room_area_sm.errors" class="error-text">
+                      <span *ngIf="f.room_area_sm.errors.required" class="text-danger"> Room Area is required</span>
+                      <span *ngIf="f.room_area_sm.errors.maxlength" class="text-danger">Room Area must be not more then 550 characters</span>
                     </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Private Area (m<sup>2</sup>) </label>
+                  <label class="col-sm-3 col-form-label required">Room Area (tsubo) </label>
                   <div class="col-sm-9">
-                    <input formControlName="private_area_sm" placeholder="Private Area"
-                      [ngClass]="{ 'is-invalid': submitted && f.private_area_sm.errors }" type="number" class="form-control" />
-                    <div *ngIf="submitted && f.private_area_sm.errors" class="error-text">
-                      <span *ngIf="f.private_area_sm.errors.required" class="text-danger"> Private Area is required</span>
+                    <input formControlName="room_area_tsubo" placeholder="Room Area (tsubo)"
+                      [ngClass]="{ 'is-invalid': submitted && f.room_area_tsubo.errors }" type="number" class="form-control" />
+                    <div *ngIf="submitted && f.room_area_tsubo.errors" class="error-text">
+                      <span *ngIf="f.room_area_tsubo.errors.required" class="text-danger"> Room Area (tsubo) is required</span>
+                      <span *ngIf="f.room_area_tsubo.errors.maxlength" class="text-danger">Room Area (tsubo) must be not more then 550 characters</span>
                     </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Private Area (tsubo) </label>
+                  <label class="col-sm-3 col-form-label required">Uses </label>
                   <div class="col-sm-9">
-                    <input formControlName="private_area_tsubo" placeholder="Private Area (tsubo)"
-                      [ngClass]="{ 'is-invalid': submitted && f.private_area_tsubo.errors }" type="number" class="form-control" />
-                    <div *ngIf="submitted && f.private_area_tsubo.errors" class="error-text">
-                      <span *ngIf="f.private_area_tsubo.errors.required" class="text-danger"> Private Area (tsubo) is required</span>
-                      <span *ngIf="f.private_area_tsubo.errors.maxlength" class="text-danger">Private Area (tsubo) must be not more then 550 characters</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Building Structure </label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="building_structure" placeholder="Building Structure"
-                      [ngClass]="{ 'is-invalid': submitted && f.building_structure.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.building_structure.errors" class="error-text">
-                      <span *ngIf="f.building_structure.errors.required" class="text-danger"> Building Structure is required</span>
-                      <span *ngIf="f.building_structure.errors.maxlength" class="text-danger">Building Structure must be not more then 550 characters</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Story </label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="story" placeholder="Story"
-                      [ngClass]="{ 'is-invalid': submitted && f.story.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.story.errors" class="error-text">
-                      <span *ngIf="f.story.errors.required" class="text-danger"> Story is required</span>
-                      <span *ngIf="f.story.errors.maxlength" class="text-danger">Story must be not more then 550 characters</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Underground Story </label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="underground_story" placeholder="Underground Story"
-                      [ngClass]="{ 'is-invalid': submitted && f.underground_story.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.underground_story.errors" class="error-text">
-                      <span *ngIf="f.underground_story.errors.required" class="text-danger"> Underground Story is required</span>
-                      <span *ngIf="f.underground_story.errors.maxlength" class="text-danger">Underground Story must be not more then 550 characters</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Date Of Completion </label>
-                  <div class="col-sm-9">
-                    <input formControlName="date_of_completion" placeholder="Date Of Completion"
-                      [ngClass]="{ 'is-invalid': submitted && f.date_of_completion.errors }" type="date" class="form-control" />
-                    <div *ngIf="submitted && f.date_of_completion.errors" class="error-text">
-                      <span *ngIf="f.date_of_completion.errors.required" class="text-danger"> Date Of Completion is required</span>
-                      <span *ngIf="f.date_of_completion.errors.maxlength" class="text-danger">Date Of Completion must be not more then 550 characters</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Owner On The Registry </label>
-                  <div class="col-sm-9">
-                    <input formControlName="owner_on_the_registry" placeholder="Owner On The Registry"
-                      [ngClass]="{ 'is-invalid': submitted && f.owner_on_the_registry.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.owner_on_the_registry.errors" class="error-text">
-                      <span *ngIf="f.owner_on_the_registry.errors.required" class="text-danger"> Owner On The Registry is required</span>
-                      <span *ngIf="f.owner_on_the_registry.errors.maxlength" class="text-danger">Owner On The Registry must be not more then 550 characters</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Owner Address </label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="owner_address" placeholder="Owner Address"
-                      [ngClass]="{ 'is-invalid': submitted && f.owner_address.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.owner_address.errors" class="error-text">
-                      <span *ngIf="f.owner_address.errors.required" class="text-danger"> Story is required</span>
-                      <span *ngIf="f.owner_address.errors.maxlength" class="text-danger">Story must be not more then 550 characters</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Property Images </label>
-                  <div class="col-sm-9 pt-2">
-                    <input type="file" formControlName="property_image" (change)="onSelectFile($event)" placeholder="Upload file" accept="image/x-png,image/jpeg" placeholder="Insert file"/>
-                    <div *ngIf="submitted && f.property_image.errors" class="error-text">
-                      <span *ngIf="f.property_image.errors.required" class="text-danger"> File is required</span>                      
+                    <input type="text" rows="2" formControlName="uses" placeholder="Uses"
+                      [ngClass]="{ 'is-invalid': submitted && f.uses.errors }" type="text" class="form-control" />
+                    <div *ngIf="submitted && f.uses.errors" class="error-text">
+                      <span *ngIf="f.uses.errors.required" class="text-danger"> Uses is required</span>
+                      <span *ngIf="f.uses.errors.maxlength" class="text-danger">Uses must be not more then 550 characters</span>
                     </div>
                   </div>
                 </div>
