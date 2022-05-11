@@ -219,7 +219,7 @@ export class PropertyMasterListComponent implements OnInit {
         this.entryForm.controls['building_structure'].setValue(item.building_structure);
         this.entryForm.controls['story'].setValue(item.story);
         this.entryForm.controls['underground_story'].setValue(item.underground_story);
-        this.entryForm.controls['date_of_completion'].setValue(this.getOnlyDateFormatModal(item.date_of_completion));
+        this.entryForm.controls['date_of_completion'].setValue(item.date_of_completion);
         this.entryForm.controls['owner_on_the_registry'].setValue(item.owner_on_the_registry);
         this.entryForm.controls['owner_address'].setValue(item.owner_address);
         this.entryForm.controls['is_active'].setValue(item.is_active);
@@ -252,7 +252,7 @@ export class PropertyMasterListComponent implements OnInit {
             building_structure: this.entryForm.value.building_structure,
             story: this.entryForm.value.story,
             underground_story: this.entryForm.value.underground_story,
-            date_of_completion: this.entryForm.value.date_of_completion ? this.validateMinDateFormat(this.entryForm.value.date_of_completion) : null,
+            date_of_completion: this.entryForm.value.date_of_completion ? this.entryForm.value.date_of_completion : null,
             owner_on_the_registry: this.entryForm.value.owner_on_the_registry,
             owner_address: this.entryForm.value.owner_address,
             is_active: this.entryForm.value.is_active

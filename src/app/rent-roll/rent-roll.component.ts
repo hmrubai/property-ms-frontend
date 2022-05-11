@@ -32,28 +32,32 @@ export class  RentRollListComponent implements OnInit {
 
     modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
     modalRef: BsModalRef;
-    promo_id = null;
+    property_id;
+    filter_date;
 
-    propertyList = [
-        {
-            id: 1,
-            name: "Tulip Palace",
-            address: "82/A, Dhaka, Bangladesh",
-            completion_date_of_construction: "16th April, 2022",
-            total_floor_space: "1800",
-            total_floor_space_for_rent: "1800",
-            image: "property1.jpg"
-        },
-        {
-            id: 2,
-            name: "Rose Garden Palace",
-            address: "Banasree, Dhaka, Bangladesh",
-            completion_date_of_construction: "12th April, 2022",
-            total_floor_space: "2100",
-            total_floor_space_for_rent: "2000",
-            image: "property2.jpg"
-        }
-    ];
+    propertyList: Array<any> = [];
+    tenantDLList: Array<any> = [];
+
+    // propertyList = [
+    //     {
+    //         id: 1,
+    //         name: "Tulip Palace",
+    //         address: "82/A, Dhaka, Bangladesh",
+    //         completion_date_of_construction: "16th April, 2022",
+    //         total_floor_space: "1800",
+    //         total_floor_space_for_rent: "1800",
+    //         image: "property1.jpg"
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Rose Garden Palace",
+    //         address: "Banasree, Dhaka, Bangladesh",
+    //         completion_date_of_construction: "12th April, 2022",
+    //         total_floor_space: "2100",
+    //         total_floor_space_for_rent: "2000",
+    //         image: "property2.jpg"
+    //     }
+    // ];
 
     rows = [];
     loadingIndicator = false;
@@ -73,7 +77,8 @@ export class  RentRollListComponent implements OnInit {
 
     page = new Page();
 
-    paymentList = [];
+    contractList = [];
+    is_loaded = false;
     roleList = [];
 
     promoList = [];
@@ -102,7 +107,6 @@ export class  RentRollListComponent implements OnInit {
 
     ngOnInit() {
 
-        //"promo_code", "promo_value", "beat_package_id", "collaborator_id", "limit", "expiry_date", "is_active", "created_by"
         this.entryForm = this.formBuilder.group({
             id: [null],
             promo_code: [null, [Validators.required, Validators.maxLength(50)]],
@@ -134,6 +138,7 @@ export class  RentRollListComponent implements OnInit {
         // this.getPackageList();
         // this.getPromoList();
         // this.getCollaboratorList();
+        this.getPropertyList()
     }
 
     get f() {
@@ -146,34 +151,66 @@ export class  RentRollListComponent implements OnInit {
 
     setPage(pageInfo) {
         this.page.pageNumber = pageInfo.offset;
-        this.getList();
     }
 
-    getPromoList() {
-        this.blockUI.start('Getting data...');
-        this._service.get('admin/beat/promo-list').subscribe(res => {
-            this.promoList = res.result;
-            this.blockUI.stop();
-        }, err => {
-            this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-            this.blockUI.stop();
-        });
+    getPropertyList() {
+        this._service.get('property-dropdown-list').subscribe(res => {
+            if (!res.success) {
+                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                return;
+            }
+            this.propertyList = res.data;
+        }, err => { }
+        );
     }
 
-    getCollaboratorList() {
-        this._service.get('admin/getCollaboratorList').subscribe(res => {
-            this.collaboratorList = res.result;
-        }, err => {
-            this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        });
+    getTenantList() {
+        this._service.get('tenant-dropdown-list').subscribe(res => {
+            if (!res.success) {
+                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                return;
+            }
+            this.tenantDLList = res.data;
+        }, err => { }
+        );
     }
 
-    getPackageList() {
-        this._service.get('beat/package/dropdown-list').subscribe(res => {
-            this.packageList = res.result;
-        }, err => {
-            this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-        });
+    filterRentRoll()
+    {    
+        if(this.filter_date && this.property_id ){
+            console.log(this.filter_date);
+            console.log(this.property_id);
+
+            let params = {
+                property_id : this.property_id,
+                filter_date : this.filter_date
+            }
+            this.blockUI.start('Getting Data...');
+            this._service.get('rent-roll-list', params).subscribe(res => {
+                if (!res.success) {
+                    this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                    return;
+                }
+                this.rows = res.data;
+                this.contractList = res.data;
+                this.is_loaded = true;
+                console.log(this.rows)
+                setTimeout(() => {
+                    this.blockUI.stop();
+                    this.loadingIndicator = false;
+                }, 500);
+            }, err => {
+                this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
+                setTimeout(() => {
+                    this.blockUI.stop();
+                    this.loadingIndicator = false;
+                }, 500);
+            }
+            );
+        }else{
+            this.contractList = [];
+            this.is_loaded = false;
+        }
     }
 
     openEditModal(promo, template: TemplateRef<any>) {
@@ -209,7 +246,6 @@ export class  RentRollListComponent implements OnInit {
                 
                 this.toastr.success(res.message, 'Success!', { timeOut: 2000 });
                 this.modalHide();
-                this.getPromoList();
             },
             error => {
                 this.blockUI.stop();
@@ -217,67 +253,21 @@ export class  RentRollListComponent implements OnInit {
         );
     }
 
-    onPromoChange(promo){
-        this.blockUI.start('Getting data...');
-        if(promo){
-            let params = {
-                fromDate: this.bsValue ? moment(this.bsValue[0]).format("DD-MMM-YYYY") : null,
-                toDate: this.bsValue ? moment(this.bsValue[1]).format("DD-MMM-YYYY") : null,
-                promo_id: promo.id
-            }
-
-            this._service.get('admin/beat/transaction/list-with-promo', params).subscribe(res => {
-                this.blockUI.stop();
-                this.paymentList = res;
-            }, err => {
-                this.blockUI.stop();
-                this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-            });
-        }else{
-            this.blockUI.stop();
-            this.paymentList = [];
-        }
-    }
-
     resetFilter(){
-        this.promo_id = null;
-        this.paymentList = [];
+        this.property_id = null;
     }
 
     onDateValueChange(e) {
         this.page.pageNumber = 0;
         this.page.size = 10;
         this.bsValue = e;
-        this.getList();
     }
 
     allClear() {
         this.page.pageNumber = 0;
         this.page.size = 10;
         this.bsValue = null;
-        this.getList();
         this.entryForm.controls['created_by'].setValue(this.currentUser.id);
-    }
-
-    getList() {
-        let params = {
-            fromDate: this.bsValue ? moment(this.bsValue[0]).format("DD-MMM-YYYY") : null,
-            toDate: this.bsValue ? moment(this.bsValue[1]).format("DD-MMM-YYYY") : null,
-        }
-
-        this.loadingIndicator = true;
-        this._service.get('admin/beat/payment-list', params).subscribe(res => {
-            this.paymentList = res;
-            setTimeout(() => {
-                this.loadingIndicator = false;
-            }, 1000);
-        }, err => {
-            this.toastr.error(err.message || err, 'Error!', { closeButton: true, disableTimeOut: true });
-            setTimeout(() => {
-                this.loadingIndicator = false;
-            }, 1000);
-        }
-        );
     }
 
     public export() {
@@ -332,35 +322,6 @@ export class  RentRollListComponent implements OnInit {
         this.modalTitle = 'Add New Promo Code';
         this.saveButtonText = 'Save';
         this.modalRef = this.modalService.show(template, this.modalConfig);
-    }
-
-    openPasswordModal(member, template: TemplateRef<any>) {
-        this.modalTitle = 'Update Password ('+member.name+')';
-        this.saveButtonText = 'Update';
-        this.passwordForm.controls['email'].setValue(member.email);
-        this.modalRef = this.modalService.show(template, this.modalConfig);
-    }
-
-    onUpdatePasswordFormSubmit() {
-        this.password_submitted = true;
-        if (this.passwordForm.invalid) {
-            return;
-        }
-        
-        delete this.passwordForm.value.ConfirmPassword;
-
-        this.blockUI.start('Updating Password...');
-        this._service.post('update-password', this.passwordForm.value).subscribe(
-            res => {
-                this.blockUI.stop();
-                this.toastr.success(res.message, 'Success!', { timeOut: 2000 });
-                this.modalHide();
-                this.getList();
-            },
-            error => {
-                this.blockUI.stop();
-            }
-        );
     }
 
     getItem(id, template: TemplateRef<any>) {

@@ -158,7 +158,7 @@ export class TenantMasterListComponent implements OnInit {
         this.entryForm.controls['type_of_industry'].setValue(item.type_of_industry);
         this.entryForm.controls['number_of_employee'].setValue(item.number_of_employee);
         this.entryForm.controls['representative_name'].setValue(item.representative_name);
-        this.entryForm.controls['establishment_date'].setValue(this.getOnlyDateFormatModal(item.establishment_date));
+        this.entryForm.controls['establishment_date'].setValue(item.establishment_date);
         this.entryForm.controls['market_capitalization'].setValue(item.market_capitalization);
         this.entryForm.controls['revenue'].setValue(item.revenue);
         this.entryForm.controls['is_active'].setValue(item.is_active);
@@ -188,7 +188,7 @@ export class TenantMasterListComponent implements OnInit {
             type_of_industry: this.entryForm.value.type_of_industry,
             number_of_employee: this.entryForm.value.number_of_employee,
             representative_name: this.entryForm.value.representative_name,
-            establishment_date: this.entryForm.value.establishment_date ? this.validateMinDateFormat(this.entryForm.value.establishment_date) : null,
+            establishment_date: this.entryForm.value.establishment_date ? this.entryForm.value.establishment_date : null,
             market_capitalization: this.entryForm.value.market_capitalization,
             revenue: this.entryForm.value.revenue,
             is_active: this.entryForm.value.is_active

@@ -5,60 +5,446 @@
         <div class="col-lg-12">
           <div class="card card-border-primary">
             <div class="card-header">
-              <h5>Add New Contract </h5>
+              <h5>{{ pageTitle }} <span class="text-danger">Working</span> </h5>
               <button class="btn btn-secondary btn-mini float-right" [routerLink]="['/contract-masters']"><i
                   class="icofont icofont-arrow-left"></i> Back</button>
             </div>
             <div class="card-block ">
-              <div class="row ">
-                <div class="col-lg-12 ">
-                  <ngx-datatable  #dataTable class="material " [rows]="rows" [loadingIndicator]="loadingIndicator"
-                    [columnMode]="ColumnMode.force" [headerHeight]="40" [footerHeight]="50" rowHeight="auto"
-                    [externalPaging]="false" [limit]="10">
-                    
-                    <ngx-datatable-column [width]="40" name="#Sl" prop="id" [draggable]="false" [sortable]="false">
-                      <ng-template let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                        <span> {{ rowIndex + 1}} </span>
-                      </ng-template>
-                    </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="250" name="Company Name" prop="company_name" [draggable]="false"
-                      [sortable]="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span title="{{ row.company_name }}"> {{ row.company_name }} ({{ row.company_name_jp }}) </span>
-                      </ng-template>
-                    </ngx-datatable-column>
+              <form [formGroup]="entryForm">
+                <div class="row ">
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Property</label>
+                      <ng-select [clearable]="false" [clearOnBackspace]="false" (change)="getRoomListByProperty($event)" formControlName="property_id" 
+                      [ngClass]="{ 'is-invalid': submitted && f.property_id.errors }"
+                        [items]="propertyDLList" [multiple]=false bindLabel="property_name" bindValue="id"
+                        placeholder="Select Property">
+                      </ng-select>
+                      <div *ngIf="submitted && f.property_id.errors" class="error-text">
+                        <span *ngIf="f.property_id.errors.required" class="text-danger"> Property is required</span>
+                        <span *ngIf="f.property_id.errors.maxlength" class="text-danger">Property must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Room</label>
+                      <ng-select [clearable]="true" [clearOnBackspace]="true" formControlName="room_id" 
+                      [ngClass]="{ 'is-invalid': submitted && f.room_id.errors }"
+                        [items]="roomDLList" [multiple]=false bindLabel="room_number" bindValue="id"
+                        placeholder="Select Room">
+                      </ng-select>
+                      <div *ngIf="submitted && f.room_id.errors" class="error-text">
+                        <span *ngIf="f.room_id.errors.required" class="text-danger"> Room is required</span>
+                        <span *ngIf="f.room_id.errors.maxlength" class="text-danger">Room must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Tenant</label>
+                      <ng-select [clearable]="false" [clearOnBackspace]="false" formControlName="tenant_id" 
+                      [ngClass]="{ 'is-invalid': submitted && f.tenant_id.errors }"
+                        [items]="tenantDLList" [multiple]=false bindLabel="company_name" bindValue="id"
+                        placeholder="Select Tenant">
+                      </ng-select>
+                      <div *ngIf="submitted && f.tenant_id.errors" class="error-text">
+                        <span *ngIf="f.tenant_id.errors.required" class="text-danger"> Tenant is required</span>
+                        <span *ngIf="f.tenant_id.errors.maxlength" class="text-danger">Tenant must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Contract Type</label>
+                      <input type="text" formControlName="contract_type" placeholder="Enter Contract Type"
+                      [ngClass]="{ 'is-invalid': submitted && f.contract_type.errors }" class="form-control">
+                      <div *ngIf="submitted && f.contract_type.errors" class="error-text">
+                        <span *ngIf="f.contract_type.errors.required" class="text-danger"> Contract Type is required</span>
+                        <span *ngIf="f.contract_type.errors.maxlength" class="text-danger">Contract Type must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Unit Rent (m<sup>2</sup>)</label>
+                      <input type="number" class="form-control" formControlName="unit_rent_sm" min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.unit_rent_sm.errors }" />
+                      <div *ngIf="submitted && f.unit_rent_sm.errors" class="error-text">
+                        <span *ngIf="f.unit_rent_sm.errors.required" class="text-danger"> Unit Rent (m<sup>2</sup>) is required</span>
+                        <span *ngIf="f.unit_rent_sm.errors.maxlength" class="text-danger">Unit Rent (m<sup>2</sup>) must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Unit Rent tsubo</label>
+                      <input type="number" class="form-control" formControlName="unit_rent_tsubo" min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.unit_rent_tsubo.errors }" />
+                      <div *ngIf="submitted && f.unit_rent_tsubo.errors" class="error-text">
+                        <span *ngIf="f.unit_rent_tsubo.errors.required" class="text-danger"> Unit Rent tsubo is required</span>
+                        <span *ngIf="f.unit_rent_tsubo.errors.maxlength" class="text-danger">Unit Rent tsubo must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Monthly Rent</label>
+                      <input type="number" class="form-control" formControlName="monthly_rent" min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.monthly_rent.errors }" />
+                      <div *ngIf="submitted && f.monthly_rent.errors" class="error-text">
+                        <span *ngIf="f.monthly_rent.errors.required" class="text-danger"> Monthly Rent is required</span>
+                        <span *ngIf="f.monthly_rent.errors.maxlength" class="text-danger">Monthly Rent must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Date Of Rent Occurrence</label>
+                      <input type="date" class="form-control" formControlName="date_of_rent_occurrence" 
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_rent_occurrence.errors }" />
+                      <div *ngIf="submitted && f.date_of_rent_occurrence.errors" class="error-text">
+                        <span *ngIf="f.date_of_rent_occurrence.errors.required" class="text-danger"> Date Of Rent Occurrence is required</span>
+                        <span *ngIf="f.date_of_rent_occurrence.errors.maxlength" class="text-danger">Date Of Rent Occurrence must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Initial Month Rent</label>
+                      <input type="number" class="form-control" formControlName="initial_month_rent"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.initial_month_rent.errors }" />
+                      <div *ngIf="submitted && f.initial_month_rent.errors" class="error-text">
+                        <span *ngIf="f.initial_month_rent.errors.required" class="text-danger"> Initial Month Rent is required</span>
+                        <span *ngIf="f.initial_month_rent.errors.maxlength" class="text-danger">Initial Month Rent must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Final Month Rent</label>
+                      <input type="number" class="form-control" formControlName="final_month_rent"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.final_month_rent.errors }" />
+                      <div *ngIf="submitted && f.final_month_rent.errors" class="error-text">
+                        <span *ngIf="f.final_month_rent.errors.required" class="text-danger"> Final Month Rent is required</span>
+                        <span *ngIf="f.final_month_rent.errors.maxlength" class="text-danger">Final Month Rent must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Unit Common Fees (m<sup>2</sup>)</label>
+                      <input type="number" class="form-control" formControlName="unit_common_fees_sm"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.unit_common_fees_sm.errors }" />
+                      <div *ngIf="submitted && f.unit_common_fees_sm.errors" class="error-text">
+                        <span *ngIf="f.unit_common_fees_sm.errors.required" class="text-danger"> Unit Common Fees (m<sup>2</sup>) is required</span>
+                        <span *ngIf="f.unit_common_fees_sm.errors.maxlength" class="text-danger">Unit Common Fees (m<sup>2</sup>) must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Unit Common Fees tsubo</label>
+                      <input type="number" class="form-control" formControlName="unit_common_fees_tsubo"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.unit_common_fees_tsubo.errors }" />
+                      <div *ngIf="submitted && f.unit_common_fees_tsubo.errors" class="error-text">
+                        <span *ngIf="f.unit_common_fees_tsubo.errors.required" class="text-danger"> Unit Common Fees tsubo is required</span>
+                        <span *ngIf="f.unit_common_fees_tsubo.errors.maxlength" class="text-danger">Unit Common Fees tsubo must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Monthly Common Fees</label>
+                      <input type="number" class="form-control" formControlName="monthly_common_fees"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.monthly_common_fees.errors }" />
+                      <div *ngIf="submitted && f.monthly_common_fees.errors" class="error-text">
+                        <span *ngIf="f.monthly_common_fees.errors.required" class="text-danger"> Monthly Common Fees is required</span>
+                        <span *ngIf="f.monthly_common_fees.errors.maxlength" class="text-danger">Monthly Common Fees must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Date of Common Fee Occurrence</label>
+                      <input type="date" class="form-control" formControlName="date_of_common_fee_occurrence" 
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_common_fee_occurrence.errors }" />
+                      <div *ngIf="submitted && f.date_of_common_fee_occurrence.errors" class="error-text">
+                        <span *ngIf="f.date_of_common_fee_occurrence.errors.required" class="text-danger"> Date of Common Fee Occurrence is required</span>
+                        <span *ngIf="f.date_of_common_fee_occurrence.errors.maxlength" class="text-danger">Date of Common Fee Occurrence must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Initial Month Common Fee</label>
+                      <input type="number" class="form-control" formControlName="initial_month_common_fee"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.initial_month_common_fee.errors }" />
+                      <div *ngIf="submitted && f.initial_month_common_fee.errors" class="error-text">
+                        <span *ngIf="f.initial_month_common_fee.errors.required" class="text-danger"> Initial Month Common Fee is required</span>
+                        <span *ngIf="f.initial_month_common_fee.errors.maxlength" class="text-danger">Initial Month Common Fee must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Final Month Common Fee</label>
+                      <input type="number" class="form-control" formControlName="final_month_common_fee"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.final_month_common_fee.errors }" />
+                      <div *ngIf="submitted && f.final_month_common_fee.errors" class="error-text">
+                        <span *ngIf="f.final_month_common_fee.errors.required" class="text-danger"> Final Month Common Fee is required</span>
+                        <span *ngIf="f.final_month_common_fee.errors.maxlength" class="text-danger">Final Month Common Fee must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Unit of Total Rent (m<sup>2</sup>)</label>
+                      <input type="number" class="form-control" formControlName="unit_of_total_rent_sm"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.unit_of_total_rent_sm.errors }" />
+                      <div *ngIf="submitted && f.unit_of_total_rent_sm.errors" class="error-text">
+                        <span *ngIf="f.unit_of_total_rent_sm.errors.required" class="text-danger"> Unit of Total Rent (m<sup>2</sup>) is required</span>
+                        <span *ngIf="f.unit_of_total_rent_sm.errors.maxlength" class="text-danger">Unit of Total Rent (m<sup>2</sup>) must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Unit Of Total Rent tsubo</label>
+                      <input type="number" class="form-control" formControlName="unit_of_total_rent_tsubo"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.unit_of_total_rent_tsubo.errors }" />
+                      <div *ngIf="submitted && f.unit_of_total_rent_tsubo.errors" class="error-text">
+                        <span *ngIf="f.unit_of_total_rent_tsubo.errors.required" class="text-danger"> Unit Of Total Rent tsubo is required</span>
+                        <span *ngIf="f.unit_of_total_rent_tsubo.errors.maxlength" class="text-danger">Unit Of Total Rent tsubo must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Rotal Rent</label>
+                      <input type="number" class="form-control" formControlName="total_rent"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.total_rent.errors }" />
+                      <div *ngIf="submitted && f.total_rent.errors" class="error-text">
+                        <span *ngIf="f.total_rent.errors.required" class="text-danger"> Tenant is required</span>
+                        <span *ngIf="f.total_rent.errors.maxlength" class="text-danger">Tenant must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Total Initial Month Rent</label>
+                      <input type="number" class="form-control" formControlName="total_initial_month_rent"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.total_initial_month_rent.errors }" />
+                      <div *ngIf="submitted && f.total_initial_month_rent.errors" class="error-text">
+                        <span *ngIf="f.total_initial_month_rent.errors.required" class="text-danger"> Total Initial Month Rent is required</span>
+                        <span *ngIf="f.total_initial_month_rent.errors.maxlength" class="text-danger">Total Initial Month Rent must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Total Final Month Rent</label>
+                      <input type="number" class="form-control" formControlName="total_final_month_rent"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.total_final_month_rent.errors }" />
+                      <div *ngIf="submitted && f.total_final_month_rent.errors" class="error-text">
+                        <span *ngIf="f.total_final_month_rent.errors.required" class="text-danger"> Total Final Month Rent is required</span>
+                        <span *ngIf="f.total_final_month_rent.errors.maxlength" class="text-danger">Total Final Month Rent must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Number of Deposit Months</label>
+                      <input type="number" class="form-control" formControlName="number_of_deposit_months"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.number_of_deposit_months.errors }" />
+                      <div *ngIf="submitted && f.number_of_deposit_months.errors" class="error-text">
+                        <span *ngIf="f.number_of_deposit_months.errors.required" class="text-danger"> Number of Deposit Months is required</span>
+                        <span *ngIf="f.number_of_deposit_months.errors.maxlength" class="text-danger">Number of Deposit Months must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Deposit</label>
+                      <input type="number" class="form-control" formControlName="deposit"  min="1" inputmode="numeric"
+                      [ngClass]="{ 'is-invalid': submitted && f.deposit.errors }" />
+                      <div *ngIf="submitted && f.deposit.errors" class="error-text">
+                        <span *ngIf="f.deposit.errors.required" class="text-danger"> Deposit is required</span>
+                        <span *ngIf="f.deposit.errors.maxlength" class="text-danger">Deposit must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Date of Contract Start</label>
+                      <input type="date" class="form-control" formControlName="date_of_contract_start" 
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_contract_start.errors }" />
+                      <div *ngIf="submitted && f.date_of_contract_start.errors" class="error-text">
+                        <span *ngIf="f.date_of_contract_start.errors.required" class="text-danger"> Date of Contract Start is required</span>
+                        <span *ngIf="f.date_of_contract_start.errors.maxlength" class="text-danger">Date of Contract Start must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Date Of Contract End</label>
+                      <input type="date" class="form-control" formControlName="date_of_contract_end" 
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_contract_end.errors }" />
+                      <div *ngIf="submitted && f.date_of_contract_end.errors" class="error-text">
+                        <span *ngIf="f.date_of_contract_end.errors.required" class="text-danger"> Date of Contract End is required</span>
+                        <span *ngIf="f.date_of_contract_end.errors.maxlength" class="text-danger">Date of Contract End must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <!--<div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Automatic Extention</label>
+                      <input type="number" class="form-control" formControlName="automatic_extention" 
+                      [ngClass]="{ 'is-invalid': submitted && f.automatic_extention.errors }" />
+                      <div *ngIf="submitted && f.automatic_extention.errors" class="error-text">
+                        <span *ngIf="f.automatic_extention.errors.required" class="text-danger"> Automatic Extention is required</span>
+                        <span *ngIf="f.automatic_extention.errors.maxlength" class="text-danger">Automatic Extention must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>-->
+                  <div class="col-lg-4">
+                    <div class="form-group row text-left mt-4">
+                      <label class="col-sm-6 col-form-label">Automatic Extention </label>
+                      <div class="col-sm-6 mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="automatic_extention">
+                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span> Yes
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Month Of Automatic Extention</label>
+                      <input type="text" class="form-control" formControlName="month_of_automatic_extention" 
+                      [ngClass]="{ 'is-invalid': submitted && f.month_of_automatic_extention.errors }" />
+                      <div *ngIf="submitted && f.month_of_automatic_extention.errors" class="error-text">
+                        <span *ngIf="f.month_of_automatic_extention.errors.required" class="text-danger"> Month Of Automatic Extention is required</span>
+                        <span *ngIf="f.month_of_automatic_extention.errors.maxlength" class="text-danger">Month Of Automatic Extention must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Period of Cancel Notice</label>
+                      <input type="date" class="form-control" formControlName="period_of_cancel_notice" 
+                      [ngClass]="{ 'is-invalid': submitted && f.period_of_cancel_notice.errors }" />
+                      <div *ngIf="submitted && f.period_of_cancel_notice.errors" class="error-text">
+                        <span *ngIf="f.period_of_cancel_notice.errors.required" class="text-danger"> Period of Cancel Notice is required</span>
+                        <span *ngIf="f.period_of_cancel_notice.errors.maxlength" class="text-danger">Period of Cancel Notice must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Date of Received Application</label>
+                      <input type="date" class="form-control" formControlName="date_of_received_application_form_for_moving_in" 
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_received_application_form_for_moving_in.errors }" />
+                      <div *ngIf="submitted && f.date_of_received_application_form_for_moving_in.errors" class="error-text">
+                        <span *ngIf="f.date_of_received_application_form_for_moving_in.errors.required" class="text-danger"> Date of Received Application is required</span>
+                        <span *ngIf="f.date_of_received_application_form_for_moving_in.errors.maxlength" class="text-danger">Date of Received Application must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Date of Contract Signed</label>
+                      <input type="date" class="form-control" formControlName="date_of_contract_signed" 
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_contract_signed.errors }" />
+                      <div *ngIf="submitted && f.date_of_contract_signed.errors" class="error-text">
+                        <span *ngIf="f.date_of_contract_signed.errors.required" class="text-danger"> Date of Contract Signed is required</span>
+                        <span *ngIf="f.date_of_contract_signed.errors.maxlength" class="text-danger">Date of Contract Signed must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Document Delivery Date</label>
+                      <input type="date" class="form-control" formControlName="document_delivery_date" 
+                      [ngClass]="{ 'is-invalid': submitted && f.document_delivery_date.errors }" />
+                      <div *ngIf="submitted && f.document_delivery_date.errors" class="error-text">
+                        <span *ngIf="f.document_delivery_date.errors.required" class="text-danger"> Document Delivery Date is required</span>
+                        <span *ngIf="f.document_delivery_date.errors.maxlength" class="text-danger">Document Delivery Date must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Date Of Noticing Contract Termination</label>
+                      <input type="date" class="form-control" formControlName="date_of_noticing_contract_termination" 
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_noticing_contract_termination.errors }" />
+                      <div *ngIf="submitted && f.date_of_noticing_contract_termination.errors" class="error-text">
+                        <span *ngIf="f.date_of_noticing_contract_termination.errors.required" class="text-danger"> Date Of Noticing Contract Termination is required</span>
+                        <span *ngIf="f.date_of_noticing_contract_termination.errors.maxlength" class="text-danger">Date Of Noticing Contract Termination must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group">
+                      <label>Cancellation Date</label>
+                      <input type="date" class="form-control" formControlName="cancellation_date" 
+                      [ngClass]="{ 'is-invalid': submitted && f.cancellation_date.errors }" />
+                      <div *ngIf="submitted && f.cancellation_date.errors" class="error-text">
+                        <span *ngIf="f.cancellation_date.errors.required" class="text-danger"> Cancellation Date is required</span>
+                        <span *ngIf="f.cancellation_date.errors.maxlength" class="text-danger">Cancellation Date must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
 
-                    <ngx-datatable-column [width]="200" name="Email" prop="email" [draggable]="false" [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column [width]="100" name="Address" prop="address" [draggable]="false" [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column [width]="150" name="No. Of Employee" prop="number_of_employee" [draggable]="false" [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                    <ngx-datatable-column [width]="120" name="Action" prop="id" [draggable]="false" [sortable]="false">
-                      <ng-template let-row="row" ngx-datatable-cell-template>
-                        <!--<button class="btn btn-info btn-mini mr-2" [routerLink]="['/beat-model-exam-list', row.id ]"><i
-                            class="icofont icofont-eye"></i>Manage Model Exams</button>-->
-                        <button class="btn btn-info btn-mini" (click)="getItem(row, template)"><i
-                            class="icofont icofont-edit"></i>Edit</button>
-                      </ng-template>
-                    </ngx-datatable-column>
-
-                  </ngx-datatable>
-                  
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label>Remarks On Furniture & Equipment</label>
+                      <input type="text" class="form-control" formControlName="remarks_on_furniture_and_equipment" 
+                      [ngClass]="{ 'is-invalid': submitted && f.remarks_on_furniture_and_equipment.errors }" />
+                      <div *ngIf="submitted && f.remarks_on_furniture_and_equipment.errors" class="error-text">
+                        <span *ngIf="f.remarks_on_furniture_and_equipment.errors.required" class="text-danger"> Remarks On Furniture & Equipment is required</span>
+                        <span *ngIf="f.remarks_on_furniture_and_equipment.errors.maxlength" class="text-danger">Remarks On Furniture & Equipment must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-6">
+                    <div class="form-group">
+                      <label>Other Remarks</label>
+                      <input type="text" class="form-control" formControlName="other_remarks" 
+                      [ngClass]="{ 'is-invalid': submitted && f.other_remarks.errors }" />
+                      <div *ngIf="submitted && f.other_remarks.errors" class="error-text">
+                        <span *ngIf="f.other_remarks.errors.required" class="text-danger"> Other Remarks is required</span>
+                        <span *ngIf="f.other_remarks.errors.maxlength" class="text-danger">Other Remarks must be not more then 550 characters</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-4">
+                    <div class="form-group row text-left">
+                      <label class="col-sm-6 col-form-label">Is Active? </label>
+                      <div class="col-sm-6 mt-2">
+                        <div class="checkbox-fade fade-in-primary">
+                          <label>
+                            <input type="checkbox" formControlName="is_active">
+                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+
+
+              </form>
+            </div>
+            <div class="card-footer">
+              <div class="pr-4">
+                <button class="btn btn-success mr-2" (click)="onFormSubmit()"><i
+                    class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
+                <button class="btn btn-danger btn-outline-danger mr-2" (click)="fromReset()"> <i
+                    class="icofont icofont-close"></i> Reset</button>
               </div>
             </div>
           </div>
@@ -67,7 +453,7 @@
     </div>
   </div>
 
-  <ng-template #template>
+  <!--<ng-template #template>
     <div class="modal-header ">
       <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
       <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
@@ -228,5 +614,5 @@
             class="icofont icofont-check-circled"></i> {{btnSaveText}}</button>
       </div>
     </div>
-  </ng-template>
+  </ng-template>-->
 </block-ui>

@@ -71,6 +71,11 @@ export const AppRoutes: Routes = [
         loadChildren: () => import('./add-contract-masters/add-contract-masters.module').then(m => m.AddContractMasterListModule),
         // canActivate: [AuthGuard]
       },
+      {
+        path: 'update-contract-masters/:contract_id',
+        loadChildren: () => import('./add-contract-masters/add-contract-masters.module').then(m => m.AddContractMasterListModule),
+        // canActivate: [AuthGuard]
+      },
       // {
       //   path: 'change-password',
       //   loadChildren: () => import('./change-password/change-password.module').then(m => m.ChangePasswordModule),

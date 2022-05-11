@@ -8,15 +8,25 @@
               <h5>Contract List </h5>
               <button class="btn btn-primary float-right" [routerLink]="['/add-contract-masters']"><i
                   class=" icofont icofont-plus"></i> Add New Contract</button>
+              <!--<ng-select [clearable]="false" class="col-lg-4 float-right" [clearOnBackspace]="false" (change)="onInstituteChange($event)"
+                [items]="propertyDLList" [multiple]=false bindLabel="property_name" bindValue="id"
+                placeholder="Select Property">
+              </ng-select>-->
             </div>
             <div class="card-block ">
               <div class="row ">
-                <!-- <div class="col-lg-4 mb-3">
-                  <ng-select [clearable]="false" [clearOnBackspace]="false" (change)="onInstituteChange($event)"
-                    [items]="instituteList" [multiple]=false bindLabel="name" bindValue="id"
-                    placeholder="Select institute">
+                <div class="col-lg-4 mb-3">
+                  <ng-select [clearable]="true" [clearOnBackspace]="false" [(ngModel)]="propertyId" (change)="getFilterList()"
+                    [items]="propertyDLList" [multiple]=false bindLabel="property_name" bindValue="id"
+                    placeholder="Select Property">
                   </ng-select>
-                </div> -->
+                </div>
+                <div class="col-lg-4 mb-3">
+                  <ng-select [clearable]="true" [clearOnBackspace]="false" [(ngModel)]="tenantId" (change)="getFilterList()"
+                    [items]="tenantDLList" [multiple]=false bindLabel="company_name" bindValue="id"
+                    placeholder="Select Tenant">
+                  </ng-select>
+                </div>
               </div>
               <div class="row ">
                 <div class="col-lg-12 ">
@@ -30,37 +40,47 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="250" name="Company Name" prop="company_name" [draggable]="false"
+                    <ngx-datatable-column [width]="250" name="Tenant" prop="company_name" [draggable]="false"
                       [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <span title="{{ row.company_name }}"> {{ row.company_name }} ({{ row.company_name_jp }}) </span>
+                        <span title="{{ row.company_name }}"> 
+                          {{ row.company_name }} ({{ row.company_name_jp }}) <br/>
+                          {{ row.tenant_email }} <br/>
+                          {{ row.tenant_address }}
+                        </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="200" name="Email" prop="email" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="200" name="Room Number" prop="room_number" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="100" name="Address" prop="address" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="200" name="Contact Type" prop="contract_type" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="No. Of Employee" prop="number_of_employee" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="100" name="Contract Start" prop="date_of_contract_start" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
+                        <span title="{{ value }}"> {{ value | date : 'longDate' }} </span>
+                      </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [width]="150" name="Contract End" prop="date_of_contract_end" [draggable]="false" [sortable]="false">
+                      <ng-template let-value="value" ngx-datatable-cell-template>
+                        <span title="{{ value }}"> {{ value | date : 'longDate' }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
                     <ngx-datatable-column [width]="120" name="Action" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <!--<button class="btn btn-info btn-mini mr-2" [routerLink]="['/beat-model-exam-list', row.id ]"><i
-                            class="icofont icofont-eye"></i>Manage Model Exams</button>-->
-                        <button class="btn btn-info btn-mini" (click)="getItem(row, template)"><i
+                        <button class="btn btn-info btn-mini mr-2" [routerLink]="['/update-contract-masters', row.id ]"><i
                             class="icofont icofont-edit"></i>Edit</button>
+                        <!--<button class="btn btn-info btn-mini" (click)="getItem(row, template)"><i
+                            class="icofont icofont-edit"></i>Edit</button>-->
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -89,21 +109,6 @@
             <div class="card">
               <div class="card-header">
                 <!-- <h5>Institute Information</h5> -->
-                <!--
-
-                  "company_name",
-                  "company_name_jp",
-                  "email",
-                  "address",
-                  "type_of_industry",
-                  "number_of_employee",
-                  "representative_name",
-                  "establishment_date",
-                  "market_capitalization",
-                  "revenue",
-                  "is_active"
-
-                -->
               </div>
               <div class="card-block">
                 <div class="form-group row">

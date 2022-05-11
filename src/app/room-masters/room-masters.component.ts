@@ -39,6 +39,17 @@ export class RoomMasterListComponent implements OnInit {
     loadingIndicator = false;
     ColumnMode = ColumnMode;
 
+    room_type = [
+        {
+            id: "Office",
+            name: "Office",
+        },
+        {
+            id: "Strage",
+            name: "Strage",
+        }
+    ]
+
     urls = [];
     files = [];
 

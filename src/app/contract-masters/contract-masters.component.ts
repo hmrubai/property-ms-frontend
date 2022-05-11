@@ -36,6 +36,7 @@ export class ContractMasterListComponent implements OnInit {
     page = new Page();
     rows = [];
     propertyDLList: Array<any> = [];
+    tenantDLList: Array<any> = [];
     loadingIndicator = false;
     ColumnMode = ColumnMode;
 
@@ -51,6 +52,9 @@ export class ContractMasterListComponent implements OnInit {
     itemUploadList: Array<any> = [];
 
     packagePrice = 0;
+
+    propertyId;
+    tenantId;
 
     constructor(
         private modalService: BsModalService,
@@ -90,8 +94,9 @@ export class ContractMasterListComponent implements OnInit {
         this.uploadForm = this.formBuilder.group({
             feature_thumbnail: ['']
         });
-        //this.getPropertyList();
-        this.getList();
+        this.getPropertyList();
+        this.getTenantList();
+        //this.getList();
     }
 
     get f() {
@@ -124,10 +129,53 @@ export class ContractMasterListComponent implements OnInit {
         );
     }
 
+    getTenantList() {
+        this._service.get('tenant-dropdown-list').subscribe(res => {
+            if (!res.success) {
+                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                return;
+            }
+            this.tenantDLList = res.data;
+        }, err => { }
+        );
+    }
+
+    getFilterList(){
+        if(this.tenantId && this.propertyId){
+            console.log(this.tenantId);
+            console.log(this.propertyId);
+            let params = {
+                property_id : this.propertyId,
+                tenant_id : this.tenantId
+            }
+            this.blockUI.start('Getting Data...');
+            this._service.get('contract-list', params).subscribe(res => {
+                if (!res.success) {
+                    this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                    return;
+                }
+                this.rows = res.data;
+                setTimeout(() => {
+                    this.blockUI.stop();
+                    this.loadingIndicator = false;
+                }, 500);
+            }, err => {
+                this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
+                setTimeout(() => {
+                    this.blockUI.stop();
+                    this.loadingIndicator = false;
+                }, 500);
+            }
+            );
+        }else{
+            this.rows = [];
+        }
+    }
+
     getList() {
         this.loadingIndicator = true;
 
-        this._service.get('tenant-list').subscribe(res => {
+        this._service.get('contract-list').subscribe(res => {
             if (!res.success) {
                 this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
                 return;

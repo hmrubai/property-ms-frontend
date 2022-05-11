@@ -45,13 +45,13 @@
 
                     <ngx-datatable-column [width]="100" name="Room Area" prop="room_area_sm" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
+                        <span title="{{ value | number }}"> {{ value | number }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
                     <ngx-datatable-column [width]="150" name="Room Area tsubo" prop="room_area_tsubo" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
+                        <span title="{{ value }}"> {{ value | number }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -160,8 +160,11 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label required">Uses </label>
                   <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="uses" placeholder="Uses"
-                      [ngClass]="{ 'is-invalid': submitted && f.uses.errors }" type="text" class="form-control" />
+                    <ng-select [clearable]="false" [clearOnBackspace]="false" formControlName="uses" 
+                      [ngClass]="{ 'is-invalid': submitted && f.uses.errors }"
+                        [items]="room_type" [multiple]=false bindLabel="name" bindValue="id"
+                        placeholder="Select Uses">
+                    </ng-select>
                     <div *ngIf="submitted && f.uses.errors" class="error-text">
                       <span *ngIf="f.uses.errors.required" class="text-danger"> Uses is required</span>
                       <span *ngIf="f.uses.errors.maxlength" class="text-danger">Uses must be not more then 550 characters</span>

@@ -185,10 +185,10 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label required">Establishment Date </label>
                   <div class="col-sm-9">
-                    <input formControlName="establishment_date" placeholder="Enter Representative Name"
-                      [ngClass]="{ 'is-invalid': submitted && f.establishment_date.errors }" type="date" class="form-control" />
+                    <input formControlName="establishment_date" placeholder="Establishment Date"
+                      [ngClass]="{ 'is-invalid': submitted && f.establishment_date.errors }" type="text" class="form-control" />
                     <div *ngIf="submitted && f.establishment_date.errors" class="error-text">
-                      <span *ngIf="f.establishment_date.errors.required" class="text-danger"> Representative Name is required</span>
+                      <span *ngIf="f.establishment_date.errors.required" class="text-danger"> Establishment Date is required</span>
                     </div>
                   </div>
                 </div>

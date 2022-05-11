@@ -45,13 +45,13 @@
 
                     <ngx-datatable-column [width]="100" name="Gross Floor Area" prop="gross_floor_area_sm" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
+                        <span title="{{ value | number }}"> {{ value | number }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
                     <ngx-datatable-column [width]="150" name="Gross Floor Area tsubo" prop="gross_floor_area_tsubo" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
+                        <span title="{{ value | number }}"> {{ value | number }} </span>
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -203,7 +203,7 @@
                   <label class="col-sm-3 col-form-label required">Date Of Completion </label>
                   <div class="col-sm-9">
                     <input formControlName="date_of_completion" placeholder="Date Of Completion"
-                      [ngClass]="{ 'is-invalid': submitted && f.date_of_completion.errors }" type="date" class="form-control" />
+                      [ngClass]="{ 'is-invalid': submitted && f.date_of_completion.errors }" type="text" class="form-control" />
                     <div *ngIf="submitted && f.date_of_completion.errors" class="error-text">
                       <span *ngIf="f.date_of_completion.errors.required" class="text-danger"> Date Of Completion is required</span>
                       <span *ngIf="f.date_of_completion.errors.maxlength" class="text-danger">Date Of Completion must be not more then 550 characters</span>

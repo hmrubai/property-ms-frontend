@@ -24,7 +24,7 @@ import { AuthorizeDirective } from './_services/authorize.directive';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import dayGridPlugin from '@fullcalendar/daygrid';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,

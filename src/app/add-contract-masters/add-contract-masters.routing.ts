@@ -6,7 +6,7 @@ export const AddContractMasterListRoutes: Routes = [{
   path: '',
   component: AddContractMasterListComponent,
   data: {
-    breadcrumb: 'Add New Contract',
+    breadcrumb: 'Contract Information',
     icon: 'icofont-home bg-c-blue',
     status: false
   }

@@ -70,6 +70,13 @@ const MENUITEMS = [
         // permission: 'Admin,SuperAdmin,Moderator,sewCollaborator'
       },
       {
+        state: 'contract-masters',
+        name: 'Contract List',
+        type: 'link',
+        icon: 'ti-control-forward',
+        // permission: 'Admin,SuperAdmin,Moderator'
+      },
+      {
         state: 'rent-roll',
         name: 'Rent-roll',
         type: 'link',
@@ -86,13 +93,6 @@ const MENUITEMS = [
       {
         state: 'property-cost-management',
         name: 'Property Cost Management',
-        type: 'link',
-        icon: 'ti-control-forward',
-        // permission: 'Admin,SuperAdmin,Moderator'
-      },
-      {
-        state: 'contract-masters',
-        name: 'Contract List',
         type: 'link',
         icon: 'ti-control-forward',
         // permission: 'Admin,SuperAdmin,Moderator'
