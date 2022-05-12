@@ -25,6 +25,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid';
+// import { UiSwitchModule } from 'ngx-ui-switch';
 
 FullCalendarModule.registerPlugins([ // register FullCalendar plugins
   dayGridPlugin,

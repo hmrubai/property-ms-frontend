@@ -9,6 +9,7 @@ import { Page } from './../_models/page';
 import { AuthenticationService } from './../_services/authentication.service';
 import { MustMatch } from './../_helpers/must-match.validator';
 import { BsDatepickerConfig, BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import * as moment from 'moment';
 import * as XLSX from 'xlsx';
 
@@ -28,36 +29,19 @@ export class  RentRollListComponent implements OnInit {
     modalTitle = 'Add Student';
     isUpdate = false;
     saveButtonText: string = 'Save';
+    btnSaveText = 'Save';
     @BlockUI() blockUI: NgBlockUI;
 
-    modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
+    modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
     modalRef: BsModalRef;
     property_id;
     filter_date;
+    lang;
 
     propertyList: Array<any> = [];
     tenantDLList: Array<any> = [];
-
-    // propertyList = [
-    //     {
-    //         id: 1,
-    //         name: "Tulip Palace",
-    //         address: "82/A, Dhaka, Bangladesh",
-    //         completion_date_of_construction: "16th April, 2022",
-    //         total_floor_space: "1800",
-    //         total_floor_space_for_rent: "1800",
-    //         image: "property1.jpg"
-    //     },
-    //     {
-    //         id: 2,
-    //         name: "Rose Garden Palace",
-    //         address: "Banasree, Dhaka, Bangladesh",
-    //         completion_date_of_construction: "12th April, 2022",
-    //         total_floor_space: "2100",
-    //         total_floor_space_for_rent: "2000",
-    //         image: "property2.jpg"
-    //     }
-    // ];
+    contractDetails;
+    is_details_loaded = false;
 
     rows = [];
     loadingIndicator = false;
@@ -94,13 +78,18 @@ export class  RentRollListComponent implements OnInit {
         public formBuilder: FormBuilder,
         private _service: CommonService,
         private authService: AuthenticationService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        public translate: TranslateService,
     ) {
         this.page.pageNumber = 0;
         this.page.size = 10;
 
         this.authService.currentUserDetails.subscribe((value) => {
             this.currentUser = value;
+        });
+
+        this._service.currentLanguage.subscribe((value) => {
+            this.translate.use(value);
         });
     }
 
@@ -176,11 +165,9 @@ export class  RentRollListComponent implements OnInit {
     }
 
     filterRentRoll()
-    {    
-        if(this.filter_date && this.property_id ){
-            console.log(this.filter_date);
-            console.log(this.property_id);
-
+    {
+        if(this.filter_date && this.property_id)
+        {
             let params = {
                 property_id : this.property_id,
                 filter_date : this.filter_date
@@ -209,8 +196,29 @@ export class  RentRollListComponent implements OnInit {
             );
         }else{
             this.contractList = [];
+            this.rows = [];
             this.is_loaded = false;
         }
+    }
+
+    getItemDetails(row, template: TemplateRef<any>){
+        this.modalTitle = 'Contract Details';
+        this.btnSaveText = 'Save';
+
+        this.blockUI.start('Getting Contract Details...')
+        this._service.get('contract-details-by-id/' + row.id).subscribe(res => {
+                this.blockUI.stop();
+                if (!res.success) {
+                    this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                    return;
+                }
+                this.contractDetails = res.data;
+                this.is_details_loaded = true;
+                this.modalRef = this.modalService.show(template, this.modalConfig);
+            }, err => { 
+                this.blockUI.stop();
+            }
+        );
     }
 
     openEditModal(promo, template: TemplateRef<any>) {

@@ -33,6 +33,13 @@
                             </li>
                         </ul>
                         <ul [@mobileMenuTop]="isCollapsedMobile" class="nav-right" [ngClass]="isCollapsedMobile">
+                            <li>
+                                <!--<ui-switch uncheckedLabel="off" checkedLabel="on"></ui-switch> -->
+                                <select (change)="changeLanguage($event.target.value)">
+                                    <option value="en" [selected] = "lang == 'en'">English</option>
+                                    <option value="jp" [selected] = "lang == 'jp'">日本語</option>
+                                </select>
+                            </li>
                             <!-- <li class="header-notification">
                                 <a href="javascript:;">
                                     <i class="ti-bell"></i>

@@ -49,7 +49,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="Gross Floor Area tsubo" prop="gross_floor_area_tsubo" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="150" name="Gross Floor Area (ツボ)" prop="gross_floor_area_tsubo" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value | number }}"> {{ value | number }} </span>
                       </ng-template>
@@ -135,13 +135,13 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Gross Floor Area (tsubo) </label>
+                  <label class="col-sm-3 col-form-label required">Gross Floor Area (ツボ) </label>
                   <div class="col-sm-9">
-                    <input formControlName="gross_floor_area_tsubo" placeholder="Gross Floor Area (tsubo)"
+                    <input formControlName="gross_floor_area_tsubo" placeholder="Gross Floor Area (ツボ)"
                       [ngClass]="{ 'is-invalid': submitted && f.gross_floor_area_tsubo.errors }" type="number" class="form-control" />
                     <div *ngIf="submitted && f.gross_floor_area_tsubo.errors" class="error-text">
-                      <span *ngIf="f.gross_floor_area_tsubo.errors.required" class="text-danger"> Gross Floor Area (tsubo) is required</span>
-                      <span *ngIf="f.gross_floor_area_tsubo.errors.maxlength" class="text-danger">Gross Floor Area (tsubo) must be not more then 550 characters</span>
+                      <span *ngIf="f.gross_floor_area_tsubo.errors.required" class="text-danger"> Gross Floor Area (ツボ) is required</span>
+                      <span *ngIf="f.gross_floor_area_tsubo.errors.maxlength" class="text-danger">Gross Floor Area (ツボ) must be not more then 550 characters</span>
                     </div>
                   </div>
                 </div>
@@ -156,13 +156,13 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Private Area (tsubo) </label>
+                  <label class="col-sm-3 col-form-label required">Private Area (ツボ) </label>
                   <div class="col-sm-9">
-                    <input formControlName="private_area_tsubo" placeholder="Private Area (tsubo)"
+                    <input formControlName="private_area_tsubo" placeholder="Private Area (ツボ)"
                       [ngClass]="{ 'is-invalid': submitted && f.private_area_tsubo.errors }" type="number" class="form-control" />
                     <div *ngIf="submitted && f.private_area_tsubo.errors" class="error-text">
-                      <span *ngIf="f.private_area_tsubo.errors.required" class="text-danger"> Private Area (tsubo) is required</span>
-                      <span *ngIf="f.private_area_tsubo.errors.maxlength" class="text-danger">Private Area (tsubo) must be not more then 550 characters</span>
+                      <span *ngIf="f.private_area_tsubo.errors.required" class="text-danger"> Private Area (ツボ) is required</span>
+                      <span *ngIf="f.private_area_tsubo.errors.maxlength" class="text-danger">Private Area (ツボ) must be not more then 550 characters</span>
                     </div>
                   </div>
                 </div>

@@ -2,10 +2,13 @@ import { Injectable, ErrorHandler } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CommonService {
+  
+  public currentLanguage: BehaviorSubject<string> = new BehaviorSubject<string>('en');
+
   constructor(private http: HttpClient) { }
 
   get(url, obj?: any) {

@@ -49,7 +49,7 @@
                       </ng-template>
                     </ngx-datatable-column>
 
-                    <ngx-datatable-column [width]="150" name="Room Area tsubo" prop="room_area_tsubo" [draggable]="false" [sortable]="false">
+                    <ngx-datatable-column [width]="150" name="Room Area (ツボ)" prop="room_area_tsubo" [draggable]="false" [sortable]="false">
                       <ng-template let-value="value" ngx-datatable-cell-template>
                         <span title="{{ value }}"> {{ value | number }} </span>
                       </ng-template>
@@ -138,7 +138,7 @@
                 <div class="form-group row">
                   <label class="col-sm-3 col-form-label required">Room Area (m<sup>2</sup>) </label>
                   <div class="col-sm-9">
-                    <input formControlName="room_area_sm" placeholder="Room Area (tsubo)"
+                    <input formControlName="room_area_sm" placeholder="Room Area"
                       [ngClass]="{ 'is-invalid': submitted && f.room_area_sm.errors }" type="number" class="form-control" />
                     <div *ngIf="submitted && f.room_area_sm.errors" class="error-text">
                       <span *ngIf="f.room_area_sm.errors.required" class="text-danger"> Room Area is required</span>
@@ -147,13 +147,13 @@
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Room Area (tsubo) </label>
+                  <label class="col-sm-3 col-form-label required">Room Area  (ツボ) </label>
                   <div class="col-sm-9">
-                    <input formControlName="room_area_tsubo" placeholder="Room Area (tsubo)"
+                    <input formControlName="room_area_tsubo" placeholder="Room Area (ツボ)"
                       [ngClass]="{ 'is-invalid': submitted && f.room_area_tsubo.errors }" type="number" class="form-control" />
                     <div *ngIf="submitted && f.room_area_tsubo.errors" class="error-text">
-                      <span *ngIf="f.room_area_tsubo.errors.required" class="text-danger"> Room Area (tsubo) is required</span>
-                      <span *ngIf="f.room_area_tsubo.errors.maxlength" class="text-danger">Room Area (tsubo) must be not more then 550 characters</span>
+                      <span *ngIf="f.room_area_tsubo.errors.required" class="text-danger"> Room Area (ツボ) is required</span>
+                      <span *ngIf="f.room_area_tsubo.errors.maxlength" class="text-danger">Room Area (ツボ) must be not more then 550 characters</span>
                     </div>
                   </div>
                 </div>

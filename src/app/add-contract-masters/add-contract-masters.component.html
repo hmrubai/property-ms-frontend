@@ -5,7 +5,7 @@
         <div class="col-lg-12">
           <div class="card card-border-primary">
             <div class="card-header">
-              <h5>{{ pageTitle }} <span class="text-danger">Working</span> </h5>
+              <h5>{{ pageTitle }} </h5>
               <button class="btn btn-secondary btn-mini float-right" [routerLink]="['/contract-masters']"><i
                   class="icofont icofont-arrow-left"></i> Back</button>
             </div>
@@ -20,6 +20,9 @@
                       [ngClass]="{ 'is-invalid': submitted && f.property_id.errors }"
                         [items]="propertyDLList" [multiple]=false bindLabel="property_name" bindValue="id"
                         placeholder="Select Property">
+                        <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                            <div> {{item.property_name}} | {{item.location}} - ({{item.gross_floor_area_sm}} m<sup>2</sup>)</div>
+                        </ng-template>
                       </ng-select>
                       <div *ngIf="submitted && f.property_id.errors" class="error-text">
                         <span *ngIf="f.property_id.errors.required" class="text-danger"> Property is required</span>
@@ -79,12 +82,12 @@
                   </div>
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label>Unit Rent tsubo</label>
+                      <label>Unit Rent (ツボ)</label>
                       <input type="number" class="form-control" formControlName="unit_rent_tsubo" min="1" inputmode="numeric"
                       [ngClass]="{ 'is-invalid': submitted && f.unit_rent_tsubo.errors }" />
                       <div *ngIf="submitted && f.unit_rent_tsubo.errors" class="error-text">
-                        <span *ngIf="f.unit_rent_tsubo.errors.required" class="text-danger"> Unit Rent tsubo is required</span>
-                        <span *ngIf="f.unit_rent_tsubo.errors.maxlength" class="text-danger">Unit Rent tsubo must be not more then 550 characters</span>
+                        <span *ngIf="f.unit_rent_tsubo.errors.required" class="text-danger"> Unit Rent (ツボ) is required</span>
+                        <span *ngIf="f.unit_rent_tsubo.errors.maxlength" class="text-danger">Unit Rent (ツボ) must be not more then 550 characters</span>
                       </div>
                     </div>
                   </div>
@@ -145,12 +148,12 @@
                   </div>
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label>Unit Common Fees tsubo</label>
+                      <label>Unit Common Fees (ツボ)</label>
                       <input type="number" class="form-control" formControlName="unit_common_fees_tsubo"  min="1" inputmode="numeric"
                       [ngClass]="{ 'is-invalid': submitted && f.unit_common_fees_tsubo.errors }" />
                       <div *ngIf="submitted && f.unit_common_fees_tsubo.errors" class="error-text">
-                        <span *ngIf="f.unit_common_fees_tsubo.errors.required" class="text-danger"> Unit Common Fees tsubo is required</span>
-                        <span *ngIf="f.unit_common_fees_tsubo.errors.maxlength" class="text-danger">Unit Common Fees tsubo must be not more then 550 characters</span>
+                        <span *ngIf="f.unit_common_fees_tsubo.errors.required" class="text-danger"> Unit Common Fees (ツボ) is required</span>
+                        <span *ngIf="f.unit_common_fees_tsubo.errors.maxlength" class="text-danger">Unit Common Fees (ツボ) must be not more then 550 characters</span>
                       </div>
                     </div>
                   </div>
@@ -211,12 +214,12 @@
                   </div>
                   <div class="col-lg-4">
                     <div class="form-group">
-                      <label>Unit Of Total Rent tsubo</label>
+                      <label>Unit Of Total Rent (ツボ)</label>
                       <input type="number" class="form-control" formControlName="unit_of_total_rent_tsubo"  min="1" inputmode="numeric"
                       [ngClass]="{ 'is-invalid': submitted && f.unit_of_total_rent_tsubo.errors }" />
                       <div *ngIf="submitted && f.unit_of_total_rent_tsubo.errors" class="error-text">
-                        <span *ngIf="f.unit_of_total_rent_tsubo.errors.required" class="text-danger"> Unit Of Total Rent tsubo is required</span>
-                        <span *ngIf="f.unit_of_total_rent_tsubo.errors.maxlength" class="text-danger">Unit Of Total Rent tsubo must be not more then 550 characters</span>
+                        <span *ngIf="f.unit_of_total_rent_tsubo.errors.required" class="text-danger"> Unit Of Total Rent (ツボ) is required</span>
+                        <span *ngIf="f.unit_of_total_rent_tsubo.errors.maxlength" class="text-danger">Unit Of Total Rent (ツボ) must be not more then 550 characters</span>
                       </div>
                     </div>
                   </div>

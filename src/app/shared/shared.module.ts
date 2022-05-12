@@ -30,8 +30,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 import { UploadDialogComponent } from './../_helpers/upload-dialog/dialog.component';
 import { UploadService } from './../_services/upload.service';
-// import { UiSwitchModule } from 'ngx-toggle-switch';
-import { UiSwitchModule } from 'ngx-ui-switch';
+// import { UiSwitchModule } from 'ngx-ui-switch';
 import { TimepickerModule } from 'ngx-bootstrap/timepicker';
 
 import { TruncatePipe } from '../_helpers/truncate-pipe';
@@ -49,6 +48,17 @@ import { MatInputModule } from '@angular/material/input';
 
 import {NgxPaginationModule} from 'ngx-pagination';
 // import { NgxEditorModule } from 'ngx-editor';
+import {HttpClientModule, HttpClient} from '@angular/common/http';
+import {TranslateModule, TranslateLoader} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
+// export function HttpLoaderFactory(http: HttpClient) {
+//   return new TranslateHttpLoader(http);
+// }
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   imports: [
@@ -70,7 +80,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
       // NgxMatDatetimePickerModule,
     //   NgxMatTimepickerModule,
       NgSelectModule,
-      UiSwitchModule,
+      // UiSwitchModule,
       FlexLayoutModule,
 
     //   MatCheckboxModule,
@@ -85,6 +95,22 @@ import {NgxPaginationModule} from 'ngx-pagination';
        MatProgressBarModule,
       NgxPaginationModule,
       // NgxEditorModule
+      TranslateModule.forRoot({
+          loader: {
+              provide: TranslateLoader,
+              useFactory: (createTranslateLoader),
+              deps: [HttpClient]
+          }
+      }),
+      // UiSwitchModule.forRoot({
+      //   size: 'small',
+      //   color: 'rgb(0, 189, 99)',
+      //   switchColor: '#80FFA2',
+      //   defaultBgColor: '#00ACFF',
+      //   defaultBoColor : '#476EFF',
+      //   checkedLabel: 'on',
+      //   uncheckedLabel: 'off'
+      // })
   ],
   declarations: [
       AccordionAnchorDirective,
@@ -125,7 +151,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
       TabsModule,
       NgSelectModule,
       BlockUIModule,
-      UiSwitchModule,
+      // UiSwitchModule,
       FlexLayoutModule,
       BsDatepickerModule,
       TimepickerModule,
@@ -145,6 +171,7 @@ import {NgxPaginationModule} from 'ngx-pagination';
       MatProgressBarModule,
       NgxPaginationModule,
       // NgxEditorModule
+      TranslateModule,
 
   ],
   providers: [

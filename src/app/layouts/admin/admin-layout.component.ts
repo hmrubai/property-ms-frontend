@@ -5,6 +5,8 @@ import { AuthenticationService } from '../../_services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { Cookie } from 'ng2-cookies';
+import { TranslateService } from '@ngx-translate/core';
+import { CommonService } from '../../_services/common.service';
 
 export interface Options {
   heading?: string;
@@ -46,6 +48,8 @@ export class AdminLayoutComponent implements OnInit {
   isCollapsedSideBar = 'no-block';
   toggleOn = true;
   windowWidth: number;
+  
+  lang;
 
   public htmlButton: string;
 
@@ -53,9 +57,11 @@ export class AdminLayoutComponent implements OnInit {
 
   constructor(
     public menuItems: MenuItems,
+    public translate: TranslateService,
     private authService: AuthenticationService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private _service: CommonService,
   ) {
     const scrollHeight = window.screen.height - 150;
     this.innerHeight = scrollHeight + 'px';
@@ -64,6 +70,16 @@ export class AdminLayoutComponent implements OnInit {
 
     this.currentUser = this.authService.currentUserDetails.value;
 
+    this.translate.addLangs(['en', 'bn']);
+    this.lang = localStorage.getItem('lang') || 'en';
+
+    if (localStorage.getItem('lang') === this.lang) {
+      this.translate.use(this.lang);
+    }else if (localStorage.getItem('lang') !== this.lang) {
+      localStorage.setItem('lang', this.lang);
+      this.translate.use(this.lang);
+    }
+
   }
 
   ngOnInit() {
@@ -71,6 +87,13 @@ export class AdminLayoutComponent implements OnInit {
     //   this.router.navigate(['/']);
     //   return;
     // }
+  }
+
+  changeLanguage(lang){
+    this.translate.use(lang);
+    localStorage.setItem('lang', lang);
+    this._service.currentLanguage.next(lang);
+    console.log(lang)
   }
 
   onClickedOutside(e: Event) {

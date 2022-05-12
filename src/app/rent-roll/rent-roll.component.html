@@ -22,8 +22,8 @@
                         </div>
                         <div class="card-block ">
                             <div class="row ">
-                                <div class="col-lg-12">
-                                    <h4> <i class="fa fa-list"></i> Rent Roll</h4>
+                                <div class="col-lg-12 table-responsive">
+                                    <h4> <i class="fa fa-list"></i> {{ 'RENT_ROLL.TITLE' | translate }}</h4>
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
@@ -33,13 +33,14 @@
                                                 <th scope="col">Tenant Name</th>
                                                 <th scope="col">Contact Type</th>
                                                 <th scope="col">Area (m<sup>2</sup>)</th>
-                                                <th scope="col">Area (tsubo)</th>
+                                                <th scope="col">Area (ツボ)</th>
                                                 <th scope="col">Unit rent including<br> common expenses</th>
                                                 <th scope="col">Rent including<br> common services (yen)</th>
                                                 <th scope="col">Diposit Months</th>
                                                 <th scope="col">Diposit</th>
                                                 <th scope="col">Contract Start</th>
                                                 <th scope="col">Contract End</th>
+                                                <th scope="col">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -57,71 +58,15 @@
                                                 <td>{{ contract.deposit | number }}</td>
                                                 <td>{{ contract.date_of_contract_start | date : 'longDate' }}</td>
                                                 <td>{{ contract.date_of_contract_end | date : 'longDate' }}</td>
+                                                <td>
+                                                    <button class="btn btn-success btn-mini mr-2" (click)="getItemDetails(contract, template)"><i
+                                                        class="icofont icofont-eye"></i>Details</button>
+                                                </td>
                                             </tr>
-                                            <tr *ngIf="rows.length <= 0">
-                                                <td colspan="13" *ngIf="!is_loaded">No data found. Please, select property & date to see the details. </td>
-                                                <td colspan="13" *ngIf="is_loaded">No data found. </td>
+                                            <tr *ngIf="contractList.length <= 0">
+                                                <td colspan="14" *ngIf="!is_loaded">No data found. Please, select property & date to see the details. </td>
+                                                <td colspan="14" *ngIf="is_loaded">No data found. </td>
                                             </tr>
-                                            <!--<tr>
-                                                <td>7</td>
-                                                <td>701</td>
-                                                <td>Office</td>
-                                                <td>ABC Company</td>
-                                                <td>Fixed Term</td>
-                                                <td>19.58</td>
-                                                <td>5.90</td>
-                                                <td>29,144</td>
-                                                <td>172,000</td>
-                                                <td>3</td>
-                                                <td>516,000</td>
-                                                <td>2021/04/01</td>
-                                                <td>2022/04/01</td>
-                                            </tr>
-                                            <tr>
-                                                <td>7</td>
-                                                <td>701</td>
-                                                <td>Office</td>
-                                                <td>ABC Company</td>
-                                                <td>Fixed Term</td>
-                                                <td>19.58</td>
-                                                <td>5.90</td>
-                                                <td>29,144</td>
-                                                <td>172,000</td>
-                                                <td>3</td>
-                                                <td>516,000</td>
-                                                <td>2021/04/01</td>
-                                                <td>2022/04/01</td>
-                                            </tr>
-                                            <tr>
-                                                <td>7</td>
-                                                <td>701</td>
-                                                <td>Office</td>
-                                                <td>ABC Company</td>
-                                                <td>Fixed Term</td>
-                                                <td>19.58</td>
-                                                <td>5.90</td>
-                                                <td>29,144</td>
-                                                <td>172,000</td>
-                                                <td>3</td>
-                                                <td>516,000</td>
-                                                <td>2021/04/01</td>
-                                                <td>2022/04/01</td>
-                                            </tr>
-                                            <tr>
-                                                <td>7</td>
-                                                <td>701</td>
-                                                <td>Office</td>
-                                                <td>ABC Company</td>
-                                                <td>Fixed Term</td>
-                                                <td>19.58</td>
-                                                <td>5.90</td>
-                                                <td>29,144</td>
-                                                <td>172,000</td>
-                                                <td>3</td>
-                                                <td>516,000</td>
-                                                <td>2021/04/01</td>
-                                                <td>2022/04/01</td>
-                                            </tr>-->
                                         </tbody>
                                     </table>
                                 </div>
@@ -137,99 +82,142 @@
 
     </div>
 
-    <!--<ng-template #template>
+    <ng-template #template>
         <div class="modal-header ">
             <h4 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h4>
             <button type="button " class="close pull-right " aria-label="Close " (click)="modalHide()">
                 <i class="icofont icofont-close"></i>
             </button>
         </div>
-        <div class="modal-body ">
+        <div class="modal-body" *ngIf="is_details_loaded">
             <app-card>
-                <form [formGroup]="entryForm" class="col-sm-12" autocomplete="off">
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label class="font-weight-bold required"> Promo Code</label>
-                            <input formControlName="promo_code" [ngClass]="{ 'is-invalid': submitted && f.promo_code.errors }" type="text"
-                                class="form-control" autocomplete="off">
-                            <div *ngIf="submitted && f.promo_code.errors" class="error-text">
-                                <span *ngIf="f.promo_code.errors.required" class="text-danger">Promo Code is required</span>
-                                <span *ngIf="f.promo_code.errors.maxlength" class="text-danger">Promo Code must be not then 50 characters</span>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row ">
+                  <div class="col-lg-4">
+                    <strong>Property:</strong> {{ contractDetails.property_name }} ({{ contractDetails.property_name_jp }})
+                  </div>
+                  <div class="col-lg-4">
+                    <strong>Room:</strong> {{ contractDetails.room_number }} | {{ contractDetails.property_name }} ({{ contractDetails.property_name_jp }})
+                  </div>
+                  <div class="col-lg-4">
+                    <strong>Tenant:</strong> {{ contractDetails.company_name }} | {{ contractDetails.company_name_jp }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Contract Type:</strong> {{ contractDetails.contract_type }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Rent (m<sup>2</sup>):</strong> {{ contractDetails.unit_rent_sm | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Rent (ツボ):</strong> {{ contractDetails.unit_rent_tsubo | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Monthly Rent:</strong> {{ contractDetails.monthly_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date Of Rent Occurrence:</strong> {{ contractDetails.date_of_rent_occurrence | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Initial Month Rent:</strong> {{ contractDetails.initial_month_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Final Month Rent:</strong> {{ contractDetails.final_month_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Common Fees (m<sup>2</sup>):</strong> {{ contractDetails.unit_common_fees_sm | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Common Fees (ツボ):</strong> {{ contractDetails.unit_common_fees_tsubo | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Monthly Common Fees:</strong> {{ contractDetails.monthly_common_fees | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date of Common Fee Occurrence:</strong> {{ contractDetails.date_of_common_fee_occurrence | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Initial Month Common Fee:</strong> {{ contractDetails.initial_month_common_fee | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Final Month Common Fee:</strong> {{ contractDetails.final_month_common_fee | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit of Total Rent (m<sup>2</sup>):</strong> {{ contractDetails.unit_of_total_rent_sm | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Of Total Rent (ツボ):</strong> {{ contractDetails.unit_of_total_rent_tsubo | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Rotal Rent:</strong> {{ contractDetails.total_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Total Initial Month Rent:</strong> {{ contractDetails.total_initial_month_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Total Final Month Rent:</strong> {{ contractDetails.total_final_month_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Number of Deposit Months:</strong> {{ contractDetails.number_of_deposit_months | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Deposit:</strong> {{ contractDetails.deposit | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date of Contract Start:</strong> {{ contractDetails.date_of_contract_start | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Date Of Contract End:</strong> {{ contractDetails.date_of_contract_end | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Automatic Extention: </strong> 
+                    <span *ngIf="contractDetails.automatic_extention" class="text-success"> <strong> Yes</strong></span>
+                    <span *ngIf="!contractDetails.automatic_extention" class="text-danger"> <strong> No</strong></span>
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Month Of Automatic Extention:</strong> {{ contractDetails.month_of_automatic_extention }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Period of Cancel Notice:</strong> {{ contractDetails.period_of_cancel_notice }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date of Received Application:</strong> {{ contractDetails.date_of_received_application_form_for_moving_in | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date of Contract Signed:</strong> {{ contractDetails.date_of_contract_signed | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Document Delivery Date:</strong> {{ contractDetails.document_delivery_date | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date Of Noticing Contract Termination:</strong> {{ contractDetails.date_of_noticing_contract_termination | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Cancellation Date:</strong> {{ contractDetails.cancellation_date | date : 'longDate' }}
+                  </div>
 
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label class="font-weight-bold required"> Promo Amount</label>
-                            <input formControlName="promo_value" [ngClass]="{ 'is-invalid': submitted && f.promo_value.errors }" type="number"
-                                class="form-control" autocomplete="off">
-                            <div *ngIf="submitted && f.promo_value.errors" class="error-text">
-                                <span *ngIf="f.promo_value.errors.required" class="text-danger">Promo Amount is required</span>
-                                <span *ngIf="f.promo_value.errors.maxlength" class="text-danger">Promo Amount must be not then 50 characters</span>
-                            </div>
-                        </div>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Remarks On Furniture & Equipment:</strong> {{ contractDetails.remarks_on_furniture_and_equipment }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Other Remarks:</strong> {{ contractDetails.other_remarks }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Is Active?: </strong> 
+                    <span *ngIf="contractDetails.is_active" class="text-success"> <strong> Yes</strong></span>
+                    <span *ngIf="!contractDetails.is_active" class="text-danger"> <strong> No</strong></span>
+                  </div>
 
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label class="font-weight-bold required"> Package</label>
-                            <ng-select [clearable]="true" [clearOnBackspace]="false" formControlName="beat_package_id" [items]="packageList"
-                                    [multiple]=false bindLabel="name" bindValue="id" placeholder="Select Package">
-                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                                        <div> {{item.name}} - ({{item.price_of_package}}৳)</div>
-                                    </ng-template>
-                            </ng-select>
-                            <div *ngIf="submitted && f.beat_package_id.errors" class="error-text">
-                                <span *ngIf="f.beat_package_id.errors.required" class="text-danger">Package is required</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <div class="col-sm-12">
-                            <label class="font-weight-bold required"> Collaborator</label>
-                            <ng-select [clearable]="true" [clearOnBackspace]="false" formControlName="collaborator_id" [items]="collaboratorList"
-                                    [multiple]=false bindLabel="name" bindValue="id" placeholder="Select Collaborator">
-                                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                                        <div> {{item.name}} - ({{item.email}})</div>
-                                    </ng-template>
-                            </ng-select>
-                            <div *ngIf="submitted && f.collaborator_id.errors" class="error-text">
-                                <span *ngIf="f.collaborator_id.errors.required" class="text-danger">Collaborator is required</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group row">
-                        <label class="col-sm-6 col-form-label">Is Active? </label>
-                        <div class="col-sm-6 mt-2">
-                            <div class="checkbox-fade fade-in-primary">
-                            <label>
-                                <input type="checkbox" formControlName="is_active">
-                                <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                            </label>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </app-card>
         </div>
         <div class="modal-footer">
             <div class="pr-4">
-
                 <button class="btn btn-danger btn-outline-danger mr-2" (click)="modalHide()"> <i
                         class="icofont icofont-close"></i>Close</button>
-
-                <button class="btn btn-success btn-outline-success" (click)="onFormSubmit()">
-                    <i class="icofont icofont-check-circled"></i> {{saveButtonText}}
-                </button>
-
             </div>
 
         </div>
     </ng-template>
-
+<!--
     <ng-template #passwordTemplate>
         <div class="modal-header ">
             <h5 class="modal-title pull-left " [innerHtml]="modalTitle" id="modalTitle"></h5>

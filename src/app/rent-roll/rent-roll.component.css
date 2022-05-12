@@ -26,3 +26,7 @@
     min-width: 40px;
     z-index: 9;
   }
+
+  .modal-xl {
+    max-width: 1000px !important;
+}

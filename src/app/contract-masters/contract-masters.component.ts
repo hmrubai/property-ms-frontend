@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@ang
 import { Router } from '@angular/router';
 import { CommonService } from '../_services/common.service';
 import { AuthenticationService } from '../_services/authentication.service';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { ToastrService } from 'ngx-toastr';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Page } from '../_models/page';
@@ -30,7 +31,7 @@ export class ContractMasterListComponent implements OnInit {
     modalTitle = 'Add New Room';
     btnSaveText = 'Save';
 
-    modalConfig: any = { class: 'gray modal-lg', backdrop: 'static' };
+    modalConfig: any = { class: 'gray modal-xl', backdrop: 'static' };
     modalRef: BsModalRef;
 
     page = new Page();
@@ -39,6 +40,9 @@ export class ContractMasterListComponent implements OnInit {
     tenantDLList: Array<any> = [];
     loadingIndicator = false;
     ColumnMode = ColumnMode;
+
+    contractDetails;
+    is_loaded = false;
 
     urls = [];
     files = [];
@@ -50,7 +54,7 @@ export class ContractMasterListComponent implements OnInit {
     arrayBuffer: any;
     itemFile: File;
     itemUploadList: Array<any> = [];
-
+    lang;
     packagePrice = 0;
 
     propertyId;
@@ -62,13 +66,18 @@ export class ContractMasterListComponent implements OnInit {
         private _service: CommonService,
         private _authService: AuthenticationService,
         private toastr: ToastrService,
-        private router: Router
+        private router: Router,
+        public translate: TranslateService,
     ) {
         window.onresize = () => {
             this.scrollBarHorizontal = (window.innerWidth < 1200);
         };
         this._authService.currentUserDetails.subscribe((value) => {
             this.currentUser = value;
+        });
+
+        this._service.currentLanguage.subscribe((value) => {
+            this.translate.use(value);
         });
     }
 
@@ -96,7 +105,7 @@ export class ContractMasterListComponent implements OnInit {
         });
         this.getPropertyList();
         this.getTenantList();
-        //this.getList();
+        this.getList();
     }
 
     get f() {
@@ -142,8 +151,6 @@ export class ContractMasterListComponent implements OnInit {
 
     getFilterList(){
         if(this.tenantId && this.propertyId){
-            console.log(this.tenantId);
-            console.log(this.propertyId);
             let params = {
                 property_id : this.propertyId,
                 tenant_id : this.tenantId
@@ -169,12 +176,15 @@ export class ContractMasterListComponent implements OnInit {
             );
         }else{
             this.rows = [];
+            if(!this.tenantId && !this.propertyId){
+                this.getList();
+            }
         }
     }
 
     getList() {
         this.loadingIndicator = true;
-
+        this.blockUI.start('Getting Contract List...')
         this._service.get('contract-list').subscribe(res => {
             if (!res.success) {
                 this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
@@ -182,11 +192,13 @@ export class ContractMasterListComponent implements OnInit {
             }
             this.rows = res.data;
             setTimeout(() => {
+                this.blockUI.stop();
                 this.loadingIndicator = false;
             }, 1000);
         }, err => {
             this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
             setTimeout(() => {
+                this.blockUI.stop();
                 this.loadingIndicator = false;
             }, 1000);
         }
@@ -212,6 +224,27 @@ export class ContractMasterListComponent implements OnInit {
         this.entryForm.controls['is_active'].setValue(item.is_active);
 
         this.modalRef = this.modalService.show(template, this.modalConfig);
+    }
+
+    getItemDetails(row, template: TemplateRef<any>){
+        this.modalTitle = 'Contract Details';
+        this.btnSaveText = 'Save';
+
+        this.blockUI.start('Getting Contract Details...')
+        this._service.get('contract-details-by-id/' + row.id).subscribe(res => {
+                this.blockUI.stop();
+                if (!res.success) {
+                    this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                    return;
+                }
+                this.contractDetails = res.data;
+                console.log(this.contractDetails);
+                this.is_loaded = true;
+                this.modalRef = this.modalService.show(template, this.modalConfig);
+            }, err => { 
+                this.blockUI.stop();
+            }
+        );
     }
 
     onFormSubmit() {

@@ -5,9 +5,9 @@
         <div class="col-lg-12">
           <div class="card card-border-primary">
             <div class="card-header">
-              <h5>Contract List </h5>
+              <h5>{{ 'CONTRACT_MASTER_LIST.TITLE' | translate }} </h5>
               <button class="btn btn-primary float-right" [routerLink]="['/add-contract-masters']"><i
-                  class=" icofont icofont-plus"></i> Add New Contract</button>
+                  class=" icofont icofont-plus"></i> {{ 'CONTRACT_MASTER_LIST.ADD_NEW_CONTRACT' | translate }}</button>
               <!--<ng-select [clearable]="false" class="col-lg-4 float-right" [clearOnBackspace]="false" (change)="onInstituteChange($event)"
                 [items]="propertyDLList" [multiple]=false bindLabel="property_name" bindValue="id"
                 placeholder="Select Property">
@@ -19,6 +19,9 @@
                   <ng-select [clearable]="true" [clearOnBackspace]="false" [(ngModel)]="propertyId" (change)="getFilterList()"
                     [items]="propertyDLList" [multiple]=false bindLabel="property_name" bindValue="id"
                     placeholder="Select Property">
+                    <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
+                        <div> {{item.property_name}} | {{item.location}} - ({{item.gross_floor_area_sm}} m<sup>2</sup>)</div>
+                    </ng-template>
                   </ng-select>
                 </div>
                 <div class="col-lg-4 mb-3">
@@ -44,7 +47,7 @@
                       [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
                         <span title="{{ row.company_name }}"> 
-                          {{ row.company_name }} ({{ row.company_name_jp }}) <br/>
+                          <strong>{{ row.company_name }}</strong> ({{ row.company_name_jp }}) <br/>
                           {{ row.tenant_email }} <br/>
                           {{ row.tenant_address }}
                         </span>
@@ -52,8 +55,8 @@
                     </ngx-datatable-column>
 
                     <ngx-datatable-column [width]="200" name="Room Number" prop="room_number" [draggable]="false" [sortable]="false">
-                      <ng-template let-value="value" ngx-datatable-cell-template>
-                        <span title="{{ value }}"> {{ value }} </span>
+                      <ng-template let-row="row" ngx-datatable-cell-template>
+                        <span title="{{ row.room_number }}"> <strong>{{ row.room_number }}</strong> <br> {{ row.property_name }} ({{ row.property_name_jp }}) </span>
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -77,10 +80,10 @@
 
                     <ngx-datatable-column [width]="120" name="Action" prop="id" [draggable]="false" [sortable]="false">
                       <ng-template let-row="row" ngx-datatable-cell-template>
-                        <button class="btn btn-info btn-mini mr-2" [routerLink]="['/update-contract-masters', row.id ]"><i
+                        <button class="btn btn-success btn-mini mr-2" (click)="getItemDetails(row, template)"><i
+                            class="icofont icofont-eye"></i>Details</button>
+                        <button class="btn btn-info btn-mini" [routerLink]="['/update-contract-masters', row.id ]"><i
                             class="icofont icofont-edit"></i>Edit</button>
-                        <!--<button class="btn btn-info btn-mini" (click)="getItem(row, template)"><i
-                            class="icofont icofont-edit"></i>Edit</button>-->
                       </ng-template>
                     </ngx-datatable-column>
 
@@ -108,140 +111,125 @@
           <div class="col-lg-12">
             <div class="card">
               <div class="card-header">
-                <!-- <h5>Institute Information</h5> -->
+                <!-- <h5>Card Title</h5> -->
               </div>
-              <div class="card-block">
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Company Name </label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="company_name" placeholder="Enter Company Name"
-                      [ngClass]="{ 'is-invalid': submitted && f.company_name.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.company_name.errors" class="error-text">
-                      <span *ngIf="f.company_name.errors.required" class="text-danger"> Company Name is required</span>
-                      <span *ngIf="f.company_name.errors.maxlength" class="text-danger">Company Name must be not more then 550 characters</span>
-                    </div>
+              <div class="card-block" *ngIf="is_loaded">
+
+                <div class="row ">
+                  <div class="col-lg-4">
+                    <strong>Property:</strong> {{ contractDetails.property_name }} ({{ contractDetails.property_name_jp }})
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Company Name (JP)</label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="company_name_jp" placeholder="Enter Company Name (JP)"
-                      [ngClass]="{ 'is-invalid': submitted && f.company_name_jp.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.company_name_jp.errors" class="error-text">
-                      <span *ngIf="f.company_name_jp.errors.required" class="text-danger"> Company Name is required</span>
-                      <span *ngIf="f.company_name_jp.errors.maxlength" class="text-danger">Company Name must be not more then 550 characters</span>
-                    </div>
+                  <div class="col-lg-4">
+                    <strong>Room:</strong> {{ contractDetails.room_number }} | {{ contractDetails.property_name }} ({{ contractDetails.property_name_jp }})
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Email </label>
-                  <div class="col-sm-9">
-                    <input formControlName="email" placeholder="Enter Email"
-                      [ngClass]="{ 'is-invalid': submitted && f.email.errors }" type="email" class="form-control" />
-                    <div *ngIf="submitted && f.email.errors" class="error-text">
-                      <span *ngIf="f.email.errors.required" class="text-danger"> Email is required</span>
-                      <span *ngIf="f.email.errors.maxlength" class="text-danger">Email must be not more then 550 characters</span>
-                    </div>
+                  <div class="col-lg-4">
+                    <strong>Tenant:</strong> {{ contractDetails.company_name }} | {{ contractDetails.company_name_jp }}
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Address </label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="address" placeholder="Enter Address"
-                      [ngClass]="{ 'is-invalid': submitted && f.address.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.address.errors" class="error-text">
-                      <span *ngIf="f.address.errors.required" class="text-danger"> Address is required</span>
-                      <span *ngIf="f.address.errors.maxlength" class="text-danger">Address must be not more then 550 characters</span>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Contract Type:</strong> {{ contractDetails.contract_type }}
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Type Of Industry </label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="type_of_industry" placeholder="Enter Type of industry"
-                      [ngClass]="{ 'is-invalid': submitted && f.type_of_industry.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.type_of_industry.errors" class="error-text">
-                      <span *ngIf="f.type_of_industry.errors.required" class="text-danger"> Type Of Industry is required</span>
-                      <span *ngIf="f.type_of_industry.errors.maxlength" class="text-danger">Type Of Industry must be not more then 550 characters</span>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Rent (m<sup>2</sup>):</strong> {{ contractDetails.unit_rent_sm | number }}
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Number Of Employee </label>
-                  <div class="col-sm-9">
-                    <input formControlName="number_of_employee" placeholder="Number Of Employee"
-                      [ngClass]="{ 'is-invalid': submitted && f.number_of_employee.errors }" type="number" class="form-control" />
-                    <div *ngIf="submitted && f.number_of_employee.errors" class="error-text">
-                      <span *ngIf="f.number_of_employee.errors.required" class="text-danger"> Number Of Employee is required</span>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Rent (ツボ):</strong> {{ contractDetails.unit_rent_tsubo | number }}
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Representative Name </label>
-                  <div class="col-sm-9">
-                    <input type="text" rows="2" formControlName="representative_name" placeholder="Enter Representative Name"
-                      [ngClass]="{ 'is-invalid': submitted && f.representative_name.errors }" type="text" class="form-control" />
-                    <div *ngIf="submitted && f.representative_name.errors" class="error-text">
-                      <span *ngIf="f.representative_name.errors.required" class="text-danger"> Representative Name is required</span>
-                      <span *ngIf="f.representative_name.errors.maxlength" class="text-danger">Representative Name must be not more then 550 characters</span>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Monthly Rent:</strong> {{ contractDetails.monthly_rent | number }}
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Establishment Date </label>
-                  <div class="col-sm-9">
-                    <input formControlName="establishment_date" placeholder="Enter Representative Name"
-                      [ngClass]="{ 'is-invalid': submitted && f.establishment_date.errors }" type="date" class="form-control" />
-                    <div *ngIf="submitted && f.establishment_date.errors" class="error-text">
-                      <span *ngIf="f.establishment_date.errors.required" class="text-danger"> Representative Name is required</span>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date Of Rent Occurrence:</strong> {{ contractDetails.date_of_rent_occurrence | date : 'longDate' }}
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Market Capitalization </label>
-                  <div class="col-sm-9">
-                    <input formControlName="market_capitalization" placeholder="Market Capitalization"
-                      [ngClass]="{ 'is-invalid': submitted && f.market_capitalization.errors }" type="number" class="form-control" />
-                    <div *ngIf="submitted && f.market_capitalization.errors" class="error-text">
-                      <span *ngIf="f.market_capitalization.errors.required" class="text-danger"> Market Capitalization is required</span>
-                      <span *ngIf="f.market_capitalization.errors.maxlength" class="text-danger">Market Capitalization must be not more then 550 characters</span>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Initial Month Rent:</strong> {{ contractDetails.initial_month_rent | number }}
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Revenue </label>
-                  <div class="col-sm-9">
-                    <input formControlName="revenue" placeholder="Revenue"
-                      [ngClass]="{ 'is-invalid': submitted && f.revenue.errors }" type="number" class="form-control" />
-                    <div *ngIf="submitted && f.revenue.errors" class="error-text">
-                      <span *ngIf="f.revenue.errors.required" class="text-danger">Revenue is required</span>
-                      <span *ngIf="f.revenue.errors.maxlength" class="text-danger">Room Area (tsubo) must be not more then 550 characters</span>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Final Month Rent:</strong> {{ contractDetails.final_month_rent | number }}
                   </div>
-                </div>
-                <div class="form-group row">
-                  <label class="col-sm-3 col-form-label required">Property Images </label>
-                  <div class="col-sm-9 pt-2">
-                    <input type="file" formControlName="profile_image" (change)="onSelectFile($event)" placeholder="Upload file" accept="image/x-png,image/jpeg" placeholder="Insert file"/>
-                    <div *ngIf="submitted && f.profile_image.errors" class="error-text">
-                      <span *ngIf="f.profile_image.errors.required" class="text-danger"> File is required</span>                      
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Common Fees (m<sup>2</sup>):</strong> {{ contractDetails.unit_common_fees_sm | number }}
                   </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-6">
-                    <div class="form-group row text-left">
-                      <label class="col-sm-6 col-form-label">Is Active? </label>
-                      <div class="col-sm-6 mt-2">
-                        <div class="checkbox-fade fade-in-primary">
-                          <label>
-                            <input type="checkbox" formControlName="is_active">
-                            <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Common Fees (ツボ):</strong> {{ contractDetails.unit_common_fees_tsubo | number }}
                   </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Monthly Common Fees:</strong> {{ contractDetails.monthly_common_fees | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date of Common Fee Occurrence:</strong> {{ contractDetails.date_of_common_fee_occurrence | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Initial Month Common Fee:</strong> {{ contractDetails.initial_month_common_fee | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Final Month Common Fee:</strong> {{ contractDetails.final_month_common_fee | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit of Total Rent (m<sup>2</sup>):</strong> {{ contractDetails.unit_of_total_rent_sm | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Unit Of Total Rent (ツボ):</strong> {{ contractDetails.unit_of_total_rent_tsubo | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Rotal Rent:</strong> {{ contractDetails.total_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Total Initial Month Rent:</strong> {{ contractDetails.total_initial_month_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Total Final Month Rent:</strong> {{ contractDetails.total_final_month_rent | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Number of Deposit Months:</strong> {{ contractDetails.number_of_deposit_months | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Deposit:</strong> {{ contractDetails.deposit | number }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date of Contract Start:</strong> {{ contractDetails.date_of_contract_start | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Date Of Contract End:</strong> {{ contractDetails.date_of_contract_end | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Automatic Extention: </strong> 
+                    <span *ngIf="contractDetails.automatic_extention" class="text-success"> <strong> Yes</strong></span>
+                    <span *ngIf="!contractDetails.automatic_extention" class="text-danger"> <strong> No</strong></span>
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Month Of Automatic Extention:</strong> {{ contractDetails.month_of_automatic_extention }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Period of Cancel Notice:</strong> {{ contractDetails.period_of_cancel_notice }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date of Received Application:</strong> {{ contractDetails.date_of_received_application_form_for_moving_in | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date of Contract Signed:</strong> {{ contractDetails.date_of_contract_signed | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                      <strong>Document Delivery Date:</strong> {{ contractDetails.document_delivery_date | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Date Of Noticing Contract Termination:</strong> {{ contractDetails.date_of_noticing_contract_termination | date : 'longDate' }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Cancellation Date:</strong> {{ contractDetails.cancellation_date | date : 'longDate' }}
+                  </div>
+
+                  <div class="col-lg-4 mt-3">
+                      <strong>Remarks On Furniture & Equipment:</strong> {{ contractDetails.remarks_on_furniture_and_equipment }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Other Remarks:</strong> {{ contractDetails.other_remarks }}
+                  </div>
+                  <div class="col-lg-4 mt-3">
+                    <strong>Is Active?: </strong> 
+                    <span *ngIf="contractDetails.is_active" class="text-success"> <strong> Yes</strong></span>
+                    <span *ngIf="!contractDetails.is_active" class="text-danger"> <strong> No</strong></span>
+                  </div>
+
                 </div>
               </div>
             </div>
