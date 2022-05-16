@@ -7,15 +7,15 @@
                     <div class="card card-border-primary">
                         <div class="card-header">
                             <div class="col-lg-3 float-right">
-                                <input type="date" class="form-control" autocomplete="off" required>
+                                <input type="date" class="form-control" autocomplete="off" [(ngModel)]="filter_date" (change)="filterStacking()" required>
                             </div>
                             <div class="col-lg-5 float-right">
-                                <ng-select (change)="onPromoChange($event)"
-                                    [clearable]="true" [clearOnBackspace]="false" [(ngModel)]="promo_id" [items]="propertyList" class="col-lg-12 inline-row"
-                                    [multiple]=false bindLabel="name" bindValue="id"
+                                <ng-select (change)="filterStacking()"
+                                    [clearable]="true" [clearOnBackspace]="false" [(ngModel)]="property_id" [items]="propertyList" class="col-lg-12 inline-row"
+                                    [multiple]=false bindLabel="property_name" bindValue="id"
                                     placeholder="Select Property">
                                     <ng-template ng-option-tmp let-item="item" let-index="index" let-search="searchTerm">
-                                        <div> {{item.name}} | {{item.address}} - ({{item.total_floor_space}} m<sup>2</sup>)</div>
+                                        <div> {{item.property_name}} | {{item.location}} - ({{item.gross_floor_area_sm}} m<sup>2</sup>)</div>
                                     </ng-template>
                                 </ng-select>
                             </div>
@@ -23,8 +23,49 @@
                         <div class="card-block ">
                             <div class="row ">
                                 <div class="col-lg-12 mt-4">
-                                    <h4> <i class="fa fa-list"></i> Stacking</h4>
-                                    <img src="assets/images/Stacking.png" width="100%" alt="">
+                                    <h4> <i class="fa fa-list"></i> {{ 'STACKING.TITLE' | translate }}</h4>
+                                    <div class="row mt-4" *ngFor="let contract of contractList; let i=index">
+                                        <div class="card col-lg-12">
+                                            <div class="card-header">
+                                                <strong>{{ contract.floor_no }}{{ nth(contract.floor_no) }} {{ 'STACKING.FLOOR' | translate }}</strong>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-3" *ngFor="let room of contract.rooms; let j=index">
+
+                                                        <div class="card bg-light border-success mb-3" *ngIf="room.is_booked" style="max-width: 18rem;">
+                                                            <div class="card-header text-center"><strong>{{ room.room_number }}</strong></div>
+                                                            <div class="card-body text-center">
+                                                                <h5 class="card-title text-center">{{ room.tenant_name }}</h5>
+                                                                <hr/>
+                                                                <table style="width: 100%">
+                                                                    <tr>
+                                                                        <td style="width: 50%"><p class="card-text float-left"><strong>{{ room.date_of_contract_start | date : 'longDate' }}</strong></p></td>
+                                                                        <td style="width: 50%"><p class="card-text float-right"><strong>{{ room.date_of_contract_end | date : 'longDate' }}</strong></p></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td><p class="card-text float-left"><strong>{{ room.room_area_sm }}m<sup>2</sup></strong></p></td>
+                                                                        <td><p class="card-text float-right"><strong>{{ room.room_area_tsubo }} (ツボ)</strong></p></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card bg-light border-secondary mb-3" *ngIf="!room.is_booked" style="max-width: 18rem;">
+                                                            <div class="card-header text-center"><strong>{{ room.room_number }}</strong></div>
+                                                            <div class="card-body text-center">
+                                                                <h5 class="card-title text-center">{{ room.tenant_name }}</h5>
+                                                                <hr/>
+                                                                <p class="card-text float-left"><strong>{{ room.room_area_sm }}m<sup>2</sup></strong></p>
+                                                                <p class="card-text float-right"><strong>{{ room.room_area_tsubo }} (ツボ)</strong></p>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span *ngIf="contractList.length <= 0">{{ 'STACKING.NOTICE_TEXT' | translate }}</span>
                                 </div>
                                     
                             </div>

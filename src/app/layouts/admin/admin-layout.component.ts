@@ -93,7 +93,6 @@ export class AdminLayoutComponent implements OnInit {
     this.translate.use(lang);
     localStorage.setItem('lang', lang);
     this._service.currentLanguage.next(lang);
-    console.log(lang)
   }
 
   onClickedOutside(e: Event) {

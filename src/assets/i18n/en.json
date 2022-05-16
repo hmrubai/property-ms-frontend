@@ -5,5 +5,10 @@
   },
   "RENT_ROLL": {
     "TITLE": "Rent Roll"
+  },
+  "STACKING": {
+    "TITLE": "Stacking",
+    "FLOOR": "Floor",
+    "NOTICE_TEXT": "Please, select property & date to see the details."
   }
 }

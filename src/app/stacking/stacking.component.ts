@@ -9,6 +9,7 @@ import { Page } from './../_models/page';
 import { AuthenticationService } from './../_services/authentication.service';
 import { MustMatch } from './../_helpers/must-match.validator';
 import { BsDatepickerConfig, BsDaterangepickerConfig } from 'ngx-bootstrap/datepicker';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import * as moment from 'moment';
 import * as XLSX from 'xlsx';
 
@@ -33,43 +34,41 @@ export class  StackingListComponent implements OnInit {
     modalConfig: any = { class: 'gray modal-md', backdrop: 'static' };
     modalRef: BsModalRef;
     promo_id = null;
+    
+    property_id;
+    filter_date;
+    lang;
 
-    propertyList = [
-        {
-            id: 1,
-            name: "Tulip Palace",
-            address: "82/A, Dhaka, Bangladesh",
-            completion_date_of_construction: "16th April, 2022",
-            total_floor_space: "1800",
-            total_floor_space_for_rent: "1800",
-            image: "property1.jpg"
-        },
-        {
-            id: 2,
-            name: "Rose Garden Palace",
-            address: "Banasree, Dhaka, Bangladesh",
-            completion_date_of_construction: "12th April, 2022",
-            total_floor_space: "2100",
-            total_floor_space_for_rent: "2000",
-            image: "property2.jpg"
-        }
-    ];
+    propertyList: Array<any> = [];
+    contractList: Array<any> = [];
+    is_loaded = false;
 
+    // propertyList = [
+    //     {
+    //         id: 1,
+    //         name: "Tulip Palace",
+    //         address: "82/A, Dhaka, Bangladesh",
+    //         completion_date_of_construction: "16th April, 2022",
+    //         total_floor_space: "1800",
+    //         total_floor_space_for_rent: "1800",
+    //         image: "property1.jpg"
+    //     },
+    //     {
+    //         id: 2,
+    //         name: "Rose Garden Palace",
+    //         address: "Banasree, Dhaka, Bangladesh",
+    //         completion_date_of_construction: "12th April, 2022",
+    //         total_floor_space: "2100",
+    //         total_floor_space_for_rent: "2000",
+    //         image: "property2.jpg"
+    //     }
+    // ];
+
+    max_rows = 0;
     rows = [];
     loadingIndicator = false;
     ColumnMode = ColumnMode;
     public categoryList: Array<any> = [];
-
-    genderList = [
-        {
-            id: 'Male',
-            name: 'Male'
-        },
-        {
-            id: 'Female',
-            name: 'Female'
-        }
-    ]
 
     page = new Page();
 
@@ -89,13 +88,18 @@ export class  StackingListComponent implements OnInit {
         public formBuilder: FormBuilder,
         private _service: CommonService,
         private authService: AuthenticationService,
-        private toastr: ToastrService
+        private toastr: ToastrService,
+        public translate: TranslateService,
     ) {
         this.page.pageNumber = 0;
         this.page.size = 10;
 
         this.authService.currentUserDetails.subscribe((value) => {
             this.currentUser = value;
+        });
+
+        this._service.currentLanguage.subscribe((value) => {
+            this.translate.use(value);
         });
     }
 
@@ -131,7 +135,7 @@ export class  StackingListComponent implements OnInit {
             maxDate: new Date()
         });
 
-        // this.getPackageList();
+        this.getPropertyList();
         // this.getPromoList();
         // this.getCollaboratorList();
     }
@@ -147,6 +151,73 @@ export class  StackingListComponent implements OnInit {
     setPage(pageInfo) {
         this.page.pageNumber = pageInfo.offset;
         this.getList();
+    }
+
+    getPropertyList() {
+        this._service.get('property-dropdown-list').subscribe(res => {
+            if (!res.success) {
+                this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                return;
+            }
+            this.propertyList = res.data;
+        }, err => { }
+        );
+    }
+
+
+    filterStacking(){
+        //stacking-list
+        if(this.filter_date && this.property_id)
+        {
+            let params = {
+                property_id : this.property_id,
+                filter_date : this.filter_date
+            }
+            this.blockUI.start('Getting Data...');
+            this._service.get('stacking-list', params).subscribe(res => {
+                if (!res.success) {
+                    this.toastr.error(res.message, 'Error!', { timeOut: 2000 });
+                    return;
+                }
+                this.rows = res.data;
+                this.contractList = res.data.reverse();
+                // this.contractList.forEach(element => {
+                //     console.log(element)
+                //     // if(element.length > this.max_rows){
+                //     //     this.max_rows = element.length;
+                //     // }
+                // });
+
+                this.is_loaded = true;
+                console.log(this.rows)
+                //console.log(this.max_rows)
+                setTimeout(() => {
+                    this.blockUI.stop();
+                    this.loadingIndicator = false;
+                }, 500);
+            }, err => {
+                this.toastr.error(err.message || err, 'Error!', { timeOut: 2000 });
+                setTimeout(() => {
+                    this.blockUI.stop();
+                    this.loadingIndicator = false;
+                }, 500);
+            }
+            );
+        }else{
+            this.contractList = [];
+            this.rows = [];
+            this.is_loaded = false;
+        }
+    }
+
+    nth(d) {
+        if (d > 3 && d < 21) return 'th'; 
+        switch (d % 10) {
+          case 1:  return "st";
+          case 2:  return "nd";
+          case 3:  return "rd";
+          default: return "th";
+        }
     }
 
     getPromoList() {

@@ -48,17 +48,6 @@ export class  RentRollListComponent implements OnInit {
     ColumnMode = ColumnMode;
     public categoryList: Array<any> = [];
 
-    genderList = [
-        {
-            id: 'Male',
-            name: 'Male'
-        },
-        {
-            id: 'Female',
-            name: 'Female'
-        }
-    ]
-
     page = new Page();
 
     contractList = [];
